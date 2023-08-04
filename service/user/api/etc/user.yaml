@@ -1,0 +1,19 @@
+Name: user
+Host: 127.0.0.1
+Port: 8881
+
+
+UserRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: userRpc
+#    Pass: liujun
+#    User: root
+
+RedisConf:
+  Host: 43.136.243.177:6379
+  Pass: "liujun"
+
+
+
