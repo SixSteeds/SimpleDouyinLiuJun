@@ -1,0 +1,23 @@
+syntax = "v1"
+
+info(
+	title: "chat-api"
+	desc: "chat-api服务"
+	author: "liujun_team"
+	version: "v1"
+)
+
+import (
+	"types.api"
+)
+
+@server(
+	prefix:douyin/message
+)
+service media {
+	@handler messageAction
+	post /action (MessageActionReq) returns (MessageActionReqResp)
+
+	@handler messageList
+	post /chat (MessageChatReq) returns (MessageChatReqResp)
+}
