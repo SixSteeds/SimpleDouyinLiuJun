@@ -7,10 +7,10 @@ type RegisterReq struct {
 }
 
 type RegisterResp struct {
-	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `json:"status_msg"`  // 返回状态描述
-	UserId     int64  `json:"user_id"`     // 用户id
-	Token      string `json:"token"`       // 用户鉴权token
+	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
+	UserId     int64  `json:"user_id"`             // 用户id
+	Token      string `json:"token"`               // 用户鉴权token
 }
 
 type LoginReq struct {
@@ -19,24 +19,24 @@ type LoginReq struct {
 }
 
 type LoginResp struct {
-	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `json:"status_msg"`  // 返回状态描述
-	UserId     int64  `json:"user_id"`     // 用户id
-	Token      string `json:"token"`       // 用户鉴权token
+	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
+	UserId     int64  `json:"user_id"`             // 用户id
+	Token      string `json:"token"`               // 用户鉴权token
 }
 
 type User struct {
-	UserId          int64  `json:"user_id"`          // 用户id
-	Name            string `json:"name"`             // 用户名称
-	FollowCount     int64  `json:"follow_count"`     // 关注总数
-	FollowerCount   int64  `json:"follower_count"`   // 粉丝总数
-	IsFollow        bool   `json:"is_follow"`        // true-已关注，false-未关注
-	Avatar          string `json:"avatar"`           //用户头像
-	BackgroundImage string `json:"background_image"` //用户个人页顶部大图
-	Signature       string `json:"signature"`        //个人简介
-	TotalFavorited  int64  `json:"total_favorited"`  //获赞数量
-	WorkCount       int64  `json:"work_count"`       //作品数量
-	FavoriteCount   int64  `json:"favorite_count"`   //点赞数量
+	UserId          int64  `json:"user_id"`                   // 用户id
+	Name            string `json:"name"`                      // 用户名称
+	FollowCount     int64  `json:"follow_count,optional"`     // 关注总数
+	FollowerCount   int64  `json:"follower_count,optional"`   // 粉丝总数
+	IsFollow        bool   `json:"is_follow"`                 // true-已关注，false-未关注
+	Avatar          string `json:"avatar,optional"`           //用户头像
+	BackgroundImage string `json:"background_image,optional"` //用户个人页顶部大图
+	Signature       string `json:"signature,optional"`        //个人简介
+	TotalFavorited  int64  `json:"total_favorited,optional"`  //获赞数量
+	WorkCount       int64  `json:"work_count,optional"`       //作品数量
+	FavoriteCount   int64  `json:"favorite_count,optional"`   //点赞数量
 }
 
 type UserinfoReq struct {
@@ -45,9 +45,9 @@ type UserinfoReq struct {
 }
 
 type UserinfoResp struct {
-	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `json:"status_msg"`  // 返回状态描述
-	User       User   `json:"user"`        // 用户信息
+	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
+	User       User   `json:"user"`                // 用户信息
 }
 
 type FollowListReq struct {
@@ -56,9 +56,9 @@ type FollowListReq struct {
 }
 
 type FollowListResp struct {
-	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `json:"status_msg"`  // 返回状态描述
-	FollowList []User `json:"user_list "`  // 关注列表
+	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
+	FollowList []User `json:"user_list "`          // 关注列表
 }
 
 type FollowerListReq struct {
@@ -67,9 +67,9 @@ type FollowerListReq struct {
 }
 
 type FollowerListResp struct {
-	StatusCode   int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg    string `json:"status_msg"`  // 返回状态描述
-	FollowerList []User `json:"user_list"`   // 粉丝列表
+	StatusCode   int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg    string `json:"status_msg,optional"` // 返回状态描述
+	FollowerList []User `json:"user_list"`           // 粉丝列表
 }
 
 type FollowReq struct {
@@ -79,8 +79,8 @@ type FollowReq struct {
 }
 
 type FollowResp struct {
-	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string `json:"status_msg"`  // 返回状态描述
+	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
 }
 
 type FriendListReq struct {
@@ -89,9 +89,9 @@ type FriendListReq struct {
 }
 
 type FriendListResp struct {
-	StatusCode int32        `json:"status_code"` // 状态码，0-成功，其他值-失败
-	StatusMsg  string       `json:"status_msg"`  // 返回状态描述
-	FriendUser []FriendUser `json:"user_list"`   // 好友列表
+	StatusCode int32        `json:"status_code"`         // 状态码，0-成功，其他值-失败
+	StatusMsg  string       `json:"status_msg,optional"` // 返回状态描述
+	FriendUser []FriendUser `json:"user_list"`           // 好友列表
 }
 
 type FriendUser struct {
@@ -106,6 +106,6 @@ type FriendUser struct {
 	TotalFavorited  int64  `json:"total_favorited"`  //获赞数量
 	WorkCount       int64  `json:"work_count"`       //作品数量
 	FavoriteCount   int64  `json:"favorite_count"`   //点赞数量
-	Message         string `json:"message"`          // 和该好友的最新聊天消息
+	Message         string `json:"message,optional"` // 和该好友的最新聊天消息
 	MsgType         int64  `json:"msg_type"`         // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
 }

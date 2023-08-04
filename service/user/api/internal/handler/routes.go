@@ -29,17 +29,13 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		rest.WithMiddlewares(
-			[]rest.Middleware{serverCtx.UserAgentMiddleware},
-			[]rest.Route{
-				{
-					Method:  http.MethodGet,
-					Path:    "/",
-					Handler: userinfo.UserinfoHandler(serverCtx),
-				},
-			}...,
-		),
-		//rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
+		[]rest.Route{
+			{
+				Method:  http.MethodGet,
+				Path:    "/",
+				Handler: userinfo.UserinfoHandler(serverCtx),
+			},
+		},
 		rest.WithPrefix("/douyin/user"),
 	)
 
@@ -66,7 +62,6 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Handler: relation.FridendListHandler(serverCtx),
 			},
 		},
-		//rest.WithJwt(serverCtx.Config.Auth.AccessSecret),
 		rest.WithPrefix("/douyin/relation"),
 	)
 }

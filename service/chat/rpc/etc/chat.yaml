@@ -1,0 +1,13 @@
+Name: chat.rpc
+ListenOn: 0.0.0.0:8088
+Etcd:
+  Hosts:
+  - 127.0.0.1:2379
+  Key: chat.rpc
+
+DB:
+  DataSource: root:liujun@tcp(43.136.243.177:3306)/liujun_content?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+
+Cache:
+  - Host: 43.136.243.177:6379
+    Pass: liujun

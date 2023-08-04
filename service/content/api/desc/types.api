@@ -25,14 +25,14 @@ type (
     }
 
     FeedReq {
-        token string `json:"token,optional"`            // 可选参数，登录用户设置
-        latest_time int64 `json:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+        Token string `json:"token,optional"`            // 可选参数，登录用户设置
+        LatestTime int64 `json:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
     }
     FeedResp {
         StatusCode int32 `json:"status_code"`          // 状态码，0-成功，其他值-失败
         StatusMsg string `json:"status_msg,optional"`  // 返回状态描述
-        video_list []Video `json:"video_list"`         // 视频列表
-        next_time int64 `json:"next_time,optional"`    // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
+        VideoList []Video `json:"video_list"`         // 视频列表
+        NextTime int64 `json:"next_time,optional"`    // 本次返回的视频中，发布最早的时间，作为下次请求时的latest_time
     }
 )
 
@@ -44,7 +44,7 @@ type (
     PublishListResp {
         StatusCode int32 `json:"status_code"`          // 状态码，0-成功，其他值-失败
         StatusMsg string `json:"status_msg,optional"`  // 返回状态描述
-        video_list []Video `json:"video_list"`         // 视频列表
+        VideoList []Video `json:"video_list"`         // 视频列表
     }
 )
 
@@ -70,7 +70,7 @@ type (
     FavoriteListResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败
         StatusMsg string `json:"status_msg,optional"` // 返回状态描述
-        video_list []Video `json:"video_list"`        // 视频列表
+        VideoList []Video `json:"video_list"`        // 视频列表
     }
 )
 
@@ -91,7 +91,7 @@ type (
     CommentActionResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败
         StatusMsg string `json:"status_msg,optional"` // 返回状态描述
-        comment Comment `json:"comment,optional"`     // 评论内容，action_type=1时返回
+        Comment Comment `json:"comment,optional"`     // 评论内容，action_type=1时返回
     }
 )
 

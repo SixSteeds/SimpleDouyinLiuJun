@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/service/chat/rpc/desc/chat.proto" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/content/rpc/desc/content.proto" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/media/rpc/desc/media.proto" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/service/user/rpc/desc/user.proto" charset="UTF-8" />
