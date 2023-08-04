@@ -1,0 +1,217 @@
+syntax = "proto3";
+
+option go_package ="./pb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------璇勮淇℃伅--------------------------------
+message Comment {
+  int64 id = 1; //涓婚敭
+  int64 videoId = 2; //瑙嗛id
+  string content = 3; //璇勮鍐呭
+  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 5; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 6; //閫昏緫鍒犻櫎
+}
+
+message AddCommentReq {
+  int64 videoId = 1; //瑙嗛id
+  string content = 2; //璇勮鍐呭
+  int64 isDelete = 3; //閫昏緫鍒犻櫎
+}
+
+message AddCommentResp {
+}
+
+message UpdateCommentReq {
+  int64 id = 1; //涓婚敭
+  int64 videoId = 2; //瑙嗛id
+  string content = 3; //璇勮鍐呭
+  int64 isDelete = 4; //閫昏緫鍒犻櫎
+}
+
+message UpdateCommentResp {
+}
+
+message DelCommentReq {
+  int64 id = 1; //id
+}
+
+message DelCommentResp {
+}
+
+message GetCommentByIdReq {
+  int64 id = 1; //id
+}
+
+message GetCommentByIdResp {
+  Comment comment = 1; //comment
+}
+
+message SearchCommentReq {
+  int64 page = 1; //page
+  int64 limit = 2; //limit
+  int64 id = 3; //涓婚敭
+  int64 videoId = 4; //瑙嗛id
+  string content = 5; //璇勮鍐呭
+  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
+}
+
+message SearchCommentResp {
+  repeated Comment comment = 1; //comment
+}
+
+//--------------------------------鐐硅禐淇℃伅--------------------------------
+message Favorite {
+  int64 id = 1; //涓婚敭
+  int64 videoId = 2; //瑙嗛id
+  int64 userId = 3; //瑙嗛id
+  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 5; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 6; //閫昏緫鍒犻櫎
+}
+
+message AddFavoriteReq {
+  int64 videoId = 1; //瑙嗛id
+  int64 userId = 2; //瑙嗛id
+  int64 isDelete = 3; //閫昏緫鍒犻櫎
+}
+
+message AddFavoriteResp {
+}
+
+message UpdateFavoriteReq {
+  int64 id = 1; //涓婚敭
+  int64 videoId = 2; //瑙嗛id
+  int64 userId = 3; //瑙嗛id
+  int64 isDelete = 4; //閫昏緫鍒犻櫎
+}
+
+message UpdateFavoriteResp {
+}
+
+message DelFavoriteReq {
+  int64 id = 1; //id
+}
+
+message DelFavoriteResp {
+}
+
+message GetFavoriteByIdReq {
+  int64 id = 1; //id
+}
+
+message GetFavoriteByIdResp {
+  Favorite favorite = 1; //favorite
+}
+
+message SearchFavoriteReq {
+  int64 page = 1; //page
+  int64 limit = 2; //limit
+  int64 id = 3; //涓婚敭
+  int64 videoId = 4; //瑙嗛id
+  int64 userId = 5; //瑙嗛id
+  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
+}
+
+message SearchFavoriteResp {
+  repeated Favorite favorite = 1; //favorite
+}
+
+//--------------------------------瑙嗛淇℃伅--------------------------------
+message Video {
+  int64 id = 1; //涓婚敭
+  int64 userId = 2; //瑙嗛浣滆€卛d
+  string playUrl = 3; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
+  string title = 5; //瑙嗛鏍囬
+  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
+}
+
+message AddVideoReq {
+  int64 userId = 1; //瑙嗛浣滆€卛d
+  string playUrl = 2; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 3; //瑙嗛灏侀潰鍦板潃
+  string title = 4; //瑙嗛鏍囬
+  int64 isDelete = 5; //閫昏緫鍒犻櫎
+}
+
+message AddVideoResp {
+}
+
+message UpdateVideoReq {
+  int64 id = 1; //涓婚敭
+  int64 userId = 2; //瑙嗛浣滆€卛d
+  string playUrl = 3; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
+  string title = 5; //瑙嗛鏍囬
+  int64 isDelete = 6; //閫昏緫鍒犻櫎
+}
+
+message UpdateVideoResp {
+}
+
+message DelVideoReq {
+  int64 id = 1; //id
+}
+
+message DelVideoResp {
+}
+
+message GetVideoByIdReq {
+  int64 id = 1; //id
+}
+
+message GetVideoByIdResp {
+  Video video = 1; //video
+}
+
+message SearchVideoReq {
+  int64 page = 1; //page
+  int64 limit = 2; //limit
+  int64 id = 3; //涓婚敭
+  int64 userId = 4; //瑙嗛浣滆€卛d
+  string playUrl = 5; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 6; //瑙嗛灏侀潰鍦板潃
+  string title = 7; //瑙嗛鏍囬
+  int64 createTime = 8; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 9; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 10; //閫昏緫鍒犻櫎
+}
+
+message SearchVideoResp {
+  repeated Video video = 1; //video
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service content{ 
+
+	 //-----------------------璇勮淇℃伅----------------------- 
+	 rpc AddComment(AddCommentReq) returns (AddCommentResp); 
+	 rpc UpdateComment(UpdateCommentReq) returns (UpdateCommentResp); 
+	 rpc DelComment(DelCommentReq) returns (DelCommentResp); 
+	 rpc GetCommentById(GetCommentByIdReq) returns (GetCommentByIdResp); 
+	 rpc SearchComment(SearchCommentReq) returns (SearchCommentResp); 
+	 //-----------------------鐐硅禐淇℃伅----------------------- 
+	 rpc AddFavorite(AddFavoriteReq) returns (AddFavoriteResp); 
+	 rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp); 
+	 rpc DelFavorite(DelFavoriteReq) returns (DelFavoriteResp); 
+	 rpc GetFavoriteById(GetFavoriteByIdReq) returns (GetFavoriteByIdResp); 
+	 rpc SearchFavorite(SearchFavoriteReq) returns (SearchFavoriteResp); 
+	 //-----------------------瑙嗛淇℃伅----------------------- 
+	 rpc AddVideo(AddVideoReq) returns (AddVideoResp); 
+	 rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp); 
+	 rpc DelVideo(DelVideoReq) returns (DelVideoResp); 
+	 rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp); 
+	 rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp); 
+
+}

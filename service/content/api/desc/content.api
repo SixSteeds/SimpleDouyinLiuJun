@@ -1,0 +1,48 @@
+syntax = "v1"
+
+info(
+	title: "content-api"
+	desc: "content-api服务"
+	author: "liujun_team"
+	version: "v1"
+)
+
+import (
+	"types.api"
+)
+
+@server(
+	prefix: douyin
+	group : vedio
+)
+service content {
+	@handler feed
+	get /feed (FeedReq) returns (FeedReq)
+
+	@handler publishList
+	get /publish/list (PublishListReq) returns (PublishListResp)
+}
+
+@server(
+	prefix: douyin/favorite
+	group : favorite
+)
+service content {
+	@handler favoriteAction
+	get /action (FavoriteActionReq) returns (FavoriteActionResp)
+
+	@handler favoriteList
+	get /list (FavoriteListReq) returns (FavoriteListResp)
+}
+
+@server(
+	prefix: douyin/comment
+	group : comment
+)
+service content {
+	@handler commentAction
+	get /action (CommentActionReq) returns (CommentActionResp)
+
+	@handler commentList
+	get /list (CommentListReq) returns (CommentListResp)
+}
