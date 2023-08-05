@@ -12,5 +12,5 @@ ContentRpcConf:
 #    User: root
 
 RedisConf:
-  Host: 43.136.243.177:6379
+  Host: 0.0.0.0:6379
   Pass: "liujun"

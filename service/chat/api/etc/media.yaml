@@ -7,10 +7,10 @@ ChatRpcConf:
   Etcd:
     Hosts:
       - 127.0.0.1:2379
-    Key: chatrRpc
+    Key: chatRpc
 #    Pass: liujun
 #    User: root
 
 RedisConf:
-  Host: 43.136.243.177:6379
+  Host: 0.0.0.0:6379
   Pass: "liujun"
