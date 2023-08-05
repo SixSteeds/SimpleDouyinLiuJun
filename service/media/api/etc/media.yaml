@@ -1,6 +1,6 @@
 Name: media
 Host: 0.0.0.0
-Port: 8883
+Port: 8083
 
 MediaRpcConf:
   Etcd:
