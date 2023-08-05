@@ -13,5 +13,6 @@ type Config struct {
 	//	AccessExpire int64
 	//}
 	UserRpcConf zrpc.RpcClientConf
-	RedisConf   redis.RedisConf
+
+	RedisConf redis.RedisConf
 }

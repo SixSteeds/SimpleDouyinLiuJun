@@ -7,11 +7,10 @@ services:
     image: bitnami/etcd:3.4.27
     container_name: etcd
     environment:
-      # 时区上海 - Time zone Shanghai (Change if needed)
       TZ: Asia/Shanghai
       ALLOW_NONE_AUTHENTICATION: "yes"
     ports:
-      - 2379:2379
+      - 8090:2379
     volumes:
       # 数据挂载 - Data mounting
       - /etc/docker/etcd/data:/bitnami/etcd/data
@@ -27,13 +26,13 @@ services:
       # 时区上海 - Time zone Shanghai (Change if needed)
       TZ: Asia/Shanghai
     volumes:
-      - /etc/docker/prometheus-persistence:/opt/bitnami/prometheus/data
+      - /etc/docker/prometheus/data:/opt/bitnami/prometheus/data
     command:
       - '--config.file=/opt/bitnami/prometheus/conf/prometheus.yml'
     restart: always
     user: root
     ports:
-      - 9090:9090
+      - 8091:9090
     networks:
       - liujun_net
 
@@ -50,7 +49,7 @@ services:
     volumes:
       - /etc/docker/grafana/data:/var/lib/grafana
     ports:
-      - 3000:3000
+      - 8092:3000
     networks:
       - liujun_net
     depends_on:
@@ -62,7 +61,7 @@ services:
     image: bitnami/kafka:3.3.2
     container_name: kafka
     ports:
-      - 9092:9092
+      - 8093:9092
     environment:
       - KAFKA_CFG_NODE_ID=0
       - KAFKA_CFG_PROCESS_ROLES=controller,broker
@@ -72,7 +71,7 @@ services:
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     restart: always
     volumes:
-      - /etc/docker/kafka-persistence:/bitnami/kafka/config
+      - /etc/docker/kafka/data:/bitnami/kafka/config
     privileged: true
     user: '1001'
     networks:
@@ -83,7 +82,7 @@ services:
     image: redis:7.2-rc
     container_name: redis
     ports:
-      - 6379:6379
+      - 8094:6379
     environment:
       # 时区上海 - Time zone Shanghai (Change if needed)
       TZ: Asia/Shanghai
@@ -107,7 +106,7 @@ services:
       # root 密码 - root password
       MYSQL_ROOT_PASSWORD: liujun
     ports:
-      - 3306:3306
+      - 8095:3306
     volumes:
       # 数据挂载 - Data mounting
       - /etc/docker/mysql/data:/var/lib/mysql

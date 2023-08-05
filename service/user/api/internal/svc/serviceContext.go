@@ -13,7 +13,8 @@ type ServiceContext struct {
 	Config              config.Config
 	UserAgentMiddleware rest.Middleware
 	UserRpcClient       user.User
-	RedisClient         *redis.Redis
+
+	RedisClient *redis.Redis
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {

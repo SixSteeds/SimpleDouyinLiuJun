@@ -6,13 +6,22 @@ Port: 8881
 UserRpcConf:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - 127.0.0.1:8090
     Key: userRpc
 #    Pass: liujun
 #    User: root
 
+ContentRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:2379
+    Key: contentRpc
+#    Pass: liujun
+#    User: root
+
+
 RedisConf:
-  Host: 43.136.243.177:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"
 
 
