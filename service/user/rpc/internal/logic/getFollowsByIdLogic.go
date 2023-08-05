@@ -26,7 +26,6 @@ func NewGetFollowsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetFollowsByIdResp, error) {
 	// todo: add your logic here and delete this line
 	// 数据库测试
-
 	one, err := l.svcCtx.FollowsModel.FindOne(l.ctx, 1)
 	println("数据库测试")
 	println(one)
