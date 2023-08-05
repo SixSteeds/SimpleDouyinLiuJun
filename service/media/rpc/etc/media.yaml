@@ -10,5 +10,5 @@ DB:
   DataSource: root:liujun@tcp(43.136.243.177:3306)/liujun_content?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Cache:
-  - Host: 43.136.243.177:6379
+  - Host: 0.0.0.0:6379
     Pass: liujun
