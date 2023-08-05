@@ -1,6 +1,6 @@
 Name: content
 Host: 0.0.0.0
-Port: 8885
+Port: 8085
 
 
 ContentRpcConf:
@@ -12,5 +12,5 @@ ContentRpcConf:
 #    User: root
 
 RedisConf:
-  Host: 0.0.0.0:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"

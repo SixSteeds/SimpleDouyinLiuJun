@@ -1,6 +1,6 @@
 Name: media
 Host: 0.0.0.0
-Port: 8887
+Port: 8087
 
 
 ChatRpcConf:
@@ -12,5 +12,5 @@ ChatRpcConf:
 #    User: root
 
 RedisConf:
-  Host: 0.0.0.0:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"
