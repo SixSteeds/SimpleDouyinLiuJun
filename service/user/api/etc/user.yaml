@@ -3,11 +3,11 @@ Host: 127.0.0.1
 Port: 8881
 
 
-MediaRpcConf:
+UserRpcConf:
   Etcd:
     Hosts:
       - 127.0.0.1:2379
-    Key: mediaRpc
+    Key: userRpc
 #    Pass: liujun
 #    User: root
 
