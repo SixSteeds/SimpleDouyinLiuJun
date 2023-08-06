@@ -2,6 +2,7 @@ package userinfo
 
 import (
 	"context"
+	"doushen_by_liujun/service/user/rpc/pb"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -25,6 +26,19 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
 	// todo: add your logic here and delete this line
+	_, err = l.svcCtx.UserRpcClient.AddUserinfo(l.ctx, &pb.AddUserinfoReq{
 
-	return
+		Username: req.Username,
+		Password: req.Password,
+	})
+	if err != nil {
+		return &types.RegisterResp{
+			StatusCode: -1,
+			StatusMsg:  "注册失败",
+		}, err
+	}
+	return &types.RegisterResp{
+		StatusCode: 200,
+		StatusMsg:  "注册成功",
+	}, nil
 }
