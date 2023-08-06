@@ -29,39 +29,45 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/",
-				Handler: userinfo.UserinfoHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtAuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/",
+					Handler: userinfo.UserinfoHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/douyin/user"),
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/follow/list",
-				Handler: relation.FollowListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/follower/list",
-				Handler: relation.FollowerListHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodPost,
-				Path:    "/action",
-				Handler: relation.FollowHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/friend/list",
-				Handler: relation.FridendListHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtAuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/follow/list",
+					Handler: relation.FollowListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/follower/list",
+					Handler: relation.FollowerListHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodPost,
+					Path:    "/action",
+					Handler: relation.FollowHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/friend/list",
+					Handler: relation.FridendListHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/douyin/relation"),
 	)
 }

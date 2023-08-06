@@ -27,8 +27,8 @@ type Video struct {
 }
 
 type FeedReq struct {
-	Token      string `json:"token,optional"`       // 可选参数，登录用户设置
-	LatestTime int64  `json:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+	Token      string `form:"token,optional"`       // 可选参数，登录用户设置
+	LatestTime int64  `form:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
 }
 
 type FeedResp struct {
@@ -39,8 +39,8 @@ type FeedResp struct {
 }
 
 type PublishListReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type PublishListResp struct {
@@ -50,9 +50,9 @@ type PublishListResp struct {
 }
 
 type FavoriteActionReq struct {
-	Token      string `json:"token"`       // 用户鉴权token
-	VideoId    int64  `json:"video_id"`    // 视频id
-	ActionType int32  `json:"action_type"` // 1-点赞，2-取消点赞
+	Token      string `form:"token"`       // 用户鉴权token
+	VideoId    int64  `form:"video_id"`    // 视频id
+	ActionType int32  `form:"action_type"` // 1-点赞，2-取消点赞
 }
 
 type FavoriteActionResp struct {
@@ -61,8 +61,8 @@ type FavoriteActionResp struct {
 }
 
 type FavoriteListReq struct {
-	Token  string `json:"token"`   // 用户鉴权token
-	UserId int64  `json:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
 }
 
 type FavoriteListResp struct {
@@ -79,11 +79,11 @@ type Comment struct {
 }
 
 type CommentActionReq struct {
-	Token       string `json:"token"`                 // 用户鉴权token
-	VideoId     int64  `json:"video_id"`              // 视频id
-	ActionType  int32  `json:"action_type"`           // 1-评论，2-删除评论
-	CommentText string `json:"comment_text,optional"` // 评论内容，在action_type=1的时候使用
-	CommentId   int64  `json:"comment_id,optional"`   // 要删除的评论id，在action_type=2的时候使用
+	Token       string `form:"token"`                 // 用户鉴权token
+	VideoId     int64  `form:"video_id"`              // 视频id
+	ActionType  int32  `form:"action_type"`           // 1-评论，2-删除评论
+	CommentText string `form:"comment_text,optional"` // 评论内容，在action_type=1的时候使用
+	CommentId   int64  `form:"comment_id,optional"`   // 要删除的评论id，在action_type=2的时候使用
 }
 
 type CommentActionResp struct {
@@ -93,8 +93,8 @@ type CommentActionResp struct {
 }
 
 type CommentListReq struct {
-	Token   string `json:"token"`    // 用户鉴权token
-	VideoId int64  `json:"video_id"` // 视频id
+	Token   string `form:"token"`    // 用户鉴权token
+	VideoId int64  `form:"video_id"` // 视频id
 }
 
 type CommentListResp struct {

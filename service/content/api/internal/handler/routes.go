@@ -20,44 +20,59 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				Path:    "/feed",
 				Handler: vedio.FeedHandler(serverCtx),
 			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/publish/list",
-				Handler: vedio.PublishListHandler(serverCtx),
-			},
 		},
 		rest.WithPrefix("/douyin"),
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/action",
-				Handler: favorite.FavoriteActionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: favorite.FavoriteListHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtAuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/publish/list",
+					Handler: vedio.PublishListHandler(serverCtx),
+				},
+			}...,
+		),
+		rest.WithPrefix("/douyin"),
+	)
+
+	server.AddRoutes(
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtAuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/action",
+					Handler: favorite.FavoriteActionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: favorite.FavoriteListHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/douyin/favorite"),
 	)
 
 	server.AddRoutes(
-		[]rest.Route{
-			{
-				Method:  http.MethodGet,
-				Path:    "/action",
-				Handler: comment.CommentActionHandler(serverCtx),
-			},
-			{
-				Method:  http.MethodGet,
-				Path:    "/list",
-				Handler: comment.CommentListHandler(serverCtx),
-			},
-		},
+		rest.WithMiddlewares(
+			[]rest.Middleware{serverCtx.JwtAuthMiddleware},
+			[]rest.Route{
+				{
+					Method:  http.MethodGet,
+					Path:    "/action",
+					Handler: comment.CommentActionHandler(serverCtx),
+				},
+				{
+					Method:  http.MethodGet,
+					Path:    "/list",
+					Handler: comment.CommentListHandler(serverCtx),
+				},
+			}...,
+		),
 		rest.WithPrefix("/douyin/comment"),
 	)
 }

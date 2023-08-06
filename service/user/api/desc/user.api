@@ -33,8 +33,7 @@ service user {
 @server(
 	prefix:douyin/user
 	group : userinfo
-	//jwt: Auth // 开启 jwt 认证
-	//middleware: UserAgentMiddleware
+	middleware: JwtAuthMiddleware
 )
 service user {
 	@handler userinfo
@@ -44,7 +43,7 @@ service user {
 @server(
 	prefix:douyin/relation
 	group : relation
-	//jwt: Auth // 开启 jwt 认证
+	middleware: JwtAuthMiddleware
 )
 service user {
 	@handler followList

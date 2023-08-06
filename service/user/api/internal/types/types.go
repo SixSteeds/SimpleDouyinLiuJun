@@ -40,8 +40,8 @@ type User struct {
 }
 
 type UserinfoReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type UserinfoResp struct {

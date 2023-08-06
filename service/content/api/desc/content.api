@@ -19,11 +19,20 @@ service content {
 	@handler feed
 	get /feed (FeedReq) returns (FeedReq)
 
+}
+
+@server(
+	prefix: douyin
+	group : vedio
+	middleware: JwtAuthMiddleware
+)
+service content {
 	@handler publishList
 	get /publish/list (PublishListReq) returns (PublishListResp)
 }
 
 @server(
+	middleware: JwtAuthMiddleware
 	prefix: douyin/favorite
 	group : favorite
 )
@@ -36,6 +45,7 @@ service content {
 }
 
 @server(
+	middleware: JwtAuthMiddleware
 	prefix: douyin/comment
 	group : comment
 )
