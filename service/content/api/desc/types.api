@@ -25,8 +25,8 @@ type (
     }
 
     FeedReq {
-        Token string `json:"token,optional"`            // 可选参数，登录用户设置
-        LatestTime int64 `json:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+        Token string `form:"token,optional"`            // 可选参数，登录用户设置
+        LatestTime int64 `form:"latest_time,optional"` // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
     }
     FeedResp {
         StatusCode int32 `json:"status_code"`          // 状态码，0-成功，其他值-失败
@@ -38,8 +38,8 @@ type (
 
 type (
     PublishListReq {
-        UserId int64 `json:"user_id"`  // 用户id
-        Token string `json:"token"`    // 用户鉴权token
+        UserId int64 `form:"user_id"`  // 用户id
+        Token string `form:"token"`    // 用户鉴权token
     }
     PublishListResp {
         StatusCode int32 `json:"status_code"`          // 状态码，0-成功，其他值-失败
@@ -51,9 +51,9 @@ type (
 
 type (
     FavoriteActionReq {
-        Token string `json:"token"`           // 用户鉴权token
-        VideoId int64 `json:"video_id"`       // 视频id
-        ActionType int32 `json:"action_type"` // 1-点赞，2-取消点赞
+        Token string `form:"token"`           // 用户鉴权token
+        VideoId int64 `form:"video_id"`       // 视频id
+        ActionType int32 `form:"action_type"` // 1-点赞，2-取消点赞
     }
 
     FavoriteActionResp {
@@ -64,8 +64,8 @@ type (
 
 type (
     FavoriteListReq {
-        Token string `json:"token"`    // 用户鉴权token
-        UserId int64 `json:"user_id"`  // 用户id
+        Token string `form:"token"`    // 用户鉴权token
+        UserId int64 `form:"user_id"`  // 用户id
     }
     FavoriteListResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败
@@ -82,11 +82,11 @@ type (
         CreateDate string `json:"create_date"` // 评论发布日期，格式 mm-dd
     }
     CommentActionReq {
-        Token string `json:"token"`                       // 用户鉴权token
-        VideoId int64 `json:"video_id"`                   // 视频id
-        ActionType int32 `json:"action_type"`             // 1-评论，2-删除评论
-        CommentText string `json:"comment_text,optional"` // 评论内容，在action_type=1的时候使用
-        CommentId int64 `json:"comment_id,optional"`      // 要删除的评论id，在action_type=2的时候使用
+        Token string `form:"token"`                       // 用户鉴权token
+        VideoId int64 `form:"video_id"`                   // 视频id
+        ActionType int32 `form:"action_type"`             // 1-评论，2-删除评论
+        CommentText string `form:"comment_text,optional"` // 评论内容，在action_type=1的时候使用
+        CommentId int64 `form:"comment_id,optional"`      // 要删除的评论id，在action_type=2的时候使用
     }
     CommentActionResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败
@@ -97,8 +97,8 @@ type (
 
 type (
     CommentListReq {
-        Token string `json:"token"`     // 用户鉴权token
-        VideoId int64 `json:"video_id"` // 视频id
+        Token string `form:"token"`     // 用户鉴权token
+        VideoId int64 `form:"video_id"` // 视频id
     }
     CommentListResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败

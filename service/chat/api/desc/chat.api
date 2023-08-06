@@ -13,11 +13,12 @@ import (
 
 @server(
 	prefix:douyin/message
+	middleware: JwtAuthMiddleware
 )
 service media {
 	@handler messageAction
 	post /action (MessageActionReq) returns (MessageActionReqResp)
 
 	@handler messageList
-	post /chat (MessageChatReq) returns (MessageChatReqResp)
+	get /chat (MessageChatReq) returns (MessageChatReqResp)
 }

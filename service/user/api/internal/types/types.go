@@ -40,8 +40,8 @@ type User struct {
 }
 
 type UserinfoReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type UserinfoResp struct {
@@ -51,8 +51,8 @@ type UserinfoResp struct {
 }
 
 type FollowListReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type FollowListResp struct {
@@ -62,8 +62,8 @@ type FollowListResp struct {
 }
 
 type FollowerListReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type FollowerListResp struct {
@@ -84,8 +84,8 @@ type FollowResp struct {
 }
 
 type FriendListReq struct {
-	UserId int64  `json:"user_id"` // 用户id
-	Token  string `json:"token"`   // 用户鉴权token
+	UserId int64  `form:"user_id"` // 用户id
+	Token  string `form:"token"`   // 用户鉴权token
 }
 
 type FriendListResp struct {

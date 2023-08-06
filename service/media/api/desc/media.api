@@ -9,9 +9,9 @@ info(
 
 type (
 	UploadReq {
-		Token string `json:"token"` // 用户鉴权token
-		Data  []byte `json:"data"`  // 视频数据
-		Title string `json:"title"` // 视频标题
+		Token string `form:"token"` // 用户鉴权token
+		Data  []byte `form:"data"`  // 视频数据
+		Title string `form:"title"` // 视频标题
 	}
 	UploadResp {
 		StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
@@ -21,6 +21,7 @@ type (
 
 @server(
 	prefix:douyin/publish
+	middleware: JwtAuthMiddleware
 )
 service media {
 	@handler upload
