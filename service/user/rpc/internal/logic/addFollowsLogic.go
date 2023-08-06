@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"database/sql"
-	"doushen_by_liujun/consumer/util"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/internal/model"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"

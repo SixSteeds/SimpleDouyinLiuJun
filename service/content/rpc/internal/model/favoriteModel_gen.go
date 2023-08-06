@@ -7,6 +7,7 @@ import (
 	"database/sql"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
 	"github.com/zeromicro/go-zero/core/stores/cache"
@@ -38,12 +39,12 @@ type (
 	}
 
 	Favorite struct {
-		Id         int64 `db:"id"`          // 主键
-		VideoId    int64 `db:"video_id"`    // 视频id
-		UserId     int64 `db:"user_id"`     // 视频id
-		CreateTime int64 `db:"create_time"` // 该条记录创建时间
-		UpdateTime int64 `db:"update_time"` // 该条最后一次更新时间
-		IsDelete   int64 `db:"is_delete"`   // 逻辑删除
+		Id         int64     `db:"id"`          // 主键
+		VideoId    int64     `db:"video_id"`    // 视频id
+		UserId     int64     `db:"user_id"`     // 视频id
+		CreateTime time.Time `db:"create_time"` // 该条记录创建时间
+		UpdateTime time.Time `db:"update_time"` // 该条最后一次更新时间
+		IsDelete   int64     `db:"is_delete"`   // 逻辑删除
 	}
 )
 
