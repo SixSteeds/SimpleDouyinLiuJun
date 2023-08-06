@@ -30,6 +30,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Follows, error)
 		Update(ctx context.Context, data *Follows) error
 		Delete(ctx context.Context, id int64) error
+		DeleteByUserIdAndFollowId(ctx context.Context,userId string,followId string) error
 	}
 
 	defaultFollowsModel struct {
@@ -69,6 +70,15 @@ func (m *defaultFollowsModel) Delete(ctx context.Context, id int64) error {
 	}, liujunUserFollowsIdKey)
 	return err
 }
+func (m *defaultFollowsModel) DeleteByUserIdAndFollowId(ctx context.Context, userId string, followId string) error {
+	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, userId+followId)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("DELETE FROM %s WHERE `user_id` = ? AND `follow_id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, userId, followId)
+	}, liujunUserFollowsIdKey)
+	return err
+}
+
 
 func (m *defaultFollowsModel) FindOne(ctx context.Context, id int64) (*Follows, error) {
 	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, id)
@@ -86,6 +96,7 @@ func (m *defaultFollowsModel) FindOne(ctx context.Context, id int64) (*Follows, 
 		return nil, err
 	}
 }
+
 
 func (m *defaultFollowsModel) Insert(ctx context.Context, data *Follows) (sql.Result, error) {
 	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, data.Id)
