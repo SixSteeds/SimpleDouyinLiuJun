@@ -1,14 +1,13 @@
 package main
 
 import (
+	"doushen_by_liujun/service/user/rpc/pb"
 	"flag"
 	"fmt"
 
 	"doushen_by_liujun/service/user/rpc/internal/config"
 	"doushen_by_liujun/service/user/rpc/internal/server"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
-	"doushen_by_liujun/service/user/rpc/pb"
-
 	"github.com/zeromicro/go-zero/core/conf"
 	"github.com/zeromicro/go-zero/core/service"
 	"github.com/zeromicro/go-zero/zrpc"

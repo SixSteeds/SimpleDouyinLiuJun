@@ -2,10 +2,8 @@ package logic
 
 import (
 	"context"
-
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 

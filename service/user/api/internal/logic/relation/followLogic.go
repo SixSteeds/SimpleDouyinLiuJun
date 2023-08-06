@@ -2,12 +2,12 @@ package relation
 
 import (
 	"context"
-	"doushen_by_liujun/service/user/rpc/pb"
-
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
-
+	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type FollowLogic struct {
@@ -25,21 +25,19 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
-	// todo: add your logic here and delete this line
-	// redis测试
-	err = l.svcCtx.RedisClient.Set("test", "test")
-	if err != nil {
-		return nil, err
+	// token校验
+
+	//判断是关注还是取消关注
+	if req.ActionType == 1 {
+		_, err := l.svcCtx.UserRpcClient.AddFollows(l.ctx, &pb.AddFollowsReq{
+			UserId:   strconv.Itoa(1), //后续从token解析中获得
+			FollowId: strconv.FormatInt(req.ToUserId, 10),
+		})
+		fmt.Println(err)
+	} else {
+
 	}
-	// rpcClientc测试
-	one, err := l.svcCtx.UserRpcClient.GetFollowsById(l.ctx, &pb.GetFollowsByIdReq{
-		Id: 1,
-	})
-	if err != nil {
-		println("rpcClientc测试失败")
-		l.Logger.Info("rpcClientc测试失败")
-	}
-	l.Logger.Info(one)
+
 	return &types.FollowResp{
 		StatusCode: 200,
 		StatusMsg:  "关注成功",
