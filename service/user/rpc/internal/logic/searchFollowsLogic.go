@@ -23,6 +23,7 @@ func NewSearchFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Sea
 
 func (l *SearchFollowsLogic) SearchFollows(in *pb.SearchFollowsReq) (*pb.SearchFollowsResp, error) {
 	// todo: add your logic here and delete this line
+	//l.svcCtx.FollowsModel.FindOne()
 
 	return &pb.SearchFollowsResp{}, nil
 }

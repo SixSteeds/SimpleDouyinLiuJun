@@ -2,6 +2,7 @@ package relation
 
 import (
 	"context"
+	"fmt"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -25,6 +26,6 @@ func NewFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Follow
 
 func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.FollowListResp, err error) {
 	// todo: add your logic here and delete this line
-
+	fmt.Println(req.UserId, req.Token)
 	return
 }

@@ -58,8 +58,8 @@ type (
 
 type (
     FollowListReq {
-        UserId int64 `json:"user_id"`        // 用户id
-        Token string `json:"token"`          // 用户鉴权token
+        UserId int64 `form:"user_id"`        // 用户id
+        Token string `form:"token"`          // 用户鉴权token
     }
 
     FollowListResp {
@@ -71,8 +71,8 @@ type (
 
 type (
     FollowerListReq {
-        UserId int64 `json:"user_id"`        // 用户id
-        Token string `json:"token"`          // 用户鉴权token
+        UserId int64 `form:"user_id"`        // 用户id
+        Token string `form:"token"`          // 用户鉴权token
     }
 
     FollowerListResp {
@@ -97,8 +97,8 @@ type (
 
 type (
     FriendListReq {
-        UserId int64 `json:"user_id"`        // 用户id
-        Token string `json:"token"`          // 用户鉴权token
+        UserId int64 `form:"user_id"`        // 用户id
+        Token string `form:"token"`          // 用户鉴权token
     }
 
     FriendListResp {

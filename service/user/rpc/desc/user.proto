@@ -34,7 +34,8 @@ message UpdateFollowsResp {
 }
 
 message DelFollowsReq {
-  int64 id = 1; //id
+  string userId = 1;
+  string followId = 2;
 }
 
 message DelFollowsResp {
