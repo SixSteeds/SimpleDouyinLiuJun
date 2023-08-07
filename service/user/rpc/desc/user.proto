@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package ="./pb";
+option go_package = "./pb";
 
 package pb;
 
@@ -70,7 +70,7 @@ message Userinfo {
   string avatar = 4; //澶村儚
   string backgroundImage = 5; //澶村儚
   string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64 updateTime = 8; //鏈€鍚庝竴娆′俊鎭慨鏀规椂闂?  int64 isDelete = 9; //閫昏緫鍒犻櫎
+  int64 updateTime = 8; //鏈€鍚庝竴娆′俊鎭慨鏀规椂闂? int64 isDelete = 9; //閫昏緫鍒犻櫎
   string name = 10; //鐢ㄦ埛鏄电О
 }
 
@@ -131,25 +131,65 @@ message SearchUserinfoResp {
   repeated Userinfo userinfo = 1; //userinfo
 }
 
+//message User {
+//  int64 id = 1;
+//  string username = 2;
+//  string password = 3;
+//  string avatar = 4;
+//  string backgroundImage = 5;
+//  string signature = 6;
+//  int64 createTime = 7;
+//  int64 updateTime = 8;
+//  int64 isDelete = 9;
+//  string name = 10;
+//}
+
+message SaveUserReq{
+  int64 id = 1;
+  string username = 2;
+  string password = 3;
+  optional string avatar = 4;
+  optional string backgroundImage = 5;
+  optional string signature = 6;
+  optional string name = 7;
+}
+
+message SaveUserResp{
+  bool success = 1;
+  int64 id = 2;
+}
+
+message CheckUserReq{
+   string username = 1;
+   string password = 2;
+}
+
+message CheckUserResp{
+   int64 userId = 1;
+}
 
 
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
 
-service user{ 
+service user{
 
-	 //-----------------------鐢ㄦ埛鍩烘湰淇℃伅----------------------- 
-	 rpc AddFollows(AddFollowsReq) returns (AddFollowsResp); 
-	 rpc UpdateFollows(UpdateFollowsReq) returns (UpdateFollowsResp); 
-	 rpc DelFollows(DelFollowsReq) returns (DelFollowsResp); 
-	 rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp); 
-	 rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp); 
-	 //-----------------------鐢ㄦ埛鍩烘湰淇℃伅----------------------- 
-	 rpc AddUserinfo(AddUserinfoReq) returns (AddUserinfoResp); 
-	 rpc UpdateUserinfo(UpdateUserinfoReq) returns (UpdateUserinfoResp); 
-	 rpc DelUserinfo(DelUserinfoReq) returns (DelUserinfoResp); 
-	 rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp); 
-	 rpc SearchUserinfo(SearchUserinfoReq) returns (SearchUserinfoResp); 
+  //-----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
+  rpc AddFollows(AddFollowsReq) returns (AddFollowsResp);
+  rpc UpdateFollows(UpdateFollowsReq) returns (UpdateFollowsResp);
+  rpc DelFollows(DelFollowsReq) returns (DelFollowsResp);
+  rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
+  rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp);
+
+  rpc SaveUser(SaveUserReq) returns (SaveUserResp);
+  rpc CheckUser(CheckUserReq) returns (CheckUserResp);
+  //-----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
+  rpc AddUserinfo(AddUserinfoReq) returns (AddUserinfoResp);
+  rpc UpdateUserinfo(UpdateUserinfoReq) returns (UpdateUserinfoResp);
+  rpc DelUserinfo(DelUserinfoReq) returns (DelUserinfoResp);
+  rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);
+  rpc SearchUserinfo(SearchUserinfoReq) returns (SearchUserinfoResp);
+
 
 }

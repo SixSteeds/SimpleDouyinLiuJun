@@ -48,6 +48,16 @@ func (s *UserServer) SearchFollows(ctx context.Context, in *pb.SearchFollowsReq)
 	return l.SearchFollows(in)
 }
 
+func (s *UserServer) SaveUser(ctx context.Context, in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
+	l := logic.NewSaveUserLogic(ctx, s.svcCtx)
+	return l.SaveUser(in)
+}
+
+func (s *UserServer) CheckUser(ctx context.Context, in *pb.CheckUserReq) (*pb.CheckUserResp, error) {
+	l := logic.NewCheckUserLogic(ctx, s.svcCtx)
+	return l.CheckUser(in)
+}
+
 // -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 func (s *UserServer) AddUserinfo(ctx context.Context, in *pb.AddUserinfoReq) (*pb.AddUserinfoResp, error) {
 	l := logic.NewAddUserinfoLogic(ctx, s.svcCtx)

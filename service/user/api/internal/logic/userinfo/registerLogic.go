@@ -2,6 +2,8 @@ package userinfo
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
@@ -25,20 +27,27 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	// todo: add your logic here and delete this line
-	_, err = l.svcCtx.UserRpcClient.AddUserinfo(l.ctx, &pb.AddUserinfoReq{
-
+	data, err := l.svcCtx.UserRpcClient.SaveUser(l.ctx, &pb.SaveUserReq{
 		Username: req.Username,
 		Password: req.Password,
 	})
+	if err != nil || !data.Success {
+		return &types.RegisterResp{
+			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+		}, err
+	}
+	token, err := util.GenToken(data.Id, req.Username)
 	if err != nil {
 		return &types.RegisterResp{
-			StatusCode: -1,
-			StatusMsg:  "注册失败",
+			StatusCode: common.TOKEN_GENERATE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_GENERATE_ERROR),
 		}, err
 	}
 	return &types.RegisterResp{
-		StatusCode: 200,
-		StatusMsg:  "注册成功",
+		StatusCode: common.OK,
+		StatusMsg:  common.MapErrMsg(common.OK),
+		UserId:     data.Id,
+		Token:      token,
 	}, nil
 }
