@@ -13,28 +13,32 @@ import (
 )
 
 type (
-	AddFollowsReq       = pb.AddFollowsReq
-	AddFollowsResp      = pb.AddFollowsResp
-	AddUserinfoReq      = pb.AddUserinfoReq
-	AddUserinfoResp     = pb.AddUserinfoResp
-	DelFollowsReq       = pb.DelFollowsReq
-	DelFollowsResp      = pb.DelFollowsResp
-	DelUserinfoReq      = pb.DelUserinfoReq
-	DelUserinfoResp     = pb.DelUserinfoResp
-	Follows             = pb.Follows
-	GetFollowsByIdReq   = pb.GetFollowsByIdReq
-	GetFollowsByIdResp  = pb.GetFollowsByIdResp
-	GetUserinfoByIdReq  = pb.GetUserinfoByIdReq
-	GetUserinfoByIdResp = pb.GetUserinfoByIdResp
-	SearchFollowsReq    = pb.SearchFollowsReq
-	SearchFollowsResp   = pb.SearchFollowsResp
-	SearchUserinfoReq   = pb.SearchUserinfoReq
-	SearchUserinfoResp  = pb.SearchUserinfoResp
-	UpdateFollowsReq    = pb.UpdateFollowsReq
-	UpdateFollowsResp   = pb.UpdateFollowsResp
-	UpdateUserinfoReq   = pb.UpdateUserinfoReq
-	UpdateUserinfoResp  = pb.UpdateUserinfoResp
-	Userinfo            = pb.Userinfo
+	AddFollowsReq        = pb.AddFollowsReq
+	AddFollowsResp       = pb.AddFollowsResp
+	AddUserinfoReq       = pb.AddUserinfoReq
+	AddUserinfoResp      = pb.AddUserinfoResp
+	DelFollowsReq        = pb.DelFollowsReq
+	DelFollowsResp       = pb.DelFollowsResp
+	DelUserinfoReq       = pb.DelUserinfoReq
+	DelUserinfoResp      = pb.DelUserinfoResp
+	Follows              = pb.Follows
+	GetFollowersByIdReq  = pb.GetFollowersByIdReq
+	GetFollowersByIdResp = pb.GetFollowersByIdResp
+	GetFollowsByIdReq    = pb.GetFollowsByIdReq
+	GetFollowsByIdResp   = pb.GetFollowsByIdResp
+	GetFriendsByIdReq    = pb.GetFriendsByIdReq
+	GetFriendsByIdResp   = pb.GetFriendsByIdResp
+	GetUserinfoByIdReq   = pb.GetUserinfoByIdReq
+	GetUserinfoByIdResp  = pb.GetUserinfoByIdResp
+	SearchFollowsReq     = pb.SearchFollowsReq
+	SearchFollowsResp    = pb.SearchFollowsResp
+	SearchUserinfoReq    = pb.SearchUserinfoReq
+	SearchUserinfoResp   = pb.SearchUserinfoResp
+	UpdateFollowsReq     = pb.UpdateFollowsReq
+	UpdateFollowsResp    = pb.UpdateFollowsResp
+	UpdateUserinfoReq    = pb.UpdateUserinfoReq
+	UpdateUserinfoResp   = pb.UpdateUserinfoResp
+	Userinfo             = pb.Userinfo
 
 	User interface {
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -42,7 +46,8 @@ type (
 		UpdateFollows(ctx context.Context, in *UpdateFollowsReq, opts ...grpc.CallOption) (*UpdateFollowsResp, error)
 		DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 		GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
-		GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error)
+		GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
+		GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
 		SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 		AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
@@ -83,9 +88,15 @@ func (m *defaultUser) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq,
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetFollowsById(ctx, in, opts...)
 }
-func (m *defaultUser) GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error) {
+
+func (m *defaultUser) GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
-	return client.GetFollowsByFollowId(ctx, in, opts...)
+	return client.GetFollowersById(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetFriendsById(ctx, in, opts...)
 }
 
 func (m *defaultUser) SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error) {

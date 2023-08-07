@@ -43,6 +43,16 @@ func (s *UserServer) GetFollowsById(ctx context.Context, in *pb.GetFollowsByIdRe
 	return l.GetFollowsById(in)
 }
 
+func (s *UserServer) GetFollowersById(ctx context.Context, in *pb.GetFollowersByIdReq) (*pb.GetFollowersByIdResp, error) {
+	l := logic.NewGetFollowersByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowersById(in)
+}
+
+func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
+	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
+	return l.GetFriendsById(in)
+}
+
 func (s *UserServer) SearchFollows(ctx context.Context, in *pb.SearchFollowsReq) (*pb.SearchFollowsResp, error) {
 	l := logic.NewSearchFollowsLogic(ctx, s.svcCtx)
 	return l.SearchFollows(in)

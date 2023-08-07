@@ -33,6 +33,8 @@ type (
 		Delete(ctx context.Context, id int64) error
 		DeleteByUserIdAndFollowId(ctx context.Context,userId string,followId string) error
 		FindByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
+		FindByFollowId(ctx context.Context, userId int64) (*[]*Follows, error)
+		FindFriendsByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
 	}
 
 	defaultFollowsModel struct {
@@ -112,8 +114,34 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 		return nil, err
 	}
 }
+func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]*Follows, error) {
+	var resp []*Follows
+	query := fmt.Sprintf("select %s from %s where `follow_id` = ? ", followsRows, m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 
-
+func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64) (*[]*Follows, error) {
+	var resp []*Follows
+	query := fmt.Sprintf("SELECT f1.id AS id,f1.create_time AS create_time,f1.update_time AS update_time," +
+		"f1.is_delete AS is_delete,f1.user_id AS user_id, f1.follow_id AS follow_id FROM %s f1 INNER JOIN %s f2 ON f1.user_id = f2.follow_id AND f1.follow_id = f2.user_id WHERE f1.user_id = ?", m.table,m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 func (m *defaultFollowsModel) Insert(ctx context.Context, data *Follows) (sql.Result, error) {
 	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {

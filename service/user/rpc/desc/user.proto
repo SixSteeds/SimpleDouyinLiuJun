@@ -3,17 +3,15 @@ syntax = "proto3";
 option go_package ="./pb";
 
 package pb;
-
+//    goctl rpc protoc user.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
 // ------------------------------------ 
 // Messages
 // ------------------------------------ 
 
 //--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Follows {
-  int64 id = 1; //涓婚敭
   string userId = 2; //鍏虫敞鐨勪汉
   string followId = 3; //琚叧娉ㄧ殑浜?  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 5; //璇ユ潯鏈€鍚庝竴娆′俊鎭慨鏀规椂闂?  int64 isDelete = 6; //閫昏緫鍒犻櫎
 }
 
 message AddFollowsReq {
@@ -46,7 +44,21 @@ message GetFollowsByIdReq {
 }
 
 message GetFollowsByIdResp {
-  Follows follows = 1; //follows
+  repeated Follows follows = 1; //follows
+}
+message GetFollowersByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFollowersByIdResp {
+  repeated Follows follows = 1; //follows
+}
+message GetFriendsByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFriendsByIdResp {
+  repeated Follows follows = 1; //follows
 }
 
 message SearchFollowsReq {
@@ -143,7 +155,9 @@ service user{
 	 rpc AddFollows(AddFollowsReq) returns (AddFollowsResp); 
 	 rpc UpdateFollows(UpdateFollowsReq) returns (UpdateFollowsResp); 
 	 rpc DelFollows(DelFollowsReq) returns (DelFollowsResp); 
-	 rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp); 
+	 rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
+   rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
+   rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
 	 rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp); 
 	 //-----------------------鐢ㄦ埛鍩烘湰淇℃伅----------------------- 
 	 rpc AddUserinfo(AddUserinfoReq) returns (AddUserinfoResp); 

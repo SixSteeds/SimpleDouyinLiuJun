@@ -2,29 +2,31 @@ package logic
 
 import (
 	"context"
+	"fmt"
+
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
+
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetFollowsByIdLogic struct {
+type GetFriendsByIdLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetFollowsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFollowsByIdLogic {
-	return &GetFollowsByIdLogic{
+func NewGetFriendsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFriendsByIdLogic {
+	return &GetFriendsByIdLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetFollowsByIdResp, error) {
+func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
 	// todo: add your logic here and delete this line
-	follows, err := l.svcCtx.FollowsModel.FindByUserId(l.ctx, in.Id)
+	follows, err := l.svcCtx.FollowsModel.FindFriendsByUserId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +38,7 @@ func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetF
 			FollowId: item.FollowId,
 		})
 	}
-	return &pb.GetFollowsByIdResp{
+	return &pb.GetFriendsByIdResp{
 		Follows: resp,
 	}, nil
 }
