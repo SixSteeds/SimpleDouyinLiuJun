@@ -26,6 +26,8 @@ func NewGetCommentByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetCommentByIdResp, error) {
 	comments, err := l.svcCtx.CommentModel.FindConmentsByVideoId(l.ctx, in.Id)
+	//a, err := l.svcCtx.CommentForUserModel.FindOne(l.ctx, 3)
+	//fmt.Println("dr数据库", a)
 	if err != nil {
 		return nil, err
 	}

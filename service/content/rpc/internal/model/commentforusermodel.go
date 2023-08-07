@@ -1,6 +1,9 @@
 package genModel
 
-import "github.com/zeromicro/go-zero/core/stores/sqlx"
+import (
+	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
+)
 
 var _ CommentForUserModel = (*customCommentForUserModel)(nil)
 
@@ -17,8 +20,8 @@ type (
 )
 
 // NewCommentForUserModel returns a model for the database table.
-func NewCommentForUserModel(conn sqlx.SqlConn) CommentForUserModel {
+func NewCommentForUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) CommentForUserModel {
 	return &customCommentForUserModel{
-		defaultCommentForUserModel: newCommentForUserModel(conn),
+		defaultCommentForUserModel: newCommentForUserModel(conn, c, opts...),
 	}
 }

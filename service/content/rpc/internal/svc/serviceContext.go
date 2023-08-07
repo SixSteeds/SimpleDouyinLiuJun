@@ -16,7 +16,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 	return &ServiceContext{
 		CommentModel:        genModel.NewCommentModel(sqlConn, c.Cache),
-		CommentForUserModel: genModel.NewCommentForUserModel(sqlConn),
+		CommentForUserModel: genModel.NewCommentForUserModel(sqlConn, c.Cache),
 		Config:              c,
 	}
 }

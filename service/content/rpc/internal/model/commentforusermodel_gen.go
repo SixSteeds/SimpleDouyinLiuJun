@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/zeromicro/go-zero/core/stores/builder"
+	"github.com/zeromicro/go-zero/core/stores/cache"
 	"github.com/zeromicro/go-zero/core/stores/sqlc"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
@@ -19,6 +20,8 @@ var (
 	commentForUserRows                = strings.Join(commentForUserFieldNames, ",")
 	commentForUserRowsExpectAutoSet   = strings.Join(stringx.Remove(commentForUserFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	commentForUserRowsWithPlaceHolder = strings.Join(stringx.Remove(commentForUserFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
+
+	cacheLiujunContentCommentForUserIdPrefix = "cache:liujunContent:commentForUser:id:"
 )
 
 type (
@@ -30,41 +33,47 @@ type (
 	}
 
 	defaultCommentForUserModel struct {
-		conn  sqlx.SqlConn
+		sqlc.CachedConn
 		table string
 	}
 
 	CommentForUser struct {
-		Id        int64 `db:"id"`
-		UserId    int64 `db:"user_id"`
-		CommentId int64 `db:"comment_id"`
+		Id        int64 `db:"id"`         // 主键
+		UserId    int64 `db:"user_id"`    // 用户id
+		CommentId int64 `db:"comment_id"` // 评论id
 	}
 )
 
-func newCommentForUserModel(conn sqlx.SqlConn) *defaultCommentForUserModel {
+func newCommentForUserModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *defaultCommentForUserModel {
 	return &defaultCommentForUserModel{
-		conn:  conn,
-		table: "`comment_for_user`",
+		CachedConn: sqlc.NewConn(conn, c, opts...),
+		table:      "`comment_for_user`",
 	}
 }
 
 func (m *defaultCommentForUserModel) withSession(session sqlx.Session) *defaultCommentForUserModel {
 	return &defaultCommentForUserModel{
-		conn:  sqlx.NewSqlConnFromSession(session),
-		table: "`comment_for_user`",
+		CachedConn: m.CachedConn.WithSession(session),
+		table:      "`comment_for_user`",
 	}
 }
 
 func (m *defaultCommentForUserModel) Delete(ctx context.Context, id int64) error {
-	query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
-	_, err := m.conn.ExecCtx(ctx, query, id)
+	liujunContentCommentForUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentForUserIdPrefix, id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
+		return conn.ExecCtx(ctx, query, id)
+	}, liujunContentCommentForUserIdKey)
 	return err
 }
 
 func (m *defaultCommentForUserModel) FindOne(ctx context.Context, id int64) (*CommentForUser, error) {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", commentForUserRows, m.table)
+	liujunContentCommentForUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentForUserIdPrefix, id)
 	var resp CommentForUser
-	err := m.conn.QueryRowCtx(ctx, &resp, query, id)
+	err := m.QueryRowCtx(ctx, &resp, liujunContentCommentForUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", commentForUserRows, m.table)
+		return conn.QueryRowCtx(ctx, v, query, id)
+	})
 	switch err {
 	case nil:
 		return &resp, nil
@@ -76,15 +85,30 @@ func (m *defaultCommentForUserModel) FindOne(ctx context.Context, id int64) (*Co
 }
 
 func (m *defaultCommentForUserModel) Insert(ctx context.Context, data *CommentForUser) (sql.Result, error) {
-	query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, commentForUserRowsExpectAutoSet)
-	ret, err := m.conn.ExecCtx(ctx, query, data.Id, data.UserId, data.CommentId)
+	liujunContentCommentForUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentForUserIdPrefix, data.Id)
+	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?)", m.table, commentForUserRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.UserId, data.CommentId)
+	}, liujunContentCommentForUserIdKey)
 	return ret, err
 }
 
 func (m *defaultCommentForUserModel) Update(ctx context.Context, data *CommentForUser) error {
-	query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentForUserRowsWithPlaceHolder)
-	_, err := m.conn.ExecCtx(ctx, query, data.UserId, data.CommentId, data.Id)
+	liujunContentCommentForUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentForUserIdPrefix, data.Id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentForUserRowsWithPlaceHolder)
+		return conn.ExecCtx(ctx, query, data.UserId, data.CommentId, data.Id)
+	}, liujunContentCommentForUserIdKey)
 	return err
+}
+
+func (m *defaultCommentForUserModel) formatPrimary(primary any) string {
+	return fmt.Sprintf("%s%v", cacheLiujunContentCommentForUserIdPrefix, primary)
+}
+
+func (m *defaultCommentForUserModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", commentForUserRows, m.table)
+	return conn.QueryRowCtx(ctx, v, query, primary)
 }
 
 func (m *defaultCommentForUserModel) tableName() string {
