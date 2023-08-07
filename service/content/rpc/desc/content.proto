@@ -48,7 +48,7 @@ message GetCommentByIdReq {
 }
 
 message GetCommentByIdResp {
-  Comment comment = 1; //comment
+  repeated Comment comment = 1; //comment
 }
 
 message SearchCommentReq {
