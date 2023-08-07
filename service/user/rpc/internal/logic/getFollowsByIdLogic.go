@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,23 +24,21 @@ func NewGetFollowsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 
 func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetFollowsByIdResp, error) {
 	// todo: add your logic here and delete this line
-	// 数据库测试
-	one, err := l.svcCtx.FollowsModel.FindOne(l.ctx, 1)
-	println("数据库测试")
-	println(one)
-	//println(err.Error())
-	println("数据库测试1111111111")
-	println(one.Id)
+	follows, err := l.svcCtx.FollowsModel.FindByUserId(l.ctx, in.Id)
 	if err != nil {
-		println("数据库测试失败")
 		return nil, err
 	}
-	println("数据库测试")
-	l.Logger.Info(one.Id)
-	var pbFollows pb.Follows
-	//pbFollows.Id = one.Id
-	//println(pbFollows.Id)
+	var resp []pb.Follows
+	for _, item := range *follows {
+		fmt.Println(item)
+		resp = append(resp, pb.Follows{
+			Id:         item.Id,
+			UserId:     item.UserId,
+			FollowId:   item.FollowId,
+			UpdateTime: item.UpdateTime.Unix(),
+		})
+	}
 	return &pb.GetFollowsByIdResp{
-		Follows: &pbFollows,
+		Follows: &resp,
 	}, nil
 }

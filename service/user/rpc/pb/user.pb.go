@@ -431,7 +431,7 @@ type GetFollowsByIdResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Follows *Follows `protobuf:"bytes,1,opt,name=follows,proto3" json:"follows,omitempty"` //follows
+	Follows *[]Follows `protobuf:"bytes,1,opt,name=follows,proto3" json:"follows,omitempty"` //follows
 }
 
 func (x *GetFollowsByIdResp) Reset() {
@@ -466,7 +466,7 @@ func (*GetFollowsByIdResp) Descriptor() ([]byte, []int) {
 	return file_user_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetFollowsByIdResp) GetFollows() *Follows {
+func (x *GetFollowsByIdResp) GetFollows() *[]Follows {
 	if x != nil {
 		return x.Follows
 	}

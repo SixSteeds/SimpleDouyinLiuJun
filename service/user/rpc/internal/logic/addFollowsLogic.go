@@ -2,7 +2,6 @@ package logic
 
 import (
 	"context"
-	"database/sql"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/internal/model"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -31,24 +30,24 @@ func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, 
 	// todo: add your logic here and delete this line
 	fmt.Println(in)
 	// 将普通的string类型转换为sql.NullString类型
-	nSUserId := sql.NullString{
-		String: in.UserId,
-		Valid:  true,
-	}
-	nSFollowId := sql.NullString{
-		String: in.FollowId,
-		Valid:  true,
-	}
+	//nSUserId := sql.NullString{
+	//	String: in.UserId,
+	//	Valid:  true,
+	//}
+	//nSFollowId := sql.NullString{
+	//	String: in.FollowId,
+	//	Valid:  true,
+	//}
 	data, err := util.NewSnowflake(47)
 	if err != nil {
 		l.Logger.Info("雪花算法报错", err)
 		return nil, errors.New("雪花算法报错")
 	}
-	_, err = l.svcCtx.FollowsModel.Insert(l.ctx, &model.Follows{
+	_, err = l.svcCtx.FollowsModel.Insert(l.ctx, &genModel.Follows{
 
 		Id:       data.Generate(),
-		UserId:   nSUserId,
-		FollowId: nSFollowId,
+		UserId:   in.UserId,
+		FollowId: in.FollowId,
 		//CreateTime: time.Now().Unix(),
 		//UpdateTime: time.Now().Unix(),
 		IsDelete: 0,

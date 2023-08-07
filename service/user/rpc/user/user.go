@@ -42,6 +42,7 @@ type (
 		UpdateFollows(ctx context.Context, in *UpdateFollowsReq, opts ...grpc.CallOption) (*UpdateFollowsResp, error)
 		DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 		GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
+		GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error)
 		SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 		AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
@@ -81,6 +82,10 @@ func (m *defaultUser) DelFollows(ctx context.Context, in *DelFollowsReq, opts ..
 func (m *defaultUser) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetFollowsById(ctx, in, opts...)
+}
+func (m *defaultUser) GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetFollowsByFollowId(ctx, in, opts...)
 }
 
 func (m *defaultUser) SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error) {

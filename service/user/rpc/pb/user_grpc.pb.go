@@ -40,6 +40,7 @@ type UserClient interface {
 	UpdateFollows(ctx context.Context, in *UpdateFollowsReq, opts ...grpc.CallOption) (*UpdateFollowsResp, error)
 	DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 	GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
+	GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error)
 	SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 	// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 	AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
@@ -85,6 +86,14 @@ func (c *userClient) DelFollows(ctx context.Context, in *DelFollowsReq, opts ...
 }
 
 func (c *userClient) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error) {
+	out := new(GetFollowsByIdResp)
+	err := c.cc.Invoke(ctx, User_GetFollowsById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+func (c *userClient) GetFollowsByFollowId(ctx context.Context, in any, opts ...grpc.CallOption) (any, error) {
 	out := new(GetFollowsByIdResp)
 	err := c.cc.Invoke(ctx, User_GetFollowsById_FullMethodName, in, out, opts...)
 	if err != nil {

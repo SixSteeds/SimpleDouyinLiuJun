@@ -2,6 +2,7 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
@@ -26,6 +27,11 @@ func NewFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Follow
 
 func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.FollowListResp, err error) {
 	// todo: add your logic here and delete this line
-	fmt.Println(req.UserId, req.Token)
+	fmt.Println(req.UserId, req.Token) //校验token
+	follows, e := l.svcCtx.UserRpcClient.GetFollowsByFollowId(l.ctx, &pb.GetFollowsByIdReq{
+		Id: req.UserId,
+	})
+	fmt.Println(follows, e)
+	//拿到了两条数据，还要查别人的表，之后写
 	return
 }
