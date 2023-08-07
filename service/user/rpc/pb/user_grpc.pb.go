@@ -24,6 +24,8 @@ const (
 	User_DelFollows_FullMethodName      = "/pb.user/DelFollows"
 	User_GetFollowsById_FullMethodName  = "/pb.user/GetFollowsById"
 	User_SearchFollows_FullMethodName   = "/pb.user/SearchFollows"
+	User_SaveUser_FullMethodName        = "/pb.user/SaveUser"
+	User_CheckUser_FullMethodName       = "/pb.user/CheckUser"
 	User_AddUserinfo_FullMethodName     = "/pb.user/AddUserinfo"
 	User_UpdateUserinfo_FullMethodName  = "/pb.user/UpdateUserinfo"
 	User_DelUserinfo_FullMethodName     = "/pb.user/DelUserinfo"
@@ -41,6 +43,8 @@ type UserClient interface {
 	DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 	GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
 	SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
+	SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error)
+	CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error)
 	// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 	AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
 	UpdateUserinfo(ctx context.Context, in *UpdateUserinfoReq, opts ...grpc.CallOption) (*UpdateUserinfoResp, error)
@@ -102,6 +106,24 @@ func (c *userClient) SearchFollows(ctx context.Context, in *SearchFollowsReq, op
 	return out, nil
 }
 
+func (c *userClient) SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error) {
+	out := new(SaveUserResp)
+	err := c.cc.Invoke(ctx, User_SaveUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error) {
+	out := new(CheckUserResp)
+	err := c.cc.Invoke(ctx, User_CheckUser_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userClient) AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error) {
 	out := new(AddUserinfoResp)
 	err := c.cc.Invoke(ctx, User_AddUserinfo_FullMethodName, in, out, opts...)
@@ -157,6 +179,8 @@ type UserServer interface {
 	DelFollows(context.Context, *DelFollowsReq) (*DelFollowsResp, error)
 	GetFollowsById(context.Context, *GetFollowsByIdReq) (*GetFollowsByIdResp, error)
 	SearchFollows(context.Context, *SearchFollowsReq) (*SearchFollowsResp, error)
+	SaveUser(context.Context, *SaveUserReq) (*SaveUserResp, error)
+	CheckUser(context.Context, *CheckUserReq) (*CheckUserResp, error)
 	// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 	AddUserinfo(context.Context, *AddUserinfoReq) (*AddUserinfoResp, error)
 	UpdateUserinfo(context.Context, *UpdateUserinfoReq) (*UpdateUserinfoResp, error)
@@ -184,6 +208,12 @@ func (UnimplementedUserServer) GetFollowsById(context.Context, *GetFollowsByIdRe
 }
 func (UnimplementedUserServer) SearchFollows(context.Context, *SearchFollowsReq) (*SearchFollowsResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchFollows not implemented")
+}
+func (UnimplementedUserServer) SaveUser(context.Context, *SaveUserReq) (*SaveUserResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SaveUser not implemented")
+}
+func (UnimplementedUserServer) CheckUser(context.Context, *CheckUserReq) (*CheckUserResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CheckUser not implemented")
 }
 func (UnimplementedUserServer) AddUserinfo(context.Context, *AddUserinfoReq) (*AddUserinfoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddUserinfo not implemented")
@@ -299,6 +329,42 @@ func _User_SearchFollows_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).SearchFollows(ctx, req.(*SearchFollowsReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_SaveUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SaveUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).SaveUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_SaveUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).SaveUser(ctx, req.(*SaveUserReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_CheckUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CheckUserReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).CheckUser(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_CheckUser_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).CheckUser(ctx, req.(*CheckUserReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -419,6 +485,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchFollows",
 			Handler:    _User_SearchFollows_Handler,
+		},
+		{
+			MethodName: "SaveUser",
+			Handler:    _User_SaveUser_Handler,
+		},
+		{
+			MethodName: "CheckUser",
+			Handler:    _User_CheckUser_Handler,
 		},
 		{
 			MethodName: "AddUserinfo",

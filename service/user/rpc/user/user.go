@@ -17,6 +17,8 @@ type (
 	AddFollowsResp      = pb.AddFollowsResp
 	AddUserinfoReq      = pb.AddUserinfoReq
 	AddUserinfoResp     = pb.AddUserinfoResp
+	CheckUserReq        = pb.CheckUserReq
+	CheckUserResp       = pb.CheckUserResp
 	DelFollowsReq       = pb.DelFollowsReq
 	DelFollowsResp      = pb.DelFollowsResp
 	DelUserinfoReq      = pb.DelUserinfoReq
@@ -26,6 +28,8 @@ type (
 	GetFollowsByIdResp  = pb.GetFollowsByIdResp
 	GetUserinfoByIdReq  = pb.GetUserinfoByIdReq
 	GetUserinfoByIdResp = pb.GetUserinfoByIdResp
+	SaveUserReq         = pb.SaveUserReq
+	SaveUserResp        = pb.SaveUserResp
 	SearchFollowsReq    = pb.SearchFollowsReq
 	SearchFollowsResp   = pb.SearchFollowsResp
 	SearchUserinfoReq   = pb.SearchUserinfoReq
@@ -43,6 +47,8 @@ type (
 		DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 		GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
 		SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
+		SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error)
+		CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error)
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 		AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
 		UpdateUserinfo(ctx context.Context, in *UpdateUserinfoReq, opts ...grpc.CallOption) (*UpdateUserinfoResp, error)
@@ -86,6 +92,16 @@ func (m *defaultUser) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq,
 func (m *defaultUser) SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.SearchFollows(ctx, in, opts...)
+}
+
+func (m *defaultUser) SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.SaveUser(ctx, in, opts...)
+}
+
+func (m *defaultUser) CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CheckUser(ctx, in, opts...)
 }
 
 // -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
