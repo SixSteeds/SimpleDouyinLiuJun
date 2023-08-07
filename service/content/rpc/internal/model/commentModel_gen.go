@@ -29,6 +29,7 @@ type (
 	commentModel interface {
 		Insert(ctx context.Context, data *Comment) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Comment, error)
+		FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error)
 		Update(ctx context.Context, data *Comment) error
 		Delete(ctx context.Context, id int64) error
 	}
@@ -87,7 +88,19 @@ func (m *defaultCommentModel) FindOne(ctx context.Context, id int64) (*Comment, 
 		return nil, err
 	}
 }
-
+func (m *defaultCommentModel) FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error) {
+	var resp []*Comment
+	query := fmt.Sprintf("select * from %s where `video_id` = ? ",  m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 func (m *defaultCommentModel) Insert(ctx context.Context, data *Comment) (sql.Result, error) {
 	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
