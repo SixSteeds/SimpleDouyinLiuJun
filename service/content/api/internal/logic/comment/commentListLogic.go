@@ -33,6 +33,8 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	})
 	fmt.Println("查评论列表啦！！！！！！")
 	fmt.Println(follows, e)
-	//拿到了两条数据，还要查别人的表，之后写
+	if e != nil {
+	}
+
 	return
 }
