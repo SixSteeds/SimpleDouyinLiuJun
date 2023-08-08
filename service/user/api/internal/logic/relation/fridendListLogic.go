@@ -2,8 +2,10 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
+	"strconv"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -28,11 +30,50 @@ func NewFridendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fride
 func (l *FridendListLogic) FridendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
 	// todo: add your logic here and delete this line
 	fmt.Println(req.UserId, req.Token) //校验token
-	follows, e := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
+	friends, e := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
 	fmt.Println("查好友列表啦！！！！！！")
-	fmt.Println(follows, e)
-	//拿到了两条数据，还要查别人的表，之后写
-	return
+	fmt.Println(friends, e)
+	if e != nil {
+		return &types.FriendListResp{
+			StatusCode: -1,
+			StatusMsg:  "查询好友列表失败",
+			FriendUser: nil,
+		}, e
+	}
+	userInfo := userinfo.NewUserinfoLogic(l.ctx, l.svcCtx)
+	var users []types.FriendUser
+	for _, item := range friends.Follows {
+		fmt.Println(item.FollowId)
+		id, _ := strconv.Atoi(item.FollowId)
+		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
+		if err != nil {
+			return &types.FriendListResp{
+				StatusCode: -1,
+				StatusMsg:  "查询好友列表失败",
+				FriendUser: nil,
+			}, err
+		}
+		users = append(users, types.FriendUser{
+			UserId:          resp.User.UserId,
+			Name:            resp.User.Name,
+			FollowCount:     resp.User.FollowCount,
+			FollowerCount:   resp.User.FollowerCount,
+			IsFollow:        true,
+			Avatar:          resp.User.Avatar,
+			BackgroundImage: resp.User.BackgroundImage,
+			Signature:       resp.User.Signature,
+			TotalFavorited:  resp.User.TotalFavorited,
+			WorkCount:       resp.User.WorkCount,
+			FavoriteCount:   resp.User.FavoriteCount,
+			Message:         "Message和MsgType后续调用别人接口查询",
+			MsgType:         0,
+		})
+	}
+	return &types.FriendListResp{
+		StatusCode: 0,
+		StatusMsg:  "查询好友列表成功",
+		FriendUser: users,
+	}, nil
 }

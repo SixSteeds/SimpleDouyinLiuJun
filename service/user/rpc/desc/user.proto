@@ -132,7 +132,14 @@ message DelUserinfoReq {
 
 message DelUserinfoResp {
 }
+message CheckIsFollowReq{
+  string userid = 1; //id
+  string followid=2;
+}
+message CheckIsFollowResp{
+  bool isFollowed=1;
 
+}
 message GetUserinfoByIdReq {
   int64 id = 1; //id
 }
@@ -174,6 +181,7 @@ service user{
    rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
    rpc GetFollowsCountById(GetFollowsCountByIdReq) returns (GetFollowsCountByIdResp);
    rpc GetFollowersCountById(GetFollowersCountByIdReq) returns (GetFollowersCountByIdResp);
+   rpc CheckIsFollow(CheckIsFollowReq) returns (CheckIsFollowResp);
    rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
 	 rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp); 
 	 //-----------------------鐢ㄦ埛鍩烘湰淇℃伅----------------------- 

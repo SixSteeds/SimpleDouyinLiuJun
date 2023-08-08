@@ -52,6 +52,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 				FollowList: nil,
 			}, err
 		}
+		resp.User.IsFollow = true
 		users = append(users, resp.User)
 	}
 	fmt.Println(follows, e)
