@@ -30,7 +30,29 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 	info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &pb.GetUserinfoByIdReq{
 		Id: req.UserId,
 	})
-	fmt.Println(info, e)
-
-	return
+	var user types.User
+	if e != nil {
+		return &types.UserinfoResp{
+			StatusCode: -1,
+			StatusMsg:  e.Error(),
+			User:       user,
+		}, err
+	}
+	user = types.User{
+		UserId:          info.Userinfo.Id,
+		Name:            info.Userinfo.Name,
+		FollowCount:     0,     //查表
+		FollowerCount:   0,     //查表
+		IsFollow:        false, //查表
+		Avatar:          info.Userinfo.Avatar,
+		BackgroundImage: info.Userinfo.BackgroundImage,
+		Signature:       info.Userinfo.Signature,
+		WorkCount:       0, //查表
+		FavoriteCount:   0, //查表
+	}
+	return &types.UserinfoResp{
+		StatusCode: 0,
+		StatusMsg:  "查询成功",
+		User:       user,
+	}, nil
 }

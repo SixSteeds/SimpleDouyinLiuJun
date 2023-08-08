@@ -53,6 +53,21 @@ message GetFollowersByIdReq{
 message GetFollowersByIdResp {
   repeated Follows follows = 1; //follows
 }
+
+message GetFollowsCountByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFollowsCountByIdResp {
+  int64 count = 1; //follows
+}
+message GetFollowersCountByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFollowersCountByIdResp {
+  int64 count = 1; //follows
+}
 message GetFriendsByIdReq{
   int64 id = 1; //id
 }
@@ -157,6 +172,8 @@ service user{
 	 rpc DelFollows(DelFollowsReq) returns (DelFollowsResp); 
 	 rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
    rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
+   rpc GetFollowsCountById(GetFollowsCountByIdReq) returns (GetFollowsCountByIdResp);
+   rpc GetFollowersCountById(GetFollowersCountByIdReq) returns (GetFollowersCountByIdResp);
    rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
 	 rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp); 
 	 //-----------------------鐢ㄦ埛鍩烘湰淇℃伅----------------------- 
