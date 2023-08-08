@@ -48,6 +48,16 @@ func (s *UserServer) GetFollowersById(ctx context.Context, in *pb.GetFollowersBy
 	return l.GetFollowersById(in)
 }
 
+func (s *UserServer) GetFollowsCountById(ctx context.Context, in *pb.GetFollowsCountByIdReq) (*pb.GetFollowsCountByIdResp, error) {
+	l := logic.NewGetFollowsCountByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowsCountById(in)
+}
+
+func (s *UserServer) GetFollowersCountById(ctx context.Context, in *pb.GetFollowersCountByIdReq) (*pb.GetFollowersCountByIdResp, error) {
+	l := logic.NewGetFollowersCountByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowersCountById(in)
+}
+
 func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
 	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
 	return l.GetFriendsById(in)

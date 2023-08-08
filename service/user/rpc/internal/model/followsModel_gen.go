@@ -35,6 +35,8 @@ type (
 		FindByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
 		FindByFollowId(ctx context.Context, userId int64) (*[]*Follows, error)
 		FindFriendsByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
+		FindFollowsCount(ctx context.Context, userId int64) (int, error)
+		FindFollowersCount(ctx context.Context, userId int64) (int, error)
 	}
 
 	defaultFollowsModel struct {
@@ -141,6 +143,24 @@ func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64)
 	default:
 		return nil, err
 	}
+}
+func (m *defaultFollowsModel) FindFollowsCount(ctx context.Context, id int64) (int, error) {
+	var count int
+	query := fmt.Sprintf("select count(*) from %s where `user_id` = ?", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &count, query, id)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+func (m *defaultFollowsModel) FindFollowersCount(ctx context.Context, id int64) (int, error) {
+	var count int
+	query := fmt.Sprintf("select count(*) from %s where `follow_id` = ?", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &count, query, id)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
 }
 func (m *defaultFollowsModel) Insert(ctx context.Context, data *Follows) (sql.Result, error) {
 	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, data.Id)

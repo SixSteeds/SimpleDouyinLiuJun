@@ -19,18 +19,20 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	User_AddFollows_FullMethodName       = "/pb.user/AddFollows"
-	User_UpdateFollows_FullMethodName    = "/pb.user/UpdateFollows"
-	User_DelFollows_FullMethodName       = "/pb.user/DelFollows"
-	User_GetFollowsById_FullMethodName   = "/pb.user/GetFollowsById"
-	User_GetFollowersById_FullMethodName = "/pb.user/GetFollowersById"
-	User_GetFriendsById_FullMethodName   = "/pb.user/GetFriendsById"
-	User_SearchFollows_FullMethodName    = "/pb.user/SearchFollows"
-	User_AddUserinfo_FullMethodName      = "/pb.user/AddUserinfo"
-	User_UpdateUserinfo_FullMethodName   = "/pb.user/UpdateUserinfo"
-	User_DelUserinfo_FullMethodName      = "/pb.user/DelUserinfo"
-	User_GetUserinfoById_FullMethodName  = "/pb.user/GetUserinfoById"
-	User_SearchUserinfo_FullMethodName   = "/pb.user/SearchUserinfo"
+	User_AddFollows_FullMethodName            = "/pb.user/AddFollows"
+	User_UpdateFollows_FullMethodName         = "/pb.user/UpdateFollows"
+	User_DelFollows_FullMethodName            = "/pb.user/DelFollows"
+	User_GetFollowsById_FullMethodName        = "/pb.user/GetFollowsById"
+	User_GetFollowersById_FullMethodName      = "/pb.user/GetFollowersById"
+	User_GetFollowsCountById_FullMethodName   = "/pb.user/GetFollowsCountById"
+	User_GetFollowersCountById_FullMethodName = "/pb.user/GetFollowersCountById"
+	User_GetFriendsById_FullMethodName        = "/pb.user/GetFriendsById"
+	User_SearchFollows_FullMethodName         = "/pb.user/SearchFollows"
+	User_AddUserinfo_FullMethodName           = "/pb.user/AddUserinfo"
+	User_UpdateUserinfo_FullMethodName        = "/pb.user/UpdateUserinfo"
+	User_DelUserinfo_FullMethodName           = "/pb.user/DelUserinfo"
+	User_GetUserinfoById_FullMethodName       = "/pb.user/GetUserinfoById"
+	User_SearchUserinfo_FullMethodName        = "/pb.user/SearchUserinfo"
 )
 
 // UserClient is the client API for User service.
@@ -43,6 +45,8 @@ type UserClient interface {
 	DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 	GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
 	GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
+	GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error)
+	GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error)
 	GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
 	SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 	// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -100,6 +104,24 @@ func (c *userClient) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, 
 func (c *userClient) GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error) {
 	out := new(GetFollowersByIdResp)
 	err := c.cc.Invoke(ctx, User_GetFollowersById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error) {
+	out := new(GetFollowsCountByIdResp)
+	err := c.cc.Invoke(ctx, User_GetFollowsCountById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error) {
+	out := new(GetFollowersCountByIdResp)
+	err := c.cc.Invoke(ctx, User_GetFollowersCountById_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -179,6 +201,8 @@ type UserServer interface {
 	DelFollows(context.Context, *DelFollowsReq) (*DelFollowsResp, error)
 	GetFollowsById(context.Context, *GetFollowsByIdReq) (*GetFollowsByIdResp, error)
 	GetFollowersById(context.Context, *GetFollowersByIdReq) (*GetFollowersByIdResp, error)
+	GetFollowsCountById(context.Context, *GetFollowsCountByIdReq) (*GetFollowsCountByIdResp, error)
+	GetFollowersCountById(context.Context, *GetFollowersCountByIdReq) (*GetFollowersCountByIdResp, error)
 	GetFriendsById(context.Context, *GetFriendsByIdReq) (*GetFriendsByIdResp, error)
 	SearchFollows(context.Context, *SearchFollowsReq) (*SearchFollowsResp, error)
 	// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -208,6 +232,12 @@ func (UnimplementedUserServer) GetFollowsById(context.Context, *GetFollowsByIdRe
 }
 func (UnimplementedUserServer) GetFollowersById(context.Context, *GetFollowersByIdReq) (*GetFollowersByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFollowersById not implemented")
+}
+func (UnimplementedUserServer) GetFollowsCountById(context.Context, *GetFollowsCountByIdReq) (*GetFollowsCountByIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowsCountById not implemented")
+}
+func (UnimplementedUserServer) GetFollowersCountById(context.Context, *GetFollowersCountByIdReq) (*GetFollowersCountByIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFollowersCountById not implemented")
 }
 func (UnimplementedUserServer) GetFriendsById(context.Context, *GetFriendsByIdReq) (*GetFriendsByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFriendsById not implemented")
@@ -329,6 +359,42 @@ func _User_GetFollowersById_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserServer).GetFollowersById(ctx, req.(*GetFollowersByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetFollowsCountById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowsCountByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetFollowsCountById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetFollowsCountById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetFollowsCountById(ctx, req.(*GetFollowsCountByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetFollowersCountById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFollowersCountByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetFollowersCountById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetFollowersCountById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetFollowersCountById(ctx, req.(*GetFollowersCountByIdReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -485,6 +551,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFollowersById",
 			Handler:    _User_GetFollowersById_Handler,
+		},
+		{
+			MethodName: "GetFollowsCountById",
+			Handler:    _User_GetFollowsCountById_Handler,
+		},
+		{
+			MethodName: "GetFollowersCountById",
+			Handler:    _User_GetFollowersCountById_Handler,
 		},
 		{
 			MethodName: "GetFriendsById",

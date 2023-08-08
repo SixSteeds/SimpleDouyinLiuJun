@@ -38,11 +38,31 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 			User:       user,
 		}, err
 	}
+	followCount, e := l.svcCtx.UserRpcClient.GetFollowsCountById(l.ctx, &pb.GetFollowsCountByIdReq{
+		Id: req.UserId,
+	})
+	if e != nil {
+		return &types.UserinfoResp{
+			StatusCode: -1,
+			StatusMsg:  "查询关注数量失败",
+			User:       user,
+		}, err
+	}
+	followerCount, e := l.svcCtx.UserRpcClient.GetFollowersCountById(l.ctx, &pb.GetFollowersCountByIdReq{
+		Id: req.UserId,
+	})
+	if e != nil {
+		return &types.UserinfoResp{
+			StatusCode: -1,
+			StatusMsg:  "查询粉丝数量失败",
+			User:       user,
+		}, err
+	}
 	user = types.User{
 		UserId:          info.Userinfo.Id,
 		Name:            info.Userinfo.Name,
-		FollowCount:     0,     //查表
-		FollowerCount:   0,     //查表
+		FollowCount:     followCount.Count,
+		FollowerCount:   followerCount.Count,
 		IsFollow:        false, //查表
 		Avatar:          info.Userinfo.Avatar,
 		BackgroundImage: info.Userinfo.BackgroundImage,
