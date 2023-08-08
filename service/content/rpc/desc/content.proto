@@ -12,6 +12,7 @@ package pb;
 message Comment {
   int64 id = 1; //涓婚敭
   int64 videoId = 2; //瑙嗛id
+  int64 userId = 6;
   string content = 3; //璇勮鍐呭
   int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
   int64 updateTime = 5; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 6; //閫昏緫鍒犻櫎

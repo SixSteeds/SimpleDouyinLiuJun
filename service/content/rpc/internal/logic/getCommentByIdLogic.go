@@ -37,6 +37,7 @@ func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetC
 		resp = append(resp, &pb.Comment{
 			Id:         item.Id,
 			VideoId:    item.VideoId,
+			UserId:     item.UserId,
 			Content:    item.Content,
 			CreateTime: item.CreateTime.Unix(),
 			UpdateTime: item.UpdateTime.Unix(),
