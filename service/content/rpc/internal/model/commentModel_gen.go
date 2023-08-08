@@ -29,9 +29,9 @@ type (
 	commentModel interface {
 		Insert(ctx context.Context, data *Comment) (sql.Result, error)
 		FindOne(ctx context.Context, id int64) (*Comment, error)
-		FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error)
 		Update(ctx context.Context, data *Comment) error
 		Delete(ctx context.Context, id int64) error
+		FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error)
 	}
 
 	defaultCommentModel struct {
@@ -46,6 +46,7 @@ type (
 		CreateTime time.Time `db:"create_time"` // 该条记录创建时间
 		UpdateTime time.Time `db:"update_time"` // 该条最后一次更新时间
 		IsDelete   int64     `db:"is_delete"`   // 逻辑删除
+		UserId     int64     `db:"user_id"`     // 评论用户ID
 	}
 )
 
@@ -88,6 +89,33 @@ func (m *defaultCommentModel) FindOne(ctx context.Context, id int64) (*Comment, 
 		return nil, err
 	}
 }
+
+func (m *defaultCommentModel) Insert(ctx context.Context, data *Comment) (sql.Result, error) {
+	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, data.Id)
+	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, commentRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.VideoId, data.Content, data.IsDelete, data.UserId)
+	}, liujunContentCommentIdKey)
+	return ret, err
+}
+
+func (m *defaultCommentModel) Update(ctx context.Context, data *Comment) error {
+	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, data.Id)
+	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentRowsWithPlaceHolder)
+		return conn.ExecCtx(ctx, query, data.VideoId, data.Content, data.IsDelete, data.UserId, data.Id)
+	}, liujunContentCommentIdKey)
+	return err
+}
+
+func (m *defaultCommentModel) formatPrimary(primary any) string {
+	return fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, primary)
+}
+
+func (m *defaultCommentModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
+	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", commentRows, m.table)
+	return conn.QueryRowCtx(ctx, v, query, primary)
+}
 func (m *defaultCommentModel) FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error) {
 	var resp []*Comment
 	query := fmt.Sprintf("select * from %s where `video_id` = ? ",  m.table)
@@ -100,32 +128,6 @@ func (m *defaultCommentModel) FindConmentsByVideoId(ctx context.Context, id int6
 	default:
 		return nil, err
 	}
-}
-func (m *defaultCommentModel) Insert(ctx context.Context, data *Comment) (sql.Result, error) {
-	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, data.Id)
-	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?)", m.table, commentRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Id, data.VideoId, data.Content, data.IsDelete)
-	}, liujunContentCommentIdKey)
-	return ret, err
-}
-
-func (m *defaultCommentModel) Update(ctx context.Context, data *Comment) error {
-	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, data.Id)
-	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("update %s set %s where `id` = ?", m.table, commentRowsWithPlaceHolder)
-		return conn.ExecCtx(ctx, query, data.VideoId, data.Content, data.IsDelete, data.Id)
-	}, liujunContentCommentIdKey)
-	return err
-}
-
-func (m *defaultCommentModel) formatPrimary(primary any) string {
-	return fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, primary)
-}
-
-func (m *defaultCommentModel) queryPrimary(ctx context.Context, conn sqlx.SqlConn, v, primary any) error {
-	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", commentRows, m.table)
-	return conn.QueryRowCtx(ctx, v, query, primary)
 }
 
 func (m *defaultCommentModel) tableName() string {
