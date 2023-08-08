@@ -2,10 +2,12 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,7 +32,32 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 	follows, e := l.svcCtx.UserRpcClient.GetFollowsById(l.ctx, &pb.GetFollowsByIdReq{
 		Id: req.UserId,
 	})
+	if e != nil {
+		return &types.FollowListResp{
+			StatusCode: -1,
+			StatusMsg:  "查询关注列表失败",
+			FollowList: nil,
+		}, e
+	}
+	userInfo := userinfo.NewUserinfoLogic(l.ctx, l.svcCtx)
+	var users []types.User
+	for _, item := range follows.Follows {
+		fmt.Println(item.FollowId)
+		id, _ := strconv.Atoi(item.FollowId)
+		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
+		if err != nil {
+			return &types.FollowListResp{
+				StatusCode: -1,
+				StatusMsg:  "查询关注列表失败",
+				FollowList: nil,
+			}, err
+		}
+		users = append(users, resp.User)
+	}
 	fmt.Println(follows, e)
-	//拿到了两条数据，还要查别人的表，之后写
-	return
+	return &types.FollowListResp{
+		StatusCode: 0,
+		StatusMsg:  "查询关注列表成功",
+		FollowList: users,
+	}, nil
 }
