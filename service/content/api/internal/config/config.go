@@ -9,5 +9,6 @@ import (
 type Config struct {
 	rest.RestConf
 	ContentRpcConf zrpc.RpcClientConf
+	UserRpcConf    zrpc.RpcClientConf
 	RedisConf      redis.RedisConf
 }
