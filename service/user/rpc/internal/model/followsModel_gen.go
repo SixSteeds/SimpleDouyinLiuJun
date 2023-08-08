@@ -37,6 +37,7 @@ type (
 		FindFriendsByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
 		FindFollowsCount(ctx context.Context, userId int64) (int, error)
 		FindFollowersCount(ctx context.Context, userId int64) (int, error)
+		CheckIsFollowed(ctx context.Context, userId int64,followId int64) (bool, error)
 	}
 
 	defaultFollowsModel struct {
@@ -161,6 +162,15 @@ func (m *defaultFollowsModel) FindFollowersCount(ctx context.Context, id int64) 
 		return 0, err
 	}
 	return count, nil
+}
+func (m *defaultFollowsModel) CheckIsFollowed(ctx context.Context, userid int64,followid int64) (bool, error) {
+	var count int
+	query := fmt.Sprintf("select count(*) from %s where `user_id` = ? and `follow_id` = ?", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &count, query, userid, followid)
+	if err != nil {
+		return false, err
+	}
+	return count > 0, nil
 }
 func (m *defaultFollowsModel) Insert(ctx context.Context, data *Follows) (sql.Result, error) {
 	liujunUserFollowsIdKey := fmt.Sprintf("%s%v", cacheLiujunUserFollowsIdPrefix, data.Id)

@@ -63,7 +63,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		Name:            info.Userinfo.Name,
 		FollowCount:     followCount.Count,
 		FollowerCount:   followerCount.Count,
-		IsFollow:        false, //查表
+		IsFollow:        false, //查表///////我对这个的理解就是当前用户对这条数据的用户是否关注
 		Avatar:          info.Userinfo.Avatar,
 		BackgroundImage: info.Userinfo.BackgroundImage,
 		Signature:       info.Userinfo.Signature,

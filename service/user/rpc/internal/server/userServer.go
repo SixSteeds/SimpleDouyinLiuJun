@@ -58,6 +58,11 @@ func (s *UserServer) GetFollowersCountById(ctx context.Context, in *pb.GetFollow
 	return l.GetFollowersCountById(in)
 }
 
+func (s *UserServer) CheckIsFollow(ctx context.Context, in *pb.CheckIsFollowReq) (*pb.CheckIsFollowResp, error) {
+	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
+	return l.CheckIsFollow(in)
+}
+
 func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
 	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
 	return l.GetFriendsById(in)

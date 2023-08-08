@@ -17,6 +17,8 @@ type (
 	AddFollowsResp            = pb.AddFollowsResp
 	AddUserinfoReq            = pb.AddUserinfoReq
 	AddUserinfoResp           = pb.AddUserinfoResp
+	CheckIsFollowReq          = pb.CheckIsFollowReq
+	CheckIsFollowResp         = pb.CheckIsFollowResp
 	DelFollowsReq             = pb.DelFollowsReq
 	DelFollowsResp            = pb.DelFollowsResp
 	DelUserinfoReq            = pb.DelUserinfoReq
@@ -53,6 +55,7 @@ type (
 		GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
 		GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error)
 		GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error)
+		CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 		GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
 		SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -108,6 +111,11 @@ func (m *defaultUser) GetFollowsCountById(ctx context.Context, in *GetFollowsCou
 func (m *defaultUser) GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetFollowersCountById(ctx, in, opts...)
+}
+
+func (m *defaultUser) CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.CheckIsFollow(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error) {

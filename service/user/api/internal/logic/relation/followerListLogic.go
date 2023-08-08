@@ -54,6 +54,18 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 				FollowerList: nil,
 			}, err
 		}
+		isFollowed, e := l.svcCtx.UserRpcClient.CheckIsFollow(l.ctx, &pb.CheckIsFollowReq{
+			Userid:   item.FollowId,
+			Followid: item.UserId,
+		})
+		if e != nil {
+			return &types.FollowerListResp{
+				StatusCode:   -1,
+				StatusMsg:    "查询粉丝列表失败",
+				FollowerList: nil,
+			}, err
+		}
+		resp.User.IsFollow = isFollowed.IsFollowed
 		users = append(users, resp.User)
 	}
 	return &types.FollowerListResp{
