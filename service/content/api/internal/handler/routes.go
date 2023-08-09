@@ -6,7 +6,7 @@ import (
 
 	comment "doushen_by_liujun/service/content/api/internal/handler/comment"
 	favorite "doushen_by_liujun/service/content/api/internal/handler/favorite"
-	vedio "doushen_by_liujun/service/content/api/internal/handler/vedio"
+	video "doushen_by_liujun/service/content/api/internal/handler/video"
 	"doushen_by_liujun/service/content/api/internal/svc"
 
 	"github.com/zeromicro/go-zero/rest"
@@ -18,7 +18,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 			{
 				Method:  http.MethodGet,
 				Path:    "/feed",
-				Handler: vedio.FeedHandler(serverCtx),
+				Handler: video.FeedHandler(serverCtx),
 			},
 		},
 		rest.WithPrefix("/douyin"),
@@ -31,7 +31,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/publish/list",
-					Handler: vedio.PublishListHandler(serverCtx),
+					Handler: video.PublishListHandler(serverCtx),
 				},
 			}...,
 		),

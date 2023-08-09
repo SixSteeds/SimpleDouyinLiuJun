@@ -23,6 +23,7 @@ var (
 	commentRowsWithPlaceHolder = strings.Join(stringx.Remove(commentFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunContentCommentIdPrefix = "cache:liujunContent:comment:id:"
+	cacheLiujunContentCommentUserIdVedioIdPrefix = "cache:liujunContent:comment:userid:videoid:"
 )
 
 type (
@@ -32,6 +33,7 @@ type (
 		Update(ctx context.Context, data *Comment) error
 		Delete(ctx context.Context, id int64) error
 		FindConmentsByVideoId(ctx context.Context, id int64) (*[]*Comment, error)
+		FindCommentByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Comment, error)
 	}
 
 	defaultCommentModel struct {
@@ -120,6 +122,27 @@ func (m *defaultCommentModel) FindConmentsByVideoId(ctx context.Context, id int6
 	var resp []*Comment
 	query := fmt.Sprintf("select * from %s where `video_id` = ? ",  m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+//根据（用户id，视频id）字段查找comment表
+func (m *defaultCommentModel) FindCommentByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Comment, error) {
+	liujunContentFavoriteUserIdVideoIdKey := fmt.Sprintf("%s%v:%v", cacheLiujunContentCommentUserIdVedioIdPrefix, userid, videoid)
+	var resp Comment
+	err := m.QueryRowIndexCtx(ctx, &resp, liujunContentFavoriteUserIdVideoIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `video_id` = ? limit 1", commentRows, m.table)
+		if err:= conn.QueryRowCtx(ctx,&resp,query,userid,videoid); err!= nil{
+			return nil, err
+		}
+		return resp.Id,nil
+	},m.queryPrimary)
 	switch err {
 	case nil:
 		return &resp, nil

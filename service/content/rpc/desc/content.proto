@@ -19,19 +19,20 @@ message Comment {
 }
 
 message AddCommentReq {
-  int64 videoId = 1; //瑙嗛id
-  string content = 2; //璇勮鍐呭
-  int64 isDelete = 3; //閫昏緫鍒犻櫎
+  int64 videoId = 1; //视频id
+  int64 userId = 2; //用户id
+  string content = 3; //评论
+  int64 isDelete = 4; //逻辑删除
 }
 
 message AddCommentResp {
 }
 
 message UpdateCommentReq {
-  int64 id = 1; //涓婚敭
-  int64 videoId = 2; //瑙嗛id
-  string content = 3; //璇勮鍐呭
-  int64 isDelete = 4; //閫昏緫鍒犻櫎
+  int64 id = 1; //主键
+  int64 videoId = 2; //视频id
+  string content = 3; //评论
+  int64 isDelete = 4; //逻辑删除
 }
 
 message UpdateCommentResp {
@@ -39,6 +40,8 @@ message UpdateCommentResp {
 
 message DelCommentReq {
   int64 id = 1; //id
+  int64 userId = 2; //用户id
+  int64 videoId = 3; //视频id
 }
 
 message DelCommentResp {
@@ -96,6 +99,8 @@ message UpdateFavoriteResp {
 
 message DelFavoriteReq {
   int64 id = 1; //id
+  int64 videoId = 2; //视频id
+  int64 userId = 3; //用户id
 }
 
 message DelFavoriteResp {

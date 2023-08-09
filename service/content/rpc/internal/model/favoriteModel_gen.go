@@ -23,6 +23,8 @@ var (
 	favoriteRowsWithPlaceHolder = strings.Join(stringx.Remove(favoriteFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunContentFavoriteIdPrefix = "cache:liujunContent:favorite:id:"
+	cacheLiujunContentFavoriteUserIdVideoIdPrefix = "cache:liujunContent:favorite:userid:videoid:"
+	cacheLiujunContentFavoriteListUserIdPrefix = "cache:liujunContent:favoriteList:userid:"
 )
 
 type (
@@ -31,6 +33,8 @@ type (
 		FindOne(ctx context.Context, id int64) (*Favorite, error)
 		Update(ctx context.Context, data *Favorite) error
 		Delete(ctx context.Context, id int64) error
+		FindFavoriteByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Favorite, error)
+		FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error)
 	}
 
 	defaultFavoriteModel struct {
@@ -104,6 +108,44 @@ func (m *defaultFavoriteModel) Update(ctx context.Context, data *Favorite) error
 		return conn.ExecCtx(ctx, query, data.VideoId, data.UserId, data.IsDelete, data.Id)
 	}, liujunContentFavoriteIdKey)
 	return err
+}
+
+//根据（用户id，视频id）字段查找favorite表
+func (m *defaultFavoriteModel) FindFavoriteByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Favorite, error) {
+	liujunContentFavoriteUserIdVideoIdKey := fmt.Sprintf("%s%v:%v", cacheLiujunContentFavoriteUserIdVideoIdPrefix, userid, videoid)
+	var resp Favorite
+	err := m.QueryRowIndexCtx(ctx, &resp, liujunContentFavoriteUserIdVideoIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `video_id` = ? limit 1", favoriteRows, m.table)
+		if err:= conn.QueryRowCtx(ctx,&resp,query,userid,videoid); err!= nil{
+			return nil, err
+		}
+		return resp.Id,nil
+	},m.queryPrimary)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultFavoriteModel) FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error) {
+	liujunContentFavoriteListUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentFavoriteListUserIdPrefix, userid)
+	var resp []*Favorite
+	err := m.QueryRowCtx(ctx, &resp, liujunContentFavoriteListUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select %s from %s where `user_id` = ? ", favoriteRows, m.table)
+		return conn.QueryRowsCtx(ctx, v, query, userid)
+	})
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
 
 func (m *defaultFavoriteModel) formatPrimary(primary any) string {

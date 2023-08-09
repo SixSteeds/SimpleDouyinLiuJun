@@ -13,7 +13,7 @@ import (
 
 @server(
 	prefix: douyin
-	group : vedio
+	group : video
 )
 service content {
 	@handler feed
@@ -23,7 +23,7 @@ service content {
 
 @server(
 	prefix: douyin
-	group : vedio
+	group : video
 	middleware: JwtAuthMiddleware
 )
 service content {
