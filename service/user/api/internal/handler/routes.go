@@ -64,7 +64,7 @@ func RegisterHandlers(server *rest.Server, serverCtx *svc.ServiceContext) {
 				{
 					Method:  http.MethodGet,
 					Path:    "/friend/list",
-					Handler: relation.FridendListHandler(serverCtx),
+					Handler: relation.FriendListHandler(serverCtx),
 				},
 			}...,
 		),

@@ -55,6 +55,6 @@ service user {
 	@handler follow
 	post /action (FollowReq) returns (FollowResp)
 
-	@handler fridendList
+	@handler FriendList
 	get /friend/list (FriendListReq) returns (FriendListResp)
 }

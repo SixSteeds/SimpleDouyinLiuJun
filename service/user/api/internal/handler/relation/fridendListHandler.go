@@ -9,7 +9,7 @@ import (
 	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
-func FridendListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
+func FriendListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req types.FriendListReq
 		if err := httpx.Parse(r, &req); err != nil {
@@ -17,8 +17,8 @@ func FridendListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := relation.NewFridendListLogic(r.Context(), svcCtx)
-		resp, err := l.FridendList(&req)
+		l := relation.NewFriendListLogic(r.Context(), svcCtx)
+		resp, err := l.FriendList(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {

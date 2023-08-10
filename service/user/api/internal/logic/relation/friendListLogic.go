@@ -15,21 +15,21 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type FridendListLogic struct {
+type FriendListLogic struct {
 	logx.Logger
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 }
 
-func NewFridendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FridendListLogic {
-	return &FridendListLogic{
+func NewFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FriendListLogic {
+	return &FriendListLogic{
 		Logger: logx.WithContext(ctx),
 		ctx:    ctx,
 		svcCtx: svcCtx,
 	}
 }
 
-func (l *FridendListLogic) FridendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
+func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
 	_, e := util.ParseToken(req.Token)
 	if e != nil {
 		return &types.FriendListResp{
