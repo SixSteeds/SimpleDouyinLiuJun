@@ -7,14 +7,18 @@ import (
 )
 
 type ServiceContext struct {
-	Config       config.Config
-	CommentModel genModel.CommentModel
+	Config        config.Config
+	CommentModel  genModel.CommentModel
+	FavoriteModel genModel.FavoriteModel
+	VideoModel    genModel.VideoModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 	return &ServiceContext{
-		CommentModel: genModel.NewCommentModel(sqlConn, c.Cache),
-		Config:       c,
+		Config:        c,
+		CommentModel:  genModel.NewCommentModel(sqlConn, c.Cache),
+		FavoriteModel: genModel.NewFavoriteModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
+		VideoModel:    genModel.NewVideoModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 	}
 }

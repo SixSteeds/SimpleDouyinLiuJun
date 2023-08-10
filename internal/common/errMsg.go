@@ -1,9 +1,9 @@
 package common
 
-var message map[uint32]string
+var message map[int32]string
 
 func init() {
-	message = make(map[uint32]string)
+	message = make(map[int32]string)
 	message[OK] = "SUCCESS"
 	message[SERVER_COMMON_ERROR] = "服务器开小差啦,稍后再来试一试"
 	message[REUQEST_PARAM_ERROR] = "参数错误"
@@ -13,7 +13,7 @@ func init() {
 	message[DB_UPDATE_AFFECTED_ZERO_ERROR] = "更新数据影响行数为0"
 }
 
-func MapErrMsg(errcode uint32) string {
+func MapErrMsg(errcode int32) string {
 	if msg, ok := message[errcode]; ok {
 		return msg
 	} else {
@@ -21,7 +21,7 @@ func MapErrMsg(errcode uint32) string {
 	}
 }
 
-func IsCodeErr(errcode uint32) bool {
+func IsCodeErr(errcode int32) bool {
 	if _, ok := message[errcode]; ok {
 		return true
 	} else {

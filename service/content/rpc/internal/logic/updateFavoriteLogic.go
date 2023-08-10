@@ -2,6 +2,9 @@ package logic
 
 import (
 	"context"
+	genModel "doushen_by_liujun/service/content/rpc/internal/model"
+	"errors"
+	"time"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -24,7 +27,21 @@ func NewUpdateFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 }
 
 func (l *UpdateFavoriteLogic) UpdateFavorite(in *pb.UpdateFavoriteReq) (*pb.UpdateFavoriteResp, error) {
-	// todo: add your logic here and delete this line
 
+	//1.根据传入的 isDelete 修改 favorite 表
+	err := l.svcCtx.FavoriteModel.Update(l.ctx, &genModel.Favorite{
+		Id:         in.Id,
+		UpdateTime: time.Now(),
+		IsDelete:   in.IsDelete,
+	})
+	if err != nil {
+		return nil, errors.New("rpc-updateFavorite-修改点赞信息失败")
+	}
+
+	if in.IsDelete == 0 {
+		logx.Error("rpc-updateFavorite-修改点赞记录为逻辑点赞成功")
+	} else {
+		logx.Error("rpc-updateFavorite-修改点赞记录为逻辑删除成功")
+	}
 	return &pb.UpdateFavoriteResp{}, nil
 }

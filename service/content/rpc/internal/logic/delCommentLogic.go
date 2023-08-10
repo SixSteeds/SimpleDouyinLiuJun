@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -24,7 +25,12 @@ func NewDelCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelCom
 }
 
 func (l *DelCommentLogic) DelComment(in *pb.DelCommentReq) (*pb.DelCommentResp, error) {
-	// todo: add your logic here and delete this line
 
+	//PS.删除评论不是高频操作，所以不逻辑删除而是直接查库删
+	err := l.svcCtx.CommentModel.Delete(l.ctx, in.Id)
+	if err != nil {
+		return nil, errors.New("rpc-DelComment-删除评论数据失败")
+	}
+	logx.Error("rpc-DelComment-删除评论数据成功")
 	return &pb.DelCommentResp{}, nil
 }
