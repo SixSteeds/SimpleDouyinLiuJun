@@ -2,7 +2,7 @@ Name: content.rpc
 ListenOn: 0.0.0.0:8086
 Etcd:
   Hosts:
-  - 0.0.0.0:2379
+  - 0.0.0.0:8090
   Key: contentRpc
 
 DB:

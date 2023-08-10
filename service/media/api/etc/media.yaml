@@ -7,7 +7,7 @@ Port: 8083
 MediaRpcConf:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - 127.0.0.1:8090
     Key: mediaRpc
 #    Pass: liujun
 #    User: root

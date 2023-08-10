@@ -7,7 +7,7 @@ Port: 8087
 ChatRpcConf:
   Etcd:
     Hosts:
-      - 127.0.0.1:2379
+      - 127.0.0.1:8090
     Key: chatRpc
 #    Pass: liujun
 #    User: root

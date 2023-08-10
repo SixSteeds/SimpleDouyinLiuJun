@@ -2,7 +2,7 @@ Name: chat.rpc
 ListenOn: 0.0.0.0:8088
 Etcd:
   Hosts:
-  - 127.0.0.1:2379
+  - 127.0.0.1:8090
   Key: chatRpc
 
 DB:
