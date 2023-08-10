@@ -43,7 +43,7 @@ func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, 
 		l.Logger.Info("雪花算法报错", err)
 		return nil, errors.New("雪花算法报错")
 	}
-	_, err = l.svcCtx.FollowsModel.Insert(l.ctx, &genModel.Follows{
+	_, err = l.svcCtx.FollowsModel.Insert(l.ctx, &model.Follows{
 
 		Id:       data.Generate(),
 		UserId:   in.UserId,

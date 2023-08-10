@@ -8,8 +8,8 @@ import (
 
 type ServiceContext struct {
 	Config        config.Config
-	UserinfoModel genModel.UserinfoModel
-	FollowsModel  genModel.FollowsModel
+	UserinfoModel model.UserinfoModel
+	FollowsModel  model.FollowsModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -17,7 +17,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 	sqlConn := sqlx.NewMysql(c.DB.DataSource)
 	return &ServiceContext{
 		Config:        c,
-		UserinfoModel: genModel.NewUserinfoModel(sqlConn, c.Cache),
-		FollowsModel:  genModel.NewFollowsModel(sqlConn, c.Cache),
+		UserinfoModel: model.NewUserinfoModel(sqlConn, c.Cache),
+		FollowsModel:  model.NewFollowsModel(sqlConn, c.Cache),
 	}
 }

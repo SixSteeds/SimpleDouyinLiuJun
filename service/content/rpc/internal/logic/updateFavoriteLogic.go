@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	genModel "doushen_by_liujun/service/content/rpc/internal/model"
+	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
 	"time"
 
@@ -29,7 +29,7 @@ func NewUpdateFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Up
 func (l *UpdateFavoriteLogic) UpdateFavorite(in *pb.UpdateFavoriteReq) (*pb.UpdateFavoriteResp, error) {
 
 	//1.根据传入的 isDelete 修改 favorite 表
-	err := l.svcCtx.FavoriteModel.Update(l.ctx, &genModel.Favorite{
+	err := l.svcCtx.FavoriteModel.Update(l.ctx, &model.Favorite{
 		Id:         in.Id,
 		UpdateTime: time.Now(),
 		IsDelete:   in.IsDelete,

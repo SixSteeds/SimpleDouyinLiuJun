@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	genModel "doushen_by_liujun/service/content/rpc/internal/model"
+	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
 	"time"
 
@@ -30,14 +30,14 @@ func (l *DelFavoriteLogic) DelFavorite(in *pb.DelFavoriteReq) (*pb.DelFavoriteRe
 
 	//1.根据（userId、videoId）查找 favorite 表
 	favorite, err0 := l.svcCtx.FavoriteModel.FindFavoriteByUserIdVideoId(l.ctx, in.UserId, in.VideoId)
-	if err0 != nil && err0 != genModel.ErrNotFound {
+	if err0 != nil && err0 != model.ErrNotFound {
 		return nil, errors.New("rpc-delFavorite-数据查询失败")
 	}
 	if favorite == nil {
 		return nil, errors.New("rpc-delFavorite-没有找到该条点赞数据")
 	}
 	//2.逻辑删除，置 isDelete=1 选项到 favorite 表项
-	err1 := l.svcCtx.FavoriteModel.Update(l.ctx, &genModel.Favorite{
+	err1 := l.svcCtx.FavoriteModel.Update(l.ctx, &model.Favorite{
 		Id:         favorite.Id,
 		UserId:     in.UserId,
 		VideoId:    in.VideoId,

@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/util"
-	genModel "doushen_by_liujun/service/content/rpc/internal/model"
+	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
 	"time"
 
@@ -36,7 +36,7 @@ func (l *AddCommentLogic) AddComment(in *pb.AddCommentReq) (*pb.AddCommentResp, 
 		return nil, errors.New("rpc-AddComment-新增评论，snowflake生成id失败")
 	}
 	snowId := snowflake.Generate()
-	_, err := l.svcCtx.CommentModel.Insert(l.ctx, &genModel.Comment{
+	_, err := l.svcCtx.CommentModel.Insert(l.ctx, &model.Comment{
 		Id:         snowId,
 		UserId:     in.UserId,
 		VideoId:    in.VideoId,

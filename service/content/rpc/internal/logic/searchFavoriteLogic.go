@@ -2,7 +2,7 @@ package logic
 
 import (
 	"context"
-	genModel "doushen_by_liujun/service/content/rpc/internal/model"
+	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
@@ -29,7 +29,7 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 
 	// 1.根据 user_id 查询 favorite 表，返回所有点赞信息
 	favoriteList, err := l.svcCtx.FavoriteModel.FindFavoriteListByUserId(l.ctx, in.UserId)
-	if err != nil && err != genModel.ErrNotFound {
+	if err != nil && err != model.ErrNotFound {
 		return nil, errors.New("数据查询失败")
 	}
 	var resp []*pb.Favorite
