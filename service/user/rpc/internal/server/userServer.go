@@ -43,34 +43,19 @@ func (s *UserServer) GetFollowsById(ctx context.Context, in *pb.GetFollowsByIdRe
 	return l.GetFollowsById(in)
 }
 
-func (s *UserServer) GetFollowersById(ctx context.Context, in *pb.GetFollowersByIdReq) (*pb.GetFollowersByIdResp, error) {
-	l := logic.NewGetFollowersByIdLogic(ctx, s.svcCtx)
-	return l.GetFollowersById(in)
-}
-
-func (s *UserServer) GetFollowsCountById(ctx context.Context, in *pb.GetFollowsCountByIdReq) (*pb.GetFollowsCountByIdResp, error) {
-	l := logic.NewGetFollowsCountByIdLogic(ctx, s.svcCtx)
-	return l.GetFollowsCountById(in)
-}
-
-func (s *UserServer) GetFollowersCountById(ctx context.Context, in *pb.GetFollowersCountByIdReq) (*pb.GetFollowersCountByIdResp, error) {
-	l := logic.NewGetFollowersCountByIdLogic(ctx, s.svcCtx)
-	return l.GetFollowersCountById(in)
-}
-
-func (s *UserServer) CheckIsFollow(ctx context.Context, in *pb.CheckIsFollowReq) (*pb.CheckIsFollowResp, error) {
-	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
-	return l.CheckIsFollow(in)
-}
-
-func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
-	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
-	return l.GetFriendsById(in)
-}
-
 func (s *UserServer) SearchFollows(ctx context.Context, in *pb.SearchFollowsReq) (*pb.SearchFollowsResp, error) {
 	l := logic.NewSearchFollowsLogic(ctx, s.svcCtx)
 	return l.SearchFollows(in)
+}
+
+func (s *UserServer) SaveUser(ctx context.Context, in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
+	l := logic.NewSaveUserLogic(ctx, s.svcCtx)
+	return l.SaveUser(in)
+}
+
+func (s *UserServer) CheckUser(ctx context.Context, in *pb.CheckUserReq) (*pb.CheckUserResp, error) {
+	l := logic.NewCheckUserLogic(ctx, s.svcCtx)
+	return l.CheckUser(in)
 }
 
 // -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -97,4 +82,29 @@ func (s *UserServer) GetUserinfoById(ctx context.Context, in *pb.GetUserinfoById
 func (s *UserServer) SearchUserinfo(ctx context.Context, in *pb.SearchUserinfoReq) (*pb.SearchUserinfoResp, error) {
 	l := logic.NewSearchUserinfoLogic(ctx, s.svcCtx)
 	return l.SearchUserinfo(in)
+}
+
+func (s *UserServer) GetFollowersById(ctx context.Context, in *pb.GetFollowersByIdReq) (*pb.GetFollowersByIdResp, error) {
+	l := logic.NewGetFollowersByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowersById(in)
+}
+
+func (s *UserServer) GetFollowsCountById(ctx context.Context, in *pb.GetFollowsCountByIdReq) (*pb.GetFollowsCountByIdResp, error) {
+	l := logic.NewGetFollowsCountByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowsCountById(in)
+}
+
+func (s *UserServer) GetFollowersCountById(ctx context.Context, in *pb.GetFollowersCountByIdReq) (*pb.GetFollowersCountByIdResp, error) {
+	l := logic.NewGetFollowersCountByIdLogic(ctx, s.svcCtx)
+	return l.GetFollowersCountById(in)
+}
+
+func (s *UserServer) CheckIsFollow(ctx context.Context, in *pb.CheckIsFollowReq) (*pb.CheckIsFollowResp, error) {
+	l := logic.NewCheckIsFollowLogic(ctx, s.svcCtx)
+	return l.CheckIsFollow(in)
+}
+
+func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
+	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
+	return l.GetFriendsById(in)
 }
