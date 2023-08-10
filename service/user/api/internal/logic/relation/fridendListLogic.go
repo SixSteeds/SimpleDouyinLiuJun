@@ -2,6 +2,8 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
@@ -28,16 +30,20 @@ func NewFridendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Fride
 }
 
 func (l *FridendListLogic) FridendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
-	// todo: add your logic here and delete this line
-	fmt.Println(req.UserId, req.Token) //校验token
+	_, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.FriendListResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  "无效token",
+			FriendUser: nil,
+		}, e
+	}
 	friends, e := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
-	fmt.Println("查好友列表啦！！！！！！")
-	fmt.Println(friends, e)
 	if e != nil {
 		return &types.FriendListResp{
-			StatusCode: -1,
+			StatusCode: common.DB_ERROR,
 			StatusMsg:  "查询好友列表失败",
 			FriendUser: nil,
 		}, e
@@ -50,7 +56,7 @@ func (l *FridendListLogic) FridendList(req *types.FriendListReq) (resp *types.Fr
 		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
 		if err != nil {
 			return &types.FriendListResp{
-				StatusCode: -1,
+				StatusCode: common.DB_ERROR,
 				StatusMsg:  "查询好友列表失败",
 				FriendUser: nil,
 			}, err
@@ -72,7 +78,7 @@ func (l *FridendListLogic) FridendList(req *types.FriendListReq) (resp *types.Fr
 		})
 	}
 	return &types.FriendListResp{
-		StatusCode: 0,
+		StatusCode: common.OK,
 		StatusMsg:  "查询好友列表成功",
 		FriendUser: users,
 	}, nil

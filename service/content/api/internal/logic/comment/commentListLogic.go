@@ -2,12 +2,15 @@ package comment
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
 	"doushen_by_liujun/service/content/rpc/pb"
 	userPB "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 	"time"
 )
 
@@ -27,16 +30,21 @@ func NewCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Comme
 
 func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.CommentListResp, err error) {
 	// todo: add your logic here and delete this line
-	fmt.Println(req.VideoId, req.Token) //校验token
+	logger, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.CommentListResp{
+			StatusCode:  common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:   "无效token",
+			CommentList: []types.Comment{},
+		}, e
+	}
 	follows, e := l.svcCtx.ContentRpcClient.GetCommentById(l.ctx, &pb.GetCommentByIdReq{
 		Id: req.VideoId,
 	})
-	fmt.Println("查评论列表啦！！！！！！")
-	fmt.Println(follows, e)
 	var comments []types.Comment
 	if e != nil {
 		return &types.CommentListResp{
-			StatusCode:  -1,
+			StatusCode:  common.DB_ERROR,
 			StatusMsg:   "查询评论列表失败",
 			CommentList: []types.Comment{},
 		}, e
@@ -50,7 +58,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		var user types.User
 		if e != nil {
 			return &types.CommentListResp{
-				StatusCode:  -1,
+				StatusCode:  common.DB_ERROR,
 				StatusMsg:   "查询评论列表失败",
 				CommentList: []types.Comment{},
 			}, e
@@ -60,7 +68,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		})
 		if e != nil {
 			return &types.CommentListResp{
-				StatusCode:  -1,
+				StatusCode:  common.DB_ERROR,
 				StatusMsg:   "查询评论列表失败",
 				CommentList: []types.Comment{},
 			}, e
@@ -70,7 +78,18 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		})
 		if e != nil {
 			return &types.CommentListResp{
-				StatusCode:  -1,
+				StatusCode:  common.DB_ERROR,
+				StatusMsg:   "查询评论列表失败",
+				CommentList: []types.Comment{},
+			}, e
+		}
+		isFollow, e := l.svcCtx.UserRpcClient.CheckIsFollow(l.ctx, &userPB.CheckIsFollowReq{
+			Userid:   logger.ID,
+			Followid: strconv.Itoa(int(info.Userinfo.Id)),
+		})
+		if e != nil {
+			return &types.CommentListResp{
+				StatusCode:  common.DB_ERROR,
 				StatusMsg:   "查询评论列表失败",
 				CommentList: []types.Comment{},
 			}, e
@@ -80,7 +99,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			Name:            info.Userinfo.Name,
 			FollowCount:     followCount.Count,
 			FollowerCount:   followerCount.Count,
-			IsFollow:        false, //查表///////我对这个的理解就是当前用户对这条数据的用户是否关注
+			IsFollow:        isFollow.IsFollowed, //我对这个的理解就是当前用户对这条数据的用户是否关注
 			Avatar:          info.Userinfo.Avatar,
 			BackgroundImage: info.Userinfo.BackgroundImage,
 			Signature:       info.Userinfo.Signature,
@@ -95,7 +114,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		})
 	}
 	return &types.CommentListResp{
-		StatusCode:  0,
+		StatusCode:  common.OK,
 		StatusMsg:   "查询评论列表成功",
 		CommentList: comments,
 	}, nil

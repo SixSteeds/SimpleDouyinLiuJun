@@ -4,7 +4,7 @@ package common
 	此处考虑后期统一错误返回码
 */
 // 成功返回
-const OK int32 = 200
+const OK int32 = 0 //tzx修改，文档上成功是0
 
 /**(前3位代表业务,后三位代表具体功能)**/
 

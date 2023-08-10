@@ -2,6 +2,8 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -27,16 +29,20 @@ func NewFollowerListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Foll
 }
 
 func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *types.FollowerListResp, err error) {
-	// todo: add your logic here and delete this line
-	fmt.Println(req.UserId, req.Token) //校验token
+	_, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.FollowerListResp{
+			StatusCode:   common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:    "无效token",
+			FollowerList: nil,
+		}, e
+	}
 	followers, e := l.svcCtx.UserRpcClient.GetFollowersById(l.ctx, &pb.GetFollowersByIdReq{
 		Id: req.UserId,
 	})
-	fmt.Println("查粉丝列表啦！！！！！！")
-	fmt.Println(followers)
 	if e != nil {
 		return &types.FollowerListResp{
-			StatusCode:   -1,
+			StatusCode:   common.DB_ERROR,
 			StatusMsg:    "查询粉丝列表失败",
 			FollowerList: nil,
 		}, e
@@ -49,7 +55,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
 		if err != nil {
 			return &types.FollowerListResp{
-				StatusCode:   -1,
+				StatusCode:   common.DB_ERROR,
 				StatusMsg:    "查询粉丝列表失败",
 				FollowerList: nil,
 			}, err
@@ -60,7 +66,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		})
 		if e != nil {
 			return &types.FollowerListResp{
-				StatusCode:   -1,
+				StatusCode:   common.DB_ERROR,
 				StatusMsg:    "查询粉丝列表失败",
 				FollowerList: nil,
 			}, err
@@ -69,7 +75,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		users = append(users, resp.User)
 	}
 	return &types.FollowerListResp{
-		StatusCode:   0,
+		StatusCode:   common.OK,
 		StatusMsg:    "查询粉丝列表成功",
 		FollowerList: users,
 	}, nil

@@ -2,6 +2,8 @@ package relation
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -27,14 +29,21 @@ func NewFollowListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Follow
 }
 
 func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.FollowListResp, err error) {
-	// todo: add your logic here and delete this line
+	_, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.FollowListResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  "无效token",
+			FollowList: nil,
+		}, e
+	}
 	fmt.Println(req.UserId, req.Token) //校验token
 	follows, e := l.svcCtx.UserRpcClient.GetFollowsById(l.ctx, &pb.GetFollowsByIdReq{
 		Id: req.UserId,
 	})
 	if e != nil {
 		return &types.FollowListResp{
-			StatusCode: -1,
+			StatusCode: common.DB_ERROR,
 			StatusMsg:  "查询关注列表失败",
 			FollowList: nil,
 		}, e
@@ -47,7 +56,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
 		if err != nil {
 			return &types.FollowListResp{
-				StatusCode: -1,
+				StatusCode: common.DB_ERROR,
 				StatusMsg:  "查询关注列表失败",
 				FollowList: nil,
 			}, err
@@ -57,7 +66,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 	}
 	fmt.Println(follows, e)
 	return &types.FollowListResp{
-		StatusCode: 0,
+		StatusCode: common.OK,
 		StatusMsg:  "查询关注列表成功",
 		FollowList: users,
 	}, nil
