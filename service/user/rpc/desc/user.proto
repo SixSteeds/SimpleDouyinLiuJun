@@ -13,7 +13,7 @@ message Follows {
   int64 FollowerCount = 1;
   int64 FollowCount = 7;
   int64 Id = 2; //鍏虫敞鐨勪汉
-  string UserName = 3; //琚叧娉ㄧ殑浜?  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  string UserName = 3;
   string Avator = 4;
   string BackgroundImage = 5;
   string Signature = 6;
@@ -98,12 +98,15 @@ message SearchFollowsResp {
 //--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Userinfo {
   int64 id = 1; //涓婚敭
+  int64 follow_count  = 11;
+  int64 follower_count  = 12;
+  bool is_follow = 13;
   string username = 2; //璐﹀彿
   string password = 3; //瀵嗙爜
   string avatar = 4; //澶村儚
   string backgroundImage = 5; //澶村儚
   string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64 updateTime = 8; //鏈€鍚庝竴娆′俊鎭慨鏀规椂闂? int64 isDelete = 9; //閫昏緫鍒犻櫎
+  int64 updateTime = 8;
   string name = 10; //鐢ㄦ埛鏄电О
 }
 
@@ -148,6 +151,7 @@ message CheckIsFollowResp{
 }
 message GetUserinfoByIdReq {
   int64 id = 1; //id
+  int64 userID=2;//当前用户
 }
 
 message GetUserinfoByIdResp {

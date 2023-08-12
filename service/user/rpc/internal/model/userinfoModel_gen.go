@@ -28,7 +28,7 @@ var (
 type (
 	userinfoModel interface {
 		Insert(ctx context.Context, data *Userinfo) (sql.Result, error)
-		FindOne(ctx context.Context, id int64) (*Userinfo, error)
+		FindOne(ctx context.Context, id int64) (*Userdetail, error)
 		Update(ctx context.Context, data *Userinfo) error
 		Delete(ctx context.Context, id int64) error
 		CheckOne(ctx context.Context, username string, password string) (*int64, error)
@@ -38,7 +38,6 @@ type (
 		sqlc.CachedConn
 		table string
 	}
-
 	Userinfo struct {
 		Id              int64          `db:"id"`               // 主键
 		Username        sql.NullString `db:"username"`         // 账号
@@ -49,7 +48,17 @@ type (
 		CreateTime      time.Time      `db:"create_time"`      // 该条记录创建时间
 		UpdateTime      time.Time      `db:"update_time"`      // 该条最后一次更新时间
 		IsDelete        int64          `db:"is_delete"`        // 逻辑删除
-		Name            sql.NullString `db:"name"`             // 用户昵称
+		Name            sql.NullString `db:"name"`
+	}
+	Userdetail struct {
+		Id              int64          `db:"id"`               // 主键
+		Username        sql.NullString `db:"username"`         // 账号
+		Avatar          sql.NullString `db:"avatar"`           // 头像
+		BackgroundImage sql.NullString `db:"background_image"` // 头像
+		Signature       sql.NullString `db:"signature"`        // 个人简介
+		FollowCount            sql.NullString `db:"follow_count"`             // 用户昵称
+		FollowerCount            sql.NullString `db:"follower_count"`
+		IsFollow            bool `db:"is_follow"`
 	}
 )
 
@@ -76,11 +85,15 @@ func (m *defaultUserinfoModel) Delete(ctx context.Context, id int64) error {
 	return err
 }
 
-func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64) (*Userinfo, error) {
+func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64) (*Userdetail, error) {
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id)
-	var resp Userinfo
+	var resp Userdetail
 	err := m.QueryRowCtx(ctx, &resp, liujunUserUserinfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userinfoRows, m.table)
+		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
+			"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
+			"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
+			",EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
+			" from userinfo u where u.id = ? and u.is_delete = 0")
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
 	switch err {
