@@ -89,6 +89,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		Signature:       info.Userinfo.Signature,
 		WorkCount:       0, //查表
 		FavoriteCount:   0, //查表
+		TotalFavorited:  0, //查表
 	}
 	return &types.UserinfoResp{
 		StatusCode: common.OK,

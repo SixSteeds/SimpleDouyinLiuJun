@@ -10,8 +10,14 @@ package pb;
 
 //--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Follows {
-  string userId = 2; //鍏虫敞鐨勪汉
-  string followId = 3; //琚叧娉ㄧ殑浜?  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 FollowerCount = 1;
+  int64 FollowCount = 7;
+  int64 Id = 2; //鍏虫敞鐨勪汉
+  string UserName = 3; //琚叧娉ㄧ殑浜?  int64 createTime = 4; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  string Avator = 4;
+  string BackgroundImage = 5;
+  string Signature = 6;
+  bool IsFollow = 8;
 }
 
 message AddFollowsReq {

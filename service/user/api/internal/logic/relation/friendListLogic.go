@@ -3,14 +3,9 @@ package relation
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"doushen_by_liujun/internal/util"
-	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
-	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
-	"strconv"
-
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
+	"doushen_by_liujun/service/user/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -30,14 +25,14 @@ func NewFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Friend
 }
 
 func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
-	_, e := util.ParseToken(req.Token)
-	if e != nil {
-		return &types.FriendListResp{
-			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  "无效token",
-			FriendUser: nil,
-		}, e
-	}
+	//_, e := util.ParseToken(req.Token)
+	//if e != nil {
+	//	return &types.FriendListResp{
+	//		StatusCode: common.TOKEN_EXPIRE_ERROR,
+	//		StatusMsg:  "无效token",
+	//		FriendUser: nil,
+	//	}, e
+	//}
 	friends, e := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
@@ -48,34 +43,22 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			FriendUser: nil,
 		}, e
 	}
-	userInfo := userinfo.NewUserinfoLogic(l.ctx, l.svcCtx)
 	var users []types.FriendUser
 	for _, item := range friends.Follows {
-		fmt.Println(item.FollowId)
-		id, _ := strconv.Atoi(item.FollowId)
-		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
-		if err != nil {
-			return &types.FriendListResp{
-				StatusCode: common.DB_ERROR,
-				StatusMsg:  "查询好友列表失败",
-				FriendUser: nil,
-			}, err
+		user := types.FriendUser{
+			UserId:          item.Id,
+			Name:            item.UserName,
+			FollowCount:     item.FollowCount,
+			FollowerCount:   item.FollowerCount,
+			IsFollow:        item.IsFollow,
+			Avatar:          item.Avator,
+			BackgroundImage: item.BackgroundImage,
+			Signature:       item.Signature,
+			TotalFavorited:  0, //后三个数据查别人的数据库
+			WorkCount:       0,
+			FavoriteCount:   0,
 		}
-		users = append(users, types.FriendUser{
-			UserId:          resp.User.UserId,
-			Name:            resp.User.Name,
-			FollowCount:     resp.User.FollowCount,
-			FollowerCount:   resp.User.FollowerCount,
-			IsFollow:        true,
-			Avatar:          resp.User.Avatar,
-			BackgroundImage: resp.User.BackgroundImage,
-			Signature:       resp.User.Signature,
-			TotalFavorited:  resp.User.TotalFavorited,
-			WorkCount:       resp.User.WorkCount,
-			FavoriteCount:   resp.User.FavoriteCount,
-			Message:         "Message和MsgType后续调用别人接口查询",
-			MsgType:         0,
-		})
+		users = append(users, user)
 	}
 	return &types.FriendListResp{
 		StatusCode: common.OK,

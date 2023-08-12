@@ -3,13 +3,9 @@ package relation
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
-	"strconv"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -46,32 +42,22 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 			FollowerList: nil,
 		}, e
 	}
-	userInfo := userinfo.NewUserinfoLogic(l.ctx, l.svcCtx)
 	var users []types.User
 	for _, item := range followers.Follows {
-		fmt.Println(item.FollowId)
-		id, _ := strconv.Atoi(item.UserId)
-		resp, err := userInfo.Userinfo(&types.UserinfoReq{UserId: int64(id)})
-		if err != nil {
-			return &types.FollowerListResp{
-				StatusCode:   common.DB_ERROR,
-				StatusMsg:    "查询粉丝列表失败",
-				FollowerList: nil,
-			}, err
+		user := types.User{
+			UserId:          item.Id,
+			Name:            item.UserName,
+			FollowCount:     item.FollowCount,
+			FollowerCount:   item.FollowerCount,
+			IsFollow:        item.IsFollow,
+			Avatar:          item.Avator,
+			BackgroundImage: item.BackgroundImage,
+			Signature:       item.Signature,
+			TotalFavorited:  0, //后三个数据查别人的数据库
+			WorkCount:       0,
+			FavoriteCount:   0,
 		}
-		isFollowed, e := l.svcCtx.UserRpcClient.CheckIsFollow(l.ctx, &pb.CheckIsFollowReq{
-			Userid:   item.FollowId,
-			Followid: item.UserId,
-		})
-		if e != nil {
-			return &types.FollowerListResp{
-				StatusCode:   common.DB_ERROR,
-				StatusMsg:    "查询粉丝列表失败",
-				FollowerList: nil,
-			}, err
-		}
-		resp.User.IsFollow = isFollowed.IsFollowed
-		users = append(users, resp.User)
+		users = append(users, user)
 	}
 	return &types.FollowerListResp{
 		StatusCode:   common.OK,

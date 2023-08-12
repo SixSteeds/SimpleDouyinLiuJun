@@ -34,8 +34,14 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 	for _, item := range *follows {
 		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
-			UserId:   item.UserId,
-			FollowId: item.FollowId,
+			Id:              item.Id,
+			FollowerCount:   item.FollowerCount,
+			FollowCount:     item.FollowCount,
+			UserName:        item.UserName,
+			Avator:          item.Avator,
+			BackgroundImage: item.BackgroundImage,
+			Signature:       item.Signature,
+			IsFollow:        item.IsFollow,
 		})
 	}
 	return &pb.GetFollowersByIdResp{

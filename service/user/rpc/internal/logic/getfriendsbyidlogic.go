@@ -25,7 +25,6 @@ func NewGetFriendsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
-	// todo: add your logic here and delete this line
 	follows, err := l.svcCtx.FollowsModel.FindFriendsByUserId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
@@ -34,8 +33,14 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 	for _, item := range *follows {
 		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
-			UserId:   item.UserId,
-			FollowId: item.FollowId,
+			Id:              item.Id,
+			FollowerCount:   item.FollowerCount,
+			FollowCount:     item.FollowCount,
+			UserName:        item.UserName,
+			Avator:          item.Avator,
+			BackgroundImage: item.BackgroundImage,
+			Signature:       item.Signature,
+			IsFollow:        item.IsFollow,
 		})
 	}
 	return &pb.GetFriendsByIdResp{
