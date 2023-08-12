@@ -102,12 +102,9 @@ message Userinfo {
   int64 follower_count  = 12;
   bool is_follow = 13;
   string username = 2; //璐﹀彿
-  string password = 3; //瀵嗙爜
   string avatar = 4; //澶村儚
   string backgroundImage = 5; //澶村儚
   string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64 updateTime = 8;
-  string name = 10; //鐢ㄦ埛鏄电О
 }
 
 message AddUserinfoReq {
