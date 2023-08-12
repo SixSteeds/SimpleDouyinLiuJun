@@ -23,19 +23,19 @@ func NewGetUserinfoByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.GetUserinfoByIdResp, error) {
 	// todo: add your logic here and delete this line
-	info, err := l.svcCtx.UserinfoModel.FindOne(l.ctx, in.Id)
+	info, err := l.svcCtx.UserinfoModel.FindOne(l.ctx, in.Id, in.UserID)
 	if err != nil {
 		return nil, err
 	}
 	userInfo := pb.Userinfo{
 		Id:              info.Id,
+		FollowCount:     info.FollowCount,
+		FollowerCount:   info.FollowerCount,
+		IsFollow:        info.IsFollow,
 		Username:        info.Username.String,
-		Password:        info.Password.String,
 		Avatar:          info.Avatar.String,
 		BackgroundImage: info.BackgroundImage.String,
 		Signature:       info.Signature.String,
-		UpdateTime:      info.UpdateTime.Unix(),
-		Name:            info.Name.String,
 	}
 	return &pb.GetUserinfoByIdResp{
 		Userinfo: &userInfo,

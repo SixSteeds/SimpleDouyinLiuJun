@@ -51,8 +51,10 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	}
 	for _, item := range follows.Comment {
 		//查询用户信息
+		IntUserId, _ := strconv.Atoi(logger.ID)
 		info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &userPB.GetUserinfoByIdReq{
-			Id: item.UserId,
+			Id:     item.UserId,
+			UserID: int64(IntUserId),
 		})
 		fmt.Println("用户信息", info, e)
 		var user types.User
@@ -63,48 +65,18 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 				CommentList: []types.Comment{},
 			}, e
 		}
-		followCount, e := l.svcCtx.UserRpcClient.GetFollowsCountById(l.ctx, &userPB.GetFollowsCountByIdReq{
-			Id: item.UserId,
-		})
-		if e != nil {
-			return &types.CommentListResp{
-				StatusCode:  common.DB_ERROR,
-				StatusMsg:   "查询评论列表失败",
-				CommentList: []types.Comment{},
-			}, e
-		}
-		followerCount, e := l.svcCtx.UserRpcClient.GetFollowersCountById(l.ctx, &userPB.GetFollowersCountByIdReq{
-			Id: item.UserId,
-		})
-		if e != nil {
-			return &types.CommentListResp{
-				StatusCode:  common.DB_ERROR,
-				StatusMsg:   "查询评论列表失败",
-				CommentList: []types.Comment{},
-			}, e
-		}
-		isFollow, e := l.svcCtx.UserRpcClient.CheckIsFollow(l.ctx, &userPB.CheckIsFollowReq{
-			Userid:   logger.ID,
-			Followid: strconv.Itoa(int(info.Userinfo.Id)),
-		})
-		if e != nil {
-			return &types.CommentListResp{
-				StatusCode:  common.DB_ERROR,
-				StatusMsg:   "查询评论列表失败",
-				CommentList: []types.Comment{},
-			}, e
-		}
 		user = types.User{
 			Id:              info.Userinfo.Id,
-			Name:            info.Userinfo.Name,
-			FollowCount:     followCount.Count,
-			FollowerCount:   followerCount.Count,
-			IsFollow:        isFollow.IsFollowed, //我对这个的理解就是当前用户对这条数据的用户是否关注
+			Name:            info.Userinfo.Username,
+			FollowCount:     info.Userinfo.FollowCount,
+			FollowerCount:   info.Userinfo.FollowerCount,
+			IsFollow:        info.Userinfo.IsFollow, //我对这个的理解就是当前用户对这条数据的用户是否关注
 			Avatar:          info.Userinfo.Avatar,
 			BackgroundImage: info.Userinfo.BackgroundImage,
 			Signature:       info.Userinfo.Signature,
 			WorkCount:       0, //查表
 			FavoriteCount:   0, //查表
+			TotalFavorited:  0, //查表
 		}
 		comments = append(comments, types.Comment{
 			Id:         item.Id,
