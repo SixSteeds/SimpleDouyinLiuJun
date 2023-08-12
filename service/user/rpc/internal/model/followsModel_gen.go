@@ -33,7 +33,7 @@ type (
 		Delete(ctx context.Context, id int64) error
 		DeleteByUserIdAndFollowId(ctx context.Context,userId string,followId string) error
 		FindByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
-		FindByFollowId(ctx context.Context, userId int64) (*[]*Follows, error)
+		FindByFollowId(ctx context.Context, userId int64) (*[]*FollowUser, error)
 		FindFriendsByUserId(ctx context.Context, userId int64) (*[]*Follows, error)
 		FindFollowsCount(ctx context.Context, userId int64) (int, error)
 		FindFollowersCount(ctx context.Context, userId int64) (int, error)
@@ -52,6 +52,17 @@ type (
 		CreateTime time.Time          `db:"create_time"` // 该条记录创建时间
 		UpdateTime time.Time          `db:"update_time"` // 该条最后一次信息修改时间
 		IsDelete   int64          `db:"is_delete"`   // 逻辑删除
+	}
+
+	FollowUser struct{
+		Id         int64          `db:"id"`          // 主键
+		UserName     string         `db:"username"`
+		Avator   string         `db:"avator"`
+		BackgroundImage   string         `db:"background_image"`
+		Signature   string         `db:"signature"`
+		FollowerCount         int64          `db:"follower_count"`
+		FollowCount         int64          `db:"follow_count"`
+		IsFollow         bool          `db:"is_follow"`
 	}
 )
 
@@ -117,10 +128,15 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 		return nil, err
 	}
 }
-func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]*Follows, error) {
-	var resp []*Follows
-	query := fmt.Sprintf("select %s from %s where `follow_id` = ? ", followsRows, m.table)
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
+
+func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]*FollowUser, error) {
+	var resp []*FollowUser
+	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
+		"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
+		"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
+		",EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
+		" from userinfo u,follows f where f.follow_id = ? and f.user_id = u.id and u.is_delete = 0")
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id,id)
 	switch err {
 	case nil:
 		return &resp, nil

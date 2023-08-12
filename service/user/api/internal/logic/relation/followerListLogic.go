@@ -3,7 +3,6 @@ package relation
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -29,14 +28,14 @@ func NewFollowerListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Foll
 }
 
 func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *types.FollowerListResp, err error) {
-	_, e := util.ParseToken(req.Token)
-	if e != nil {
-		return &types.FollowerListResp{
-			StatusCode:   common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:    "无效token",
-			FollowerList: nil,
-		}, e
-	}
+	//_, e := util.ParseToken(req.Token)
+	//if e != nil {
+	//	return &types.FollowerListResp{
+	//		StatusCode:   common.TOKEN_EXPIRE_ERROR,
+	//		StatusMsg:    "无效token",
+	//		FollowerList: nil,
+	//	}, e
+	//}
 	followers, e := l.svcCtx.UserRpcClient.GetFollowersById(l.ctx, &pb.GetFollowersByIdReq{
 		Id: req.UserId,
 	})
