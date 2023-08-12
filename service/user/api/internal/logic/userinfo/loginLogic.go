@@ -5,6 +5,8 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"github.com/zeromicro/go-queue/kq"
+	"log"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -34,7 +36,16 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		return nil, err
 	}
+	pusher := kq.NewPusher([]string{
+		"127.0.0.1:9092",
+		"127.0.0.1:9093",
+		"127.0.0.1:9094",
+		"127.0.0.1:9095",
+	}, "loginLog")
 
+	if err := pusher.Push("foo"); err != nil {
+		log.Fatal(err)
+	}
 	token, err := util.GenToken(data.UserId, req.Username)
 	if err != nil {
 		return nil, err
