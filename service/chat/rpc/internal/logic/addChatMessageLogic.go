@@ -2,6 +2,11 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/util"
+	"doushen_by_liujun/service/chat/rpc/internal/model"
+	"fmt"
+	"math/rand"
+	"time"
 
 	"doushen_by_liujun/service/chat/rpc/internal/svc"
 	"doushen_by_liujun/service/chat/rpc/pb"
@@ -23,9 +28,29 @@ func NewAddChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ad
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
 func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
-	// todo: add your logic here and delete this line
+	// generate id
+	rand.Seed(time.Now().UnixNano())
+	snowflake, err := util.NewSnowflake(int64(rand.Intn(1023)))
+	if err != nil {
+		return nil, fmt.Errorf("fail to generate id, error = %s", err)
+	}
+	snowId := snowflake.Generate()
+
+	// add chat message record
+	request := &model.ChatMessage{
+		Id:         snowId,
+		UserId:     in.UserId,
+		ToUserId:   in.ToUserId,
+		Message:    in.Message,
+		CreateTime: time.Time{},
+		UpdateTime: time.Time{},
+		IsDelete:   0,
+	}
+	_, err = l.svcCtx.ChatMessageModel.Insert(l.ctx, request)
+	if err != nil {
+		return nil, fmt.Errorf("fail to add chat message record, error = %s", err)
+	}
 
 	return &pb.AddChatMessageResp{}, nil
 }
