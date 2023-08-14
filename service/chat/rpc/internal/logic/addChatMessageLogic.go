@@ -39,13 +39,11 @@ func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddC
 
 	// add chat message record
 	request := &model.ChatMessage{
-		Id:         snowId,
-		UserId:     in.UserId,
-		ToUserId:   in.ToUserId,
-		Message:    in.Message,
-		CreateTime: time.Time{},
-		UpdateTime: time.Time{},
-		IsDelete:   0,
+		Id:       snowId,
+		UserId:   in.UserId,
+		ToUserId: in.ToUserId,
+		Message:  in.Message,
+		IsDelete: 0,
 	}
 	_, err = l.svcCtx.ChatMessageModel.Insert(l.ctx, request)
 	if err != nil {
