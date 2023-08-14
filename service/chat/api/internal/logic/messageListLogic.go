@@ -2,6 +2,10 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/util"
+	"doushen_by_liujun/service/chat/rpc/pb"
+	"fmt"
+	"time"
 
 	"doushen_by_liujun/service/chat/api/internal/svc"
 	"doushen_by_liujun/service/chat/api/internal/types"
@@ -24,7 +28,55 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 }
 
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.MessageChatReqResp, err error) {
-	// todo: add your logic here and delete this line
+	// parse token
+	res, err := util.ParseToken(req.Token)
+	if err != nil {
+		resp = &types.MessageChatReqResp{
+			StatusCode:  1,
+			StatusMsg:   "fail to parse token",
+			MessageList: nil,
+		}
+		return resp, fmt.Errorf("fail to parse token, error = %s", err)
+	}
 
-	return
+	// get params
+	userId := res.UserID
+	toUserId := req.ToUserId
+
+	request := &pb.GetChatMessageByIdReq{
+		UserId:     userId,
+		ToUserId:   toUserId,
+		PreMsgTime: time.Time{},
+	}
+
+	// get chat messages
+	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, request)
+	if err != nil {
+		resp = &types.MessageChatReqResp{
+			StatusCode:  1,
+			StatusMsg:   "fail to get chat message",
+			MessageList: nil,
+		}
+		return resp, fmt.Errorf("fail to get chat message, error = %s", err)
+	}
+
+	var messages []types.Message
+	for _, item := range message.ChatMessage {
+		msg := types.Message{
+			Id:         item.Id,
+			ToUserId:   item.ToUserId,
+			FromUserId: item.UserId,
+			Content:    item.Message,
+			CreateTime: item.CreateTime,
+		}
+		messages = append(messages, msg)
+	}
+
+	resp = &types.MessageChatReqResp{
+		StatusCode:  0,
+		StatusMsg:   "get chat messages successfully",
+		MessageList: messages,
+	}
+
+	return resp, nil
 }

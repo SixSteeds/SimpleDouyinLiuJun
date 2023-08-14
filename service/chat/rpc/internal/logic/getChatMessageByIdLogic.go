@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"fmt"
 
 	"doushen_by_liujun/service/chat/rpc/internal/svc"
 	"doushen_by_liujun/service/chat/rpc/pb"
@@ -24,7 +25,20 @@ func NewGetChatMessageByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdReq) (*pb.GetChatMessageByIdResp, error) {
-	// todo: add your logic here and delete this line
-
-	return &pb.GetChatMessageByIdResp{}, nil
+	var results []*pb.ChatMessage
+	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId)
+	if err != nil {
+		return nil, fmt.Errorf("fail to getChatMsgByIds, error = ?", err)
+	}
+	for _, item := range *message {
+		results = append(results, &pb.ChatMessage{
+			Id:         item.Id,
+			UserId:     item.UserId,
+			ToUserId:   item.ToUserId,
+			Message:    item.Message,
+			CreateTime: item.CreateTime,
+			UpdateTime: item.UpdateTime,
+		})
+	}
+	return &pb.GetChatMessageByIdResp{ChatMessage: results}, nil
 }
