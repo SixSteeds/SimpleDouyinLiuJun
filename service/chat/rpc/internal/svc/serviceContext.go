@@ -3,6 +3,7 @@ package svc
 import (
 	"doushen_by_liujun/service/chat/rpc/internal/config"
 	"doushen_by_liujun/service/chat/rpc/internal/model"
+	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
