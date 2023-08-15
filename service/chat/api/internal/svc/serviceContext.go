@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/service/chat/rpc/chat"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {

@@ -95,18 +95,18 @@ func (x *ChatMessage) GetMessage() string {
 	return ""
 }
 
-func (x *ChatMessage) GetCreateTime() int64 {
+func (x *ChatMessage) GetCreateTime() time.Time {
 	if x != nil {
 		return x.CreateTime
 	}
-	return 0
+	return time.Time{}
 }
 
-func (x *ChatMessage) GetUpdateTime() int64 {
+func (x *ChatMessage) GetUpdateTime() time.Time {
 	if x != nil {
 		return x.UpdateTime
 	}
-	return 0
+	return time.Time{}
 }
 
 type AddChatMessageReq struct {
@@ -512,7 +512,7 @@ func (*GetChatMessageByIdResp) Descriptor() ([]byte, []int) {
 	return file_chat_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetChatMessageByIdResp) GetChatMessage() *ChatMessage {
+func (x *GetChatMessageByIdResp) GetChatMessage() []*ChatMessage {
 	if x != nil {
 		return x.ChatMessage
 	}

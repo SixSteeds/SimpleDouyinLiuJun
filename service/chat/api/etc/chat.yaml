@@ -1,8 +1,6 @@
-Name: media
+Name: chat
 Host: 0.0.0.0
 Port: 8087
-
-
 
 ChatRpcConf:
   Etcd:
