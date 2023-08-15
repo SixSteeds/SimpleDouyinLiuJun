@@ -81,7 +81,7 @@ service chat{
 	 rpc AddChatMessage(AddChatMessageReq) returns (AddChatMessageResp); 
 	 rpc UpdateChatMessage(UpdateChatMessageReq) returns (UpdateChatMessageResp); 
 	 rpc DelChatMessage(DelChatMessageReq) returns (DelChatMessageResp); 
-	 rpc GetChatMessageById(GetChatMessageByIdReq) returns (GetChatMessageByIdResp); 
+	 rpc GetChatMessageById(GetChatMessageByIdReq) returns (GetChatMessageByIdResp);
 	 rpc SearchChatMessage(SearchChatMessageReq) returns (SearchChatMessageResp); 
 
 }
