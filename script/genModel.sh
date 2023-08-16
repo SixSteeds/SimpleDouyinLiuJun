@@ -20,4 +20,4 @@ passwd=030321
 
 
 goctl model mysql datasource -url="${username}:${passwd}@tcp(${host}:${port})/${dbname}" -table="${tables}"  -dir="${modeldir}" -cache=true --style=goZero
-goctl model mysql datasource -url="root:liujun@tcp(43.136.243.177:3306)/liujun_chat" -table="chat_message" -dir="./genModel" -cache=true --style=goZero
+goctl model mysql datasource -url="root:liujun@tcp(8.137.50.160:3306)/liujun_chat" -table="chat_message" -dir="./model" -cache=true --style=goZero

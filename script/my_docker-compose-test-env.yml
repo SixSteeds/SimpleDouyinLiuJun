@@ -132,7 +132,8 @@ services:
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9092 # 监听器配置
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9092 #宿主机IP
 
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   kafka-2:
     image: 'bitnami/kafka:3.5.1'
@@ -156,7 +157,9 @@ services:
       KAFKA_CFG_NODE_ID: 2
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9093
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9093 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   kafka-3:
     image: 'bitnami/kafka:3.5.1'
@@ -179,7 +182,8 @@ services:
       KAFKA_CFG_NODE_ID: 3
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9094
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9094 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   #broker only
   kafka-4:
@@ -203,7 +207,8 @@ services:
       KAFKA_CFG_PROCESS_ROLES: broker # Kafka进程角色，包括broker和controller
       KAFKA_CFG_LISTENERS: BROKER://:9095 # 监听器配置
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9095 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
 networks:
   liujun_net:

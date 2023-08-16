@@ -8,7 +8,7 @@ Etcd:
 #  User: root
 
 DB:
-  DataSource: root:liujun@tcp(43.136.243.177:3306)/liujun_user?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_user?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Cache:
   - Host: 0.0.0.0:8094

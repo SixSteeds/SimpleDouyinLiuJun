@@ -7,6 +7,7 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
 )
@@ -27,6 +28,9 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
 	logger, e := util.ParseToken(req.Token)
+	fmt.Println(logger.Username)
+	fmt.Println(logger.UserID)
+	fmt.Println(e)
 	if e != nil {
 		return &types.UserinfoResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
