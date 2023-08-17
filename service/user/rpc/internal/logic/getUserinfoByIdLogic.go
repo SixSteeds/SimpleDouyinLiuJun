@@ -39,13 +39,14 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 	followNum := 0
 	followerNum := 0
+	expiration := 3600 //秒
 	if len(followRecord) == 0 {
 		//没有记录，去查表
 		num, err := l.svcCtx.FollowsModel.FindFollowsCount(l.ctx, in.Id)
 		if err != nil {
 			return nil, err
 		}
-		_ = redisClient.SetCtx(l.ctx, followKey, strconv.Itoa(num))
+		_ = redisClient.SetexCtx(l.ctx, followKey, strconv.Itoa(num), expiration)
 		followNum = num
 	} else {
 		//有记录
@@ -58,7 +59,7 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 		if err != nil {
 			return nil, err
 		}
-		_ = redisClient.SetCtx(l.ctx, followerKey, strconv.Itoa(num))
+		_ = redisClient.SetexCtx(l.ctx, followerKey, strconv.Itoa(num), expiration)
 		followerNum = num
 	} else {
 		//有记录

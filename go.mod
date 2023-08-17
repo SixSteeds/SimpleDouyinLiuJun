@@ -1,9 +1,10 @@
 module doushen_by_liujun
 
-go 1.20
+go 1.19
 
 require (
 	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/juju/ratelimit v1.0.2
 	github.com/zeromicro/go-queue v1.1.8
 	github.com/zeromicro/go-zero v1.5.4
 	google.golang.org/grpc v1.57.0

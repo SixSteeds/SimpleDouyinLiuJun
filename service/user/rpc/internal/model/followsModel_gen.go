@@ -60,8 +60,6 @@ type (
 		Avator   string         `db:"avator"`
 		BackgroundImage   string         `db:"background_image"`
 		Signature   string         `db:"signature"`
-		FollowerCount         int64          `db:"follower_count"`
-		FollowCount         int64          `db:"follow_count"`
 		IsFollow         bool          `db:"is_follow"`
 	}
 )
@@ -118,9 +116,7 @@ func (m *defaultFollowsModel) FindOne(ctx context.Context, id int64) (*Follows, 
 func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*FollowUser, error) {
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
-		"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
-		"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
-		",TRUE AS is_follow"+
+		"TRUE AS is_follow"+
 		" from userinfo u,follows f where f.user_id = ? and f.user_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
@@ -136,9 +132,7 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]*FollowUser, error) {
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
-		"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
-		"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
-		",EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
+		"EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
 		" from userinfo u,follows f where f.follow_id = ? and f.user_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id,id)
 	switch err {
@@ -154,9 +148,7 @@ func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]
 func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64) (*[]*FollowUser, error) {
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
-		"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
-		"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
-		",TRUE AS is_follow"+
+		"TRUE AS is_follow"+
 		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id and f.user_id = ? and f.user_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
