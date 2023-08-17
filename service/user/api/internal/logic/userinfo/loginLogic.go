@@ -5,6 +5,8 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"encoding/base64"
+	"fmt"
 	"log"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
@@ -49,6 +51,9 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_success"); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(base64.StdEncoding.EncodeToString([]byte(common.JwtSecret)))
+
 	return &types.LoginResp{
 		UserId:     data.UserId,
 		StatusCode: common.OK,

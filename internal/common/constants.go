@@ -1,6 +1,6 @@
 package common
 
-const JwtSecret = "liujun"
+const JwtSecret = "bGl1anVu"
 const JwtExpire = 7200
 const OrganizationName = " SixSteeds"
 const DefaultBackImage = " https://staraway.love/02c05856-e60c-44a0-9e85-6c2ba7ae9e0942d98a82be40d551ce6e123abbd0718292f80a71_raw.jpg"

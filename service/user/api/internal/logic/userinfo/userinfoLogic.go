@@ -7,6 +7,7 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"log"
 	"strconv"
@@ -28,6 +29,9 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
 	logger, e := util.ParseToken(req.Token)
+	fmt.Println(logger.Username)
+	fmt.Println(logger.UserID)
+	fmt.Println(e)
 	if e != nil {
 		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_ParseToken_false"); err != nil {
 			log.Fatal(err)

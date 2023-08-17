@@ -2,7 +2,6 @@ package util
 
 import (
 	"doushen_by_liujun/internal/common"
-	"errors"
 	"github.com/golang-jwt/jwt/v4"
 	"time"
 )
@@ -38,16 +37,15 @@ func GenToken(userId int64, username string) (string, error) {
 
 func ParseToken(tokenString string) (*CustomClaims, error) {
 	// 解析token
-	var mc = new(CustomClaims)
-	token, err := jwt.ParseWithClaims(tokenString, mc, func(token *jwt.Token) (i interface{}, err error) {
-		return common.JwtSecret, nil
+	//var mc = new(CustomClaims)
+	token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (i interface{}, err error) {
+		return []byte(common.JwtSecret), nil
 	})
 	if err != nil {
 		return nil, err
 	}
-	// 对token对象中的Claim进行类型断言
-	if token.Valid { // 校验token
-		return mc, nil
+	if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
+		return claims, nil
 	}
-	return nil, errors.New("invalid token")
+	return nil, jwt.ErrInvalidKey
 }
