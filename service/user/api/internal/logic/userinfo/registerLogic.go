@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"log"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -31,7 +32,11 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 		Username: req.Username,
 		Password: req.Password,
 	})
+
 	if err != nil || !data.Success {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_registerLogic_Register_SaveUser_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.RegisterResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -39,10 +44,16 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	}
 	token, err := util.GenToken(data.Id, req.Username)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_registerLogic_Register_genToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.RegisterResp{
 			StatusCode: common.TOKEN_GENERATE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_GENERATE_ERROR),
 		}, err
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_registerLogic_Register_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.RegisterResp{
 		StatusCode: common.OK,

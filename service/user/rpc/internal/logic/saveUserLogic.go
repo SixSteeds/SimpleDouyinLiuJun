@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/internal/model"
+	"log"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
@@ -30,6 +31,9 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 	// todo: add your logic here and delete this line
 	snowflake, err := util.NewSnowflake(2)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_NewSnowflake_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &pb.SaveUserResp{
 			Success: false,
 		}, nil
@@ -49,12 +53,18 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 		Password: password,
 	})
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_insert_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &pb.SaveUserResp{
 			Success: false,
 		}, err
 	}
 
 	logx.Error("save user success")
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_success"); err != nil {
+		log.Fatal(err)
+	}
 	return &pb.SaveUserResp{
 		Success: true,
 		Id:      snowId,

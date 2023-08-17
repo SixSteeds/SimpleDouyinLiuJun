@@ -7,6 +7,7 @@ import (
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 )
 
 type FollowerListLogic struct {
@@ -36,6 +37,9 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		Id: req.UserId,
 	})
 	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followerListLogic_FollowerList_GetFollowersById_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.FollowerListResp{
 			StatusCode:   common.DB_ERROR,
 			StatusMsg:    "查询粉丝列表失败",
@@ -58,6 +62,9 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 			FavoriteCount:   0,
 		}
 		users = append(users, user)
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followerListLogic_FollowerList_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.FollowerListResp{
 		StatusCode:   common.OK,

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
@@ -29,6 +30,9 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 	if err != nil {
 		return nil, err
 	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFriendsByIdLogic_GetFriendById_FindFriendsByUserId_false"); err != nil {
+		log.Fatal(err)
+	}
 	var resp []*pb.Follows
 	for _, item := range *follows {
 		fmt.Println(item)
@@ -42,6 +46,9 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			Signature:       item.Signature,
 			IsFollow:        item.IsFollow,
 		})
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFriendsByIdLogic_GetFriendById_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &pb.GetFriendsByIdResp{
 		Follows: resp,

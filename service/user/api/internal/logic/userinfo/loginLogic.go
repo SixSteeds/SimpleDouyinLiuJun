@@ -33,15 +33,21 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		Password: req.Password,
 	})
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_CheckUser_false"); err != nil {
+			log.Fatal(err)
+		}
 		return nil, err
 	}
 
-	if err := l.svcCtx.KqPusherClient.Push("登录成功"); err != nil {
-		log.Fatal(err)
-	}
 	token, err := util.GenToken(data.UserId, req.Username)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_genToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		return nil, err
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.LoginResp{
 		UserId:     data.UserId,

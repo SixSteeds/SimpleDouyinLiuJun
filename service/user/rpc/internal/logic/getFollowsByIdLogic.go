@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 )
 
 type GetFollowsByIdLogic struct {
@@ -28,6 +29,9 @@ func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetF
 	if err != nil {
 		return nil, err
 	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowsByIdLogic_GetFollowsById_FindByUserId_false"); err != nil {
+		log.Fatal(err)
+	}
 	var resp []*pb.Follows
 	for _, item := range *follows {
 		fmt.Println(item)
@@ -41,6 +45,9 @@ func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetF
 			Signature:       item.Signature,
 			IsFollow:        item.IsFollow,
 		})
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowsByIdLogic_GetFollowsById_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &pb.GetFollowsByIdResp{
 		Follows: resp,

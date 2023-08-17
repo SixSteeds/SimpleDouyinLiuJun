@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
@@ -30,6 +31,9 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 	if err != nil {
 		return nil, err
 	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowersByIdLogic_GetFollowersById_FindByFollowId_false"); err != nil {
+		log.Fatal(err)
+	}
 	var resp []*pb.Follows
 	for _, item := range *follows {
 		fmt.Println(item)
@@ -43,6 +47,9 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 			Signature:       item.Signature,
 			IsFollow:        item.IsFollow,
 		})
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowersByIdLogic_GetFollowersById_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &pb.GetFollowersByIdResp{
 		Follows: resp,
