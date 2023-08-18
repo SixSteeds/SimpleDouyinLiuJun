@@ -14,7 +14,7 @@ Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun
 
-LoginKqPusherConf:
+UserKqPusherConf:
   Brokers:
     - 127.0.0.1:9092
     - 127.0.0.1:9093

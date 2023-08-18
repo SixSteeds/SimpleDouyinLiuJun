@@ -11,8 +11,8 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
-	Cache             cache.CacheConf
-	LoginKqPusherConf struct {
+	Cache            cache.CacheConf
+	UserKqPusherConf struct {
 		Brokers []string
 		Topic   string
 	}

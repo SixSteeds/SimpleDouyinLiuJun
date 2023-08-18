@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -31,6 +32,9 @@ func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetC
 	if err != nil {
 		return nil, err
 	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_getCommentByIdLogic_GetCommentById_FindCommentsByVideoId_false"); err != nil {
+		log.Fatal(err)
+	}
 	var resp []*pb.Comment
 	for _, item := range *comments {
 		fmt.Println(item)
@@ -42,6 +46,9 @@ func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetC
 			CreateTime: item.CreateTime.Unix(),
 			UpdateTime: item.UpdateTime.Unix(),
 		})
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_getCommentByIdLogic_GetCommentById_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &pb.GetCommentByIdResp{
 		Comment: resp,

@@ -27,6 +27,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRpcClient:       user.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
 		RedisClient:         redis.MustNewRedis(c.RedisConf),
 		JwtAuthMiddleware:   gloabmiddleware.NewJwtAuthMiddleware().Handle,
-		KqPusherClient:      kq.NewPusher(c.LoginKqPusherConf.Brokers, c.LoginKqPusherConf.Topic),
+		KqPusherClient:      kq.NewPusher(c.UserKqPusherConf.Brokers, c.UserKqPusherConf.Topic),
 	}
 }

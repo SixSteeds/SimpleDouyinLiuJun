@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
+	"log"
 	"time"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
@@ -35,6 +36,9 @@ func (l *AddCommentLogic) AddComment(in *pb.AddCommentReq) (*pb.AddCommentResp, 
 	if err1 != nil {
 		return nil, errors.New("rpc-AddComment-新增评论，snowflake生成id失败")
 	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_addCommentLogic_AddComment_NewSnowflake_false"); err != nil {
+		log.Fatal(err)
+	}
 	snowId := snowflake.Generate()
 	_, err := l.svcCtx.CommentModel.Insert(l.ctx, &model.Comment{
 		Id:         snowId,
@@ -48,7 +52,12 @@ func (l *AddCommentLogic) AddComment(in *pb.AddCommentReq) (*pb.AddCommentResp, 
 	if err != nil {
 		return nil, errors.New("rpc-AddComment-新增评论数据失败")
 	}
-
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_addCommentLogic_AddComment_Insert_false"); err != nil {
+		log.Fatal(err)
+	}
 	logx.Error("rpc-AddComment-新增评论数据成功")
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_addCommentLogic_AddComment_success"); err != nil {
+		log.Fatal(err)
+	}
 	return &pb.AddCommentResp{}, nil
 }

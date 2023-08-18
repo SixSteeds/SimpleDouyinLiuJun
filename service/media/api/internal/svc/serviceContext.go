@@ -3,6 +3,7 @@ package svc
 import (
 	gloabmiddleware "doushen_by_liujun/internal/middleware"
 	"doushen_by_liujun/service/media/api/internal/config"
+	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
 )
@@ -11,6 +12,7 @@ type ServiceContext struct {
 	Config            config.Config
 	RedisClient       *redis.Redis
 	JwtAuthMiddleware rest.Middleware
+	KqPusherClient    *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -19,5 +21,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		RedisClient: redis.MustNewRedis(c.RedisConf),
 
 		JwtAuthMiddleware: gloabmiddleware.NewJwtAuthMiddleware().Handle,
+		KqPusherClient:    kq.NewPusher(c.MediaKqPusherConf.Brokers, c.MediaKqPusherConf.Topic),
 	}
 }

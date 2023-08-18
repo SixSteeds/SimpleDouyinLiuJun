@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
+	"log"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
@@ -31,6 +32,9 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 	//1.根据 token 获取 userid
 	parsToken, err0 := util.ParseToken(req.Token)
 	if err0 != nil {
+		if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteActionLogic_FavoriteAction_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		// 返回token失效错误
 		return &types.FavoriteActionResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
@@ -46,6 +50,9 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 			IsDelete: 0,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteActionLogic_FavoriteAction_AddFavorite_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.FavoriteActionResp{
 				StatusCode: common.DB_ERROR,
@@ -60,6 +67,9 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 			VideoId: req.VideoId,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteActionLogic_FavoriteAction_DelFavorite_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.FavoriteActionResp{
 				StatusCode: common.DB_ERROR,
@@ -67,6 +77,9 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 			}, nil
 		}
 		logx.Error("api-favoriteAction-用户取消点赞成功")
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteActionLogic_FavoriteAction_success"); err != nil {
+		log.Fatal(err)
 	}
 
 	return &types.FavoriteActionResp{
