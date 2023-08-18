@@ -34,6 +34,7 @@ func (l *SaveVideoLogic) SaveVideo(in *pb.SaveVideoReq) (*pb.SaveVideoResp, erro
 		Title:    in.Title,
 	})
 	if err != nil {
+		logx.Error(err)
 		return nil, err
 	}
 	return &pb.SaveVideoResp{}, nil

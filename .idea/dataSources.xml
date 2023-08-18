@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-<<<<<<< HEAD
-    <data-source source="LOCAL" name="aliyun" uuid="4cbb3768-0540-4de2-92e8-2542284aa1d6">
-=======
-    <data-source source="LOCAL" name="@8.137.50.160" uuid="4cbb3768-0540-4de2-92e8-2542284aa1d6">
->>>>>>> 54b9037c0c4cf9a7f75c7cee9f10f9808e5c2748
+    <data-source source="LOCAL" name="aliyun" uuid="aace4d6c-2e01-4c46-9719-7f7256c6cea2">
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
@@ -15,7 +11,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="localhost" uuid="8458e6d8-2011-4f91-bac8-d5629967583e">
+    <data-source source="LOCAL" name="docker-redis" uuid="7bd04a9e-f1e8-4374-b80c-f11d52534619">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>

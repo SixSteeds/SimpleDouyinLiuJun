@@ -97,14 +97,14 @@ message SearchFollowsResp {
 
 //--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Userinfo {
-  int64 id = 1; //涓婚敭
-  int64 follow_count  = 11;
-  int64 follower_count  = 12;
-  bool is_follow = 13;
-  string username = 2; //璐﹀彿
-  string avatar = 4; //澶村儚
-  string backgroundImage = 5; //澶村儚
-  string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
+  int64 id = 1; //
+  int64 follow_count = 11;
+  int64 follower_count = 12;
+  bool   is_follow = 13;
+  string username = 2; //
+  string avatar = 4; //
+  string backgroundImage = 5; //
+  string signature = 6; //
 }
 
 message AddUserinfoReq {
@@ -140,15 +140,15 @@ message DelUserinfoResp {
 }
 message CheckIsFollowReq{
   string userid = 1; //id
-  string followid=2;
+  string followid = 2;
 }
 message CheckIsFollowResp{
-  bool isFollowed=1;
+  bool isFollowed = 1;
 
 }
 message GetUserinfoByIdReq {
   int64 id = 1; //id
-  int64 userID=2;//当前用户
+  int64 userID = 2;//当前用户
 }
 
 message GetUserinfoByIdResp {
@@ -201,13 +201,15 @@ message SaveUserResp{
 }
 
 message CheckUserReq{
-   string username = 1;
-   string password = 2;
+  string username = 1;
+  string password = 2;
 }
 
 message CheckUserResp{
-   int64 userId = 1;
+  int64 userId = 1;
 }
+
+
 
 
 // ------------------------------------ 
