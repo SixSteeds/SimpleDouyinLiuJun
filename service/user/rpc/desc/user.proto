@@ -109,6 +109,20 @@ message Userinfo {
   int64   FavoriteCount=8;
   int64   TotalFavorited=9;
 }
+message Usersinfo {
+  int64 id = 1; //涓婚敭
+  int64 follow_count  = 11;
+  int64 follower_count  = 12;
+  bool is_follow = 13;
+  string username = 2; //璐﹀彿
+  string avatar = 4; //澶村儚
+  string backgroundImage = 5; //澶村儚
+  string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
+  int64   WorkCount=7;
+  int64   FavoriteCount=8;
+  int64   TotalFavorited=9;
+  string name = 3; //璐﹀彿
+}
 
 message AddUserinfoReq {
   string username = 1; //璐﹀彿
@@ -164,7 +178,7 @@ message GetUsersByIdsReq {
 }
 
 message GetUsersByIdsResp {
-  repeated Userinfo users = 1; //userinfo
+  repeated Usersinfo users = 1; //userinfo
 }
 message SearchUserinfoReq {
   int64 page = 1; //page

@@ -51,6 +51,7 @@ type (
 	UpdateUserinfoReq         = pb.UpdateUserinfoReq
 	UpdateUserinfoResp        = pb.UpdateUserinfoResp
 	Userinfo                  = pb.Userinfo
+	Usersinfo                 = pb.Usersinfo
 
 	User interface {
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------

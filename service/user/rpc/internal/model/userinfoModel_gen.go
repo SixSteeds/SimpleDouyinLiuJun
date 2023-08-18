@@ -61,6 +61,7 @@ type (
 		BackgroundImage sql.NullString `db:"background_image"` // 头像
 		Signature       sql.NullString `db:"signature"`        // 个人简介
 		IsFollow        bool           `db:"is_follow"`
+		Name       sql.NullString `db:"name"`
 	}
 )
 
@@ -90,7 +91,7 @@ func (m *defaultUserinfoModel) FindByIds(ctx context.Context, ids []int64, userI
 	var resp []*Userdetail
 	var idStrings []string
 	for _, id := range ids {
-		idStrings = append(idStrings, "select u.id,u.username,u.avatar,u.background_image,u.signature," +
+		idStrings = append(idStrings, "select u.id,u.username,u.avatar,u.background_image,u.signature,u.name," +
 			"EXISTS (SELECT 1 FROM follows WHERE user_id = "+strconv.FormatInt(userId, 10)+" AND follow_id = u.id) AS is_follow" +
 			" from userinfo u where u.id = "+strconv.FormatInt(id, 10)+" and u.is_delete = 0")
 	}
@@ -109,7 +110,7 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id, userId)
 	var resp Userdetail
 	err := m.QueryRowCtx(ctx, &resp, liujunUserUserinfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
+		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature,u.name," +
 			"EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow" +
 			" from userinfo u where u.id = ? and u.is_delete = 0")
 		return conn.QueryRowCtx(ctx, v, query, userId, id)
