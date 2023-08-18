@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package ="./pb";
+option go_package = "./pb";
 
 package pb;
 
@@ -195,32 +195,71 @@ message SearchVideoResp {
 
 
 
+message FeedUser{
+  int64 id = 1; // 用户id
+  string name = 2; // 用户名称
+  optional int64 follow_count = 3; // 关注总数
+  optional int64 follower_count = 4; // 粉丝总数
+  bool is_follow = 5; // true-已关注，false-未关注
+  optional string avatar = 6; //用户头像
+  optional string background_image = 7; //用户个人页顶部大图
+  optional string signature = 8; //个人简介
+  optional int64 total_favorited = 9; //获赞数量
+  optional int64 work_count = 10; //作品数量
+  optional int64 favorite_count = 11; //点赞数量
+}
+
+message FeedVideo{
+  int64 id = 1; // 视频id
+  FeedUser author = 2; // 视频作者
+  string playUrl = 3; // 视频播放地址
+  string coverUrl = 4; // 视频封面地址
+  string title = 5; // 视频标题
+  int64 favorite_count = 6; // 视频的点赞总数
+  int64 comment_count = 7; // 视频的评论总数
+  bool is_favorite = 8; // true-已点赞，false-未点赞
+}
+
+message FeedListReq {
+  int64 latest_time = 1;  //最后一条视频的创建时间
+  int64 user_id = 2; //用户id
+  int64 size = 3; // 拿多少条数据
+}
+
+message FeedListResp {
+  repeated FeedVideo video_list = 1; //videoList
+}
+
+
 
 
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
 
-service content{ 
+service content{
 
-	 //-----------------------璇勮淇℃伅----------------------- 
-	 rpc AddComment(AddCommentReq) returns (AddCommentResp); 
-	 rpc UpdateComment(UpdateCommentReq) returns (UpdateCommentResp); 
-	 rpc DelComment(DelCommentReq) returns (DelCommentResp); 
-	 rpc GetCommentById(GetCommentByIdReq) returns (GetCommentByIdResp); 
-	 rpc SearchComment(SearchCommentReq) returns (SearchCommentResp); 
-	 //-----------------------鐐硅禐淇℃伅----------------------- 
-	 rpc AddFavorite(AddFavoriteReq) returns (AddFavoriteResp); 
-	 rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp); 
-	 rpc DelFavorite(DelFavoriteReq) returns (DelFavoriteResp); 
-	 rpc GetFavoriteById(GetFavoriteByIdReq) returns (GetFavoriteByIdResp); 
-	 rpc SearchFavorite(SearchFavoriteReq) returns (SearchFavoriteResp); 
-	 //-----------------------瑙嗛淇℃伅----------------------- 
-	 rpc AddVideo(AddVideoReq) returns (AddVideoResp); 
-	 rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp); 
-	 rpc DelVideo(DelVideoReq) returns (DelVideoResp); 
-	 rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp); 
-	 rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp);
+  //-----------------------璇勮淇℃伅-----------------------
+  rpc AddComment(AddCommentReq) returns (AddCommentResp);
+  rpc UpdateComment(UpdateCommentReq) returns (UpdateCommentResp);
+  rpc DelComment(DelCommentReq) returns (DelCommentResp);
+  rpc GetCommentById(GetCommentByIdReq) returns (GetCommentByIdResp);
+  rpc SearchComment(SearchCommentReq) returns (SearchCommentResp);
+  //-----------------------鐐硅禐淇℃伅-----------------------
+  rpc AddFavorite(AddFavoriteReq) returns (AddFavoriteResp);
+  rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp);
+  rpc DelFavorite(DelFavoriteReq) returns (DelFavoriteResp);
+  rpc GetFavoriteById(GetFavoriteByIdReq) returns (GetFavoriteByIdResp);
+  rpc SearchFavorite(SearchFavoriteReq) returns (SearchFavoriteResp);
+  //-----------------------瑙嗛淇℃伅-----------------------
+  rpc AddVideo(AddVideoReq) returns (AddVideoResp);
+  rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp);
+  rpc DelVideo(DelVideoReq) returns (DelVideoResp);
+  rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp);
+  rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp);
+
+
+  rpc GetFeedList(FeedListReq) returns (FeedListResp);
 
 
 }

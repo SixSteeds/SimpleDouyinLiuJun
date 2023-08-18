@@ -19,7 +19,9 @@ import (
 var (
 	videoFieldNames          = builder.RawFieldNames(&Video{})
 	videoRows                = strings.Join(videoFieldNames, ",")
-	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+
+	// 此处去掉id以便于使用雪花算法生成id，加上is_delete以便于软删除
+	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`","`is_delete`", "`update_time`", "`updated_at`"), ",")
 	videoRowsWithPlaceHolder = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunContentVideoIdPrefix = "cache:liujunContent:video:id:"
@@ -31,6 +33,8 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
+
+
 	}
 
 	defaultVideoModel struct {
@@ -48,6 +52,9 @@ type (
 		UpdateTime time.Time      `db:"update_time"` // 该条最后一次更新时间
 		IsDelete   int64          `db:"is_delete"`   // 逻辑删除
 	}
+
+
+
 )
 
 func newVideoModel(conn sqlx.SqlConn, c cache.CacheConf, opts ...cache.Option) *defaultVideoModel {
@@ -89,6 +96,47 @@ func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, erro
 		return nil, err
 	}
 }
+
+
+
+
+
+
+
+
+
+func (m *defaultVideoModel) getFeedList(ctx context.Context, user_id int64,latest_time int64,size int64) (*Video, error) {
+	var resp int64
+
+
+	query := fmt.Sprintf("SELECT   " +
+		"v.id," +
+		"v.user_id,\n" +
+		"v.play_url,\n" +
+		"    v.cover_url,\n" +
+		"    v.title,\n" +
+		"    (SELECT COUNT(*) FROM favorite WHERE video_id = v.id) AS favorite_count,\n" +
+		"    (SELECT COUNT(*) FROM comment WHERE video_id = v.id) AS comment_count,\n" +
+		"    CASE WHEN EXISTS (SELECT 1 FROM favorite WHERE video_id = v.id AND user_id = 7) THEN true ELSE false END AS is_favorite\n" +
+		"FROM video v\n" +
+		"WHERE v.is_delete = 0\n" +
+		"ORDER BY v.create_time DESC\n" +
+		"limit 2;", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, username, password)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 func (m *defaultVideoModel) Insert(ctx context.Context, data *Video) (sql.Result, error) {
 	liujunContentVideoIdKey := fmt.Sprintf("%s%v", cacheLiujunContentVideoIdPrefix, data.Id)
