@@ -105,6 +105,9 @@ message Userinfo {
   string avatar = 4; //澶村儚
   string backgroundImage = 5; //澶村儚
   string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
+  int64   WorkCount=7;
+  int64   FavoriteCount=8;
+  int64   TotalFavorited=9;
 }
 
 message AddUserinfoReq {

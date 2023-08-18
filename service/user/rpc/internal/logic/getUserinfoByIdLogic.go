@@ -80,6 +80,9 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 		Avatar:          info.Avatar.String,
 		BackgroundImage: info.BackgroundImage.String,
 		Signature:       info.Signature.String,
+		WorkCount:       0,
+		FavoriteCount:   0,
+		TotalFavorited:  0,
 	}
 	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getUserinfoByIdLogic_GetUserinfoById_success"); err != nil {
 		log.Fatal(err)

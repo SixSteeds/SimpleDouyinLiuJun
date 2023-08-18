@@ -79,6 +79,11 @@ func (s *UserServer) GetUserinfoById(ctx context.Context, in *pb.GetUserinfoById
 	return l.GetUserinfoById(in)
 }
 
+func (s *UserServer) GetUsersByIds(ctx context.Context, in *pb.GetUsersByIdsReq) (*pb.GetUsersByIdsResp, error) {
+	l := logic.NewGetUsersByIdsLogic(ctx, s.svcCtx)
+	return l.GetUsersByIds(in)
+}
+
 func (s *UserServer) SearchUserinfo(ctx context.Context, in *pb.SearchUserinfoReq) (*pb.SearchUserinfoResp, error) {
 	l := logic.NewSearchUserinfoLogic(ctx, s.svcCtx)
 	return l.SearchUserinfo(in)
