@@ -32,7 +32,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 	if err != nil {
 		return nil, err
 	}
-	var users []*pb.Userinfo
+	var users []*pb.Usersinfo
 	for _, info := range *infos {
 		id := info.Id
 		redisClient := l.svcCtx.RedisClient
@@ -67,7 +67,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
-		users = append(users, &pb.Userinfo{
+		users = append(users, &pb.Usersinfo{
 			Id:              info.Id,
 			FollowCount:     int64(followNum),
 			FollowerCount:   int64(followerNum),
@@ -79,6 +79,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			WorkCount:       0,
 			FavoriteCount:   0,
 			TotalFavorited:  0,
+			Name:            info.Name.String,
 		})
 	}
 
