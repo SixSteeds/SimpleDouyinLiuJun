@@ -292,3 +292,5 @@
 172.18.0.1 - - [18/Aug/2023:07:01:19 +0000] "GET / HTTP/1.1" 404 153 "-" "Mozilla/5.0 (compatible; CensysInspect/1.1; +https://about.censys.io/)" "-"
 172.18.0.1 - - [18/Aug/2023:07:01:19 +0000] "PRI * HTTP/2.0" 400 157 "-" "-" "-"
 172.18.0.1 - - [18/Aug/2023:07:30:32 +0000] "SSH-2.0-Go" 400 157 "-" "-" "-"
+172.18.0.1 - - [18/Aug/2023:11:58:43 +0000] "GET / HTTP/1.1" 404 555 "-" "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2228.0 Safari/537.36" "-"
+172.18.0.1 - - [18/Aug/2023:11:58:45 +0000] "GET /favicon.ico HTTP/1.1" 404 555 "-" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.5005.63 Safari/537.36" "-"

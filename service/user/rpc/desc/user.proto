@@ -97,14 +97,17 @@ message SearchFollowsResp {
 
 //--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Userinfo {
-  int64 id = 1; //
-  int64 follow_count = 11;
-  int64 follower_count = 12;
-  bool   is_follow = 13;
-  string username = 2; //
-  string avatar = 4; //
-  string backgroundImage = 5; //
-  string signature = 6; //
+  int64 id = 1; //涓婚敭
+  int64 follow_count  = 11;
+  int64 follower_count  = 12;
+  bool is_follow = 13;
+  string username = 2; //璐﹀彿
+  string avatar = 4; //澶村儚
+  string backgroundImage = 5; //澶村儚
+  string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
+  int64   WorkCount=7;
+  int64   FavoriteCount=8;
+  int64   TotalFavorited=9;
 }
 
 message AddUserinfoReq {
@@ -155,6 +158,14 @@ message GetUserinfoByIdResp {
   Userinfo userinfo = 1; //userinfo
 }
 
+message GetUsersByIdsReq {
+  repeated int64 ids = 1; //id
+  int64 userID=2;//当前用户
+}
+
+message GetUsersByIdsResp {
+  repeated Userinfo users = 1; //userinfo
+}
 message SearchUserinfoReq {
   int64 page = 1; //page
   int64 limit = 2; //limit
@@ -231,6 +242,7 @@ service user{
   rpc UpdateUserinfo(UpdateUserinfoReq) returns (UpdateUserinfoResp);
   rpc DelUserinfo(DelUserinfoReq) returns (DelUserinfoResp);
   rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);
+  rpc GetUsersByIds(GetUsersByIdsReq) returns (GetUsersByIdsResp);
   rpc SearchUserinfo(SearchUserinfoReq) returns (SearchUserinfoResp);
   rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
   rpc GetFollowsCountById(GetFollowsCountByIdReq) returns (GetFollowsCountByIdResp);

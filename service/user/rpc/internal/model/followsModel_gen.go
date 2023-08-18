@@ -119,7 +119,7 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
 		"TRUE AS is_follow"+
-		" from userinfo u,follows f where f.user_id = ? and f.user_id = u.id and u.is_delete = 0")
+		" from userinfo u,follows f where f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
@@ -151,7 +151,7 @@ func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64)
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
 		"TRUE AS is_follow"+
-		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id and f.user_id = ? and f.user_id = u.id and u.is_delete = 0")
+		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id and f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
