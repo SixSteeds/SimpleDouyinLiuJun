@@ -1,87 +1,104 @@
 syntax = "proto3";
 
-option go_package ="./pb";
+option go_package = "./pb";
 
 package pb;
 
 // ------------------------------------ 
 // Messages
-// ------------------------------------ 
+// ------------------------------------
 
-//--------------------------------鑱婂ぉ淇℃伅--------------------------------
-message ChatMessage {
+//--------------------------------瑙嗛淇℃伅--------------------------------
+message Video {
   int64 id = 1; //涓婚敭
-  int64 userId = 2; //鍙戦€佷汉id
-  int64 toUserId = 3; //鎺ユ敹浜篿d
-  string message = 4; //娑堟伅鍐呭
-  int64 createTime = 5; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 6; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 7; //閫昏緫鍒犻櫎
+  int64 userId = 2; //瑙嗛浣滆€卛d
+  string playUrl = 3; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
+  string title = 5; //瑙嗛鏍囬
+  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
 }
 
-message AddChatMessageReq {
-  int64 userId = 1; //鍙戦€佷汉id
-  int64 toUserId = 2; //鎺ユ敹浜篿d
-  string message = 3; //娑堟伅鍐呭
-  int64 isDelete = 4; //閫昏緫鍒犻櫎
-}
-
-message AddChatMessageResp {
-}
-
-message UpdateChatMessageReq {
-  int64 id = 1; //涓婚敭
-  int64 userId = 2; //鍙戦€佷汉id
-  int64 toUserId = 3; //鎺ユ敹浜篿d
-  string message = 4; //娑堟伅鍐呭
+message AddVideoReq {
+  int64 userId = 1; //瑙嗛浣滆€卛d
+  string playUrl = 2; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 3; //瑙嗛灏侀潰鍦板潃
+  string title = 4; //瑙嗛鏍囬
   int64 isDelete = 5; //閫昏緫鍒犻櫎
 }
 
-message UpdateChatMessageResp {
+message AddVideoResp {
 }
 
-message DelChatMessageReq {
+message UpdateVideoReq {
+  int64 id = 1; //涓婚敭
+  int64 userId = 2; //瑙嗛浣滆€卛d
+  string playUrl = 3; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
+  string title = 5; //瑙嗛鏍囬
+  int64 isDelete = 6; //閫昏緫鍒犻櫎
+}
+
+message UpdateVideoResp {
+}
+
+message DelVideoReq {
   int64 id = 1; //id
 }
 
-message DelChatMessageResp {
+message DelVideoResp {
 }
 
-message GetChatMessageByIdReq {
+message GetVideoByIdReq {
   int64 id = 1; //id
 }
 
-message GetChatMessageByIdResp {
-  ChatMessage chatMessage = 1; //chatMessage
+message GetVideoByIdResp {
+  Video video = 1; //video
 }
 
-message SearchChatMessageReq {
+message SearchVideoReq {
   int64 page = 1; //page
   int64 limit = 2; //limit
   int64 id = 3; //涓婚敭
-  int64 userId = 4; //鍙戦€佷汉id
-  int64 toUserId = 5; //鎺ユ敹浜篿d
-  string message = 6; //娑堟伅鍐呭
-  int64 createTime = 7; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 8; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 9; //閫昏緫鍒犻櫎
+  int64 userId = 4; //瑙嗛浣滆€卛d
+  string playUrl = 5; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 6; //瑙嗛灏侀潰鍦板潃
+  string title = 7; //瑙嗛鏍囬
+  int64 createTime = 8; //璇ユ潯璁板綍鍒涘缓鏃堕棿
+  int64 updateTime = 9; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 10; //閫昏緫鍒犻櫎
 }
 
-message SearchChatMessageResp {
-  repeated ChatMessage chatMessage = 1; //chatMessage
+message SearchVideoResp {
+  repeated Video video = 1; //video
 }
 
+
+message SaveVideoReq {
+  int64 userId = 1; //瑙嗛浣滆€卛d
+  string playUrl = 2; //瑙嗛鎾斁鍦板潃
+  string coverUrl = 3; //瑙嗛灏侀潰鍦板潃
+  string title = 4; //瑙嗛鏍囬
+  int64 id = 6; //瑙嗛浣滆€卛d
+}
+
+message SaveVideoResp {
+}
 
 
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
 
-service media{ 
+service media{
 
-	 //-----------------------鑱婂ぉ淇℃伅----------------------- 
-	 rpc AddChatMessage(AddChatMessageReq) returns (AddChatMessageResp); 
-	 rpc UpdateChatMessage(UpdateChatMessageReq) returns (UpdateChatMessageResp); 
-	 rpc DelChatMessage(DelChatMessageReq) returns (DelChatMessageResp); 
-	 rpc GetChatMessageById(GetChatMessageByIdReq) returns (GetChatMessageByIdResp); 
-	 rpc SearchChatMessage(SearchChatMessageReq) returns (SearchChatMessageResp); 
+  rpc AddVideo(AddVideoReq) returns (AddVideoResp);
+
+  rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp);
+  rpc DelVideo(DelVideoReq) returns (DelVideoResp);
+  rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp);
+  rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp);
+
+  rpc SaveVideo(SaveVideoReq) returns (SaveVideoResp);
 
 }

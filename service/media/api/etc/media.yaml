@@ -1,6 +1,7 @@
 Name: media
 Host: 0.0.0.0
 Port: 8083
+MaxBytes: 1048576000
 
 
 
@@ -13,6 +14,9 @@ MediaRpcConf:
 #    User: root
 
 
+
+
 RedisConf:
-  Host: 0.0.0.0:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"
+

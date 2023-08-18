@@ -13,25 +13,27 @@ import (
 )
 
 type (
-	AddChatMessageReq      = pb.AddChatMessageReq
-	AddChatMessageResp     = pb.AddChatMessageResp
-	ChatMessage            = pb.ChatMessage
-	DelChatMessageReq      = pb.DelChatMessageReq
-	DelChatMessageResp     = pb.DelChatMessageResp
-	GetChatMessageByIdReq  = pb.GetChatMessageByIdReq
-	GetChatMessageByIdResp = pb.GetChatMessageByIdResp
-	SearchChatMessageReq   = pb.SearchChatMessageReq
-	SearchChatMessageResp  = pb.SearchChatMessageResp
-	UpdateChatMessageReq   = pb.UpdateChatMessageReq
-	UpdateChatMessageResp  = pb.UpdateChatMessageResp
+	AddVideoReq      = pb.AddVideoReq
+	AddVideoResp     = pb.AddVideoResp
+	DelVideoReq      = pb.DelVideoReq
+	DelVideoResp     = pb.DelVideoResp
+	GetVideoByIdReq  = pb.GetVideoByIdReq
+	GetVideoByIdResp = pb.GetVideoByIdResp
+	SaveVideoReq     = pb.SaveVideoReq
+	SaveVideoResp    = pb.SaveVideoResp
+	SearchVideoReq   = pb.SearchVideoReq
+	SearchVideoResp  = pb.SearchVideoResp
+	UpdateVideoReq   = pb.UpdateVideoReq
+	UpdateVideoResp  = pb.UpdateVideoResp
+	Video            = pb.Video
 
 	Media interface {
-		// -----------------------鑱婂ぉ淇℃伅-----------------------
-		AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error)
-		UpdateChatMessage(ctx context.Context, in *UpdateChatMessageReq, opts ...grpc.CallOption) (*UpdateChatMessageResp, error)
-		DelChatMessage(ctx context.Context, in *DelChatMessageReq, opts ...grpc.CallOption) (*DelChatMessageResp, error)
-		GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error)
-		SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error)
+		AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error)
+		UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
+		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
+		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
+		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
+		SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error)
 	}
 
 	defaultMedia struct {
@@ -45,28 +47,32 @@ func NewMedia(cli zrpc.Client) Media {
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
-func (m *defaultMedia) AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error) {
+func (m *defaultMedia) AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error) {
 	client := pb.NewMediaClient(m.cli.Conn())
-	return client.AddChatMessage(ctx, in, opts...)
+	return client.AddVideo(ctx, in, opts...)
 }
 
-func (m *defaultMedia) UpdateChatMessage(ctx context.Context, in *UpdateChatMessageReq, opts ...grpc.CallOption) (*UpdateChatMessageResp, error) {
+func (m *defaultMedia) UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error) {
 	client := pb.NewMediaClient(m.cli.Conn())
-	return client.UpdateChatMessage(ctx, in, opts...)
+	return client.UpdateVideo(ctx, in, opts...)
 }
 
-func (m *defaultMedia) DelChatMessage(ctx context.Context, in *DelChatMessageReq, opts ...grpc.CallOption) (*DelChatMessageResp, error) {
+func (m *defaultMedia) DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error) {
 	client := pb.NewMediaClient(m.cli.Conn())
-	return client.DelChatMessage(ctx, in, opts...)
+	return client.DelVideo(ctx, in, opts...)
 }
 
-func (m *defaultMedia) GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error) {
+func (m *defaultMedia) GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error) {
 	client := pb.NewMediaClient(m.cli.Conn())
-	return client.GetChatMessageById(ctx, in, opts...)
+	return client.GetVideoById(ctx, in, opts...)
 }
 
-func (m *defaultMedia) SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error) {
+func (m *defaultMedia) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
 	client := pb.NewMediaClient(m.cli.Conn())
-	return client.SearchChatMessage(ctx, in, opts...)
+	return client.SearchVideo(ctx, in, opts...)
+}
+
+func (m *defaultMedia) SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error) {
+	client := pb.NewMediaClient(m.cli.Conn())
+	return client.SaveVideo(ctx, in, opts...)
 }
