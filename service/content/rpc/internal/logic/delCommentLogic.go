@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"errors"
+	"log"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -31,6 +32,12 @@ func (l *DelCommentLogic) DelComment(in *pb.DelCommentReq) (*pb.DelCommentResp, 
 	if err != nil {
 		return nil, errors.New("rpc-DelComment-删除评论数据失败")
 	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_delCommentLogic_DelComment_Delete_false"); err != nil {
+		log.Fatal(err)
+	}
 	logx.Error("rpc-DelComment-删除评论数据成功")
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_delCommentLogic_DelComment_Delete_success"); err != nil {
+		log.Fatal(err)
+	}
 	return &pb.DelCommentResp{}, nil
 }

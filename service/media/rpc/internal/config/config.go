@@ -7,8 +7,14 @@ import (
 
 type Config struct {
 	zrpc.RpcServerConf
+
 	DB struct {
 		DataSource string
 	}
 	Cache cache.CacheConf
+
+	MediaKqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 }

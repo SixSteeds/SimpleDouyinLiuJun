@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
+	"log"
 	"time"
 
 	"doushen_by_liujun/service/chat/api/internal/svc"
@@ -31,6 +32,9 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	// parse token
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		resp = &types.MessageChatReqResp{
 			StatusCode:  1,
 			StatusMsg:   "fail to parse token",
@@ -52,6 +56,9 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, request)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
+			log.Fatal(err)
+		}
 		resp = &types.MessageChatReqResp{
 			StatusCode:  1,
 			StatusMsg:   "fail to get chat message",
@@ -77,6 +84,8 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 		StatusMsg:   "get chat messages successfully",
 		MessageList: messages,
 	}
-
+	if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
+		log.Fatal(err)
+	}
 	return resp, nil
 }

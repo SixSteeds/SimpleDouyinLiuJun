@@ -8,6 +8,11 @@ import (
 
 type Config struct {
 	rest.RestConf
-	RedisConf    redis.RedisConf
-	MediaRpcConf zrpc.RpcClientConf
+
+	MediaRpcConf      zrpc.RpcClientConf
+	RedisConf         redis.RedisConf
+	MediaKqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 }

@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"log"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,15 +34,18 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 	//		FriendUser: nil,
 	//	}, e
 	//}
-	friends, e := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
+	friends, err := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
-	if e != nil {
+	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_friendListLogic_FriendList_GetFriendsById_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.FriendListResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  "查询好友列表失败",
 			FriendUser: nil,
-		}, e
+		}, err
 	}
 	var users []types.FriendUser
 	for _, item := range friends.Follows {
@@ -59,6 +63,9 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			FavoriteCount:   0,
 		}
 		users = append(users, user)
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_api_relation_friendListLogic_FriendList_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.FriendListResp{
 		StatusCode: common.OK,

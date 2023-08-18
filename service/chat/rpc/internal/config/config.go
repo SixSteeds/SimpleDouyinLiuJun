@@ -10,5 +10,9 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
+	ChatKqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 	Cache cache.CacheConf
 }

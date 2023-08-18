@@ -10,6 +10,7 @@ import (
 	userPB "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 	"strconv"
 	"time"
 )
@@ -32,6 +33,9 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	// todo: add your logic here and delete this line
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.CommentListResp{
 			StatusCode:  common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:   "无效token",
@@ -43,6 +47,9 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	})
 	var comments []types.Comment
 	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_GetCommentById_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.CommentListResp{
 			StatusCode:  common.DB_ERROR,
 			StatusMsg:   "查询评论列表失败",
@@ -59,6 +66,9 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		fmt.Println("用户信息", info, e)
 		var user types.User
 		if e != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_GetUserinfoById_false"); err != nil {
+				log.Fatal(err)
+			}
 			return &types.CommentListResp{
 				StatusCode:  common.DB_ERROR,
 				StatusMsg:   "查询评论列表失败",
@@ -84,6 +94,9 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			Content:    item.Content,
 			CreateDate: time.Unix(item.CreateTime, 0).Format("01-02"),
 		})
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.CommentListResp{
 		StatusCode:  common.OK,

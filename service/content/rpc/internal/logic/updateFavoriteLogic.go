@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
+	"log"
 	"time"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
@@ -37,11 +38,17 @@ func (l *UpdateFavoriteLogic) UpdateFavorite(in *pb.UpdateFavoriteReq) (*pb.Upda
 	if err != nil {
 		return nil, errors.New("rpc-updateFavorite-修改点赞信息失败")
 	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_updateFavoriteLogic_UpdateFavorite_Update_false"); err != nil {
+		log.Fatal(err)
+	}
 
 	if in.IsDelete == 0 {
 		logx.Error("rpc-updateFavorite-修改点赞记录为逻辑点赞成功")
 	} else {
 		logx.Error("rpc-updateFavorite-修改点赞记录为逻辑删除成功")
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_rpc_updateFavoriteLogic_UpdateFavorite_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &pb.UpdateFavoriteResp{}, nil
 }
