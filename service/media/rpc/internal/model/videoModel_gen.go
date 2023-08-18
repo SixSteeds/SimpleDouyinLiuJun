@@ -17,9 +17,11 @@ import (
 )
 
 var (
-	videoFieldNames          = builder.RawFieldNames(&Video{})
-	videoRows                = strings.Join(videoFieldNames, ",")
-	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	videoFieldNames = builder.RawFieldNames(&Video{})
+	videoRows       = strings.Join(videoFieldNames, ",")
+
+	// 此处去掉id以便于使用雪花算法生成id，加上is_delete以便于软删除
+	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`", "`is_delete`"), ",")
 	videoRowsWithPlaceHolder = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunContentVideoIdPrefix = "cache:liujunContent:video:id:"
@@ -31,6 +33,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
+		Save(ctx context.Context, data *Video)(sql.Result, error)
 	}
 
 	defaultVideoModel struct {
@@ -39,14 +42,14 @@ type (
 	}
 
 	Video struct {
-		Id         int64          `db:"id"`          // 主键
-		UserId     int64          `db:"user_id"`     // 视频作者id
-		PlayUrl    string         `db:"play_url"`    // 视频播放地址
-		CoverUrl   sql.NullString `db:"cover_url"`   // 视频封面地址
-		Title      sql.NullString `db:"title"`       // 视频标题
-		CreateTime time.Time      `db:"create_time"` // 该条记录创建时间
-		UpdateTime time.Time      `db:"update_time"` // 该条最后一次更新时间
-		IsDelete   int64          `db:"is_delete"`   // 逻辑删除
+		Id         int64     `db:"id"`          // 主键
+		UserId     int64     `db:"user_id"`     // 视频作者id
+		PlayUrl    string    `db:"play_url"`    // 视频播放地址
+		CoverUrl   string    `db:"cover_url"`   // 视频封面地址
+		Title      string    `db:"title"`       // 视频标题
+		CreateTime time.Time `db:"create_time"` // 该条记录创建时间
+		UpdateTime time.Time `db:"update_time"` // 该条最后一次更新时间
+		IsDelete   int64     `db:"is_delete"`   // 逻辑删除
 	}
 )
 
@@ -95,6 +98,15 @@ func (m *defaultVideoModel) Insert(ctx context.Context, data *Video) (sql.Result
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, videoRowsExpectAutoSet)
 		return conn.ExecCtx(ctx, query, data.UserId, data.PlayUrl, data.CoverUrl, data.Title, data.IsDelete)
+	}, liujunContentVideoIdKey)
+	return ret, err
+}
+
+func (m *defaultVideoModel) Save(ctx context.Context, data *Video) (sql.Result, error) {
+	liujunContentVideoIdKey := fmt.Sprintf("%s%v", cacheLiujunContentVideoIdPrefix, data.Id)
+	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, videoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.UserId, data.PlayUrl, data.CoverUrl, data.Title)
 	}, liujunContentVideoIdKey)
 	return ret, err
 }

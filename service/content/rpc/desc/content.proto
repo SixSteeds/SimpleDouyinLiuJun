@@ -195,6 +195,8 @@ message SearchVideoResp {
 
 
 
+
+
 // ------------------------------------ 
 // Rpc Func
 // ------------------------------------ 
@@ -218,6 +220,7 @@ service content{
 	 rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp); 
 	 rpc DelVideo(DelVideoReq) returns (DelVideoResp); 
 	 rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp); 
-	 rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp); 
+	 rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp);
+
 
 }

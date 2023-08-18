@@ -1,6 +1,7 @@
 Name: media
 Host: 0.0.0.0
 Port: 8083
+MaxBytes: 1048576000
 
 
 
@@ -20,6 +21,9 @@ MediaKqPusherConf:
     - 127.0.0.1:9095
   Topic: media
 
+
+
 RedisConf:
-  Host: 0.0.0.0:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"
+

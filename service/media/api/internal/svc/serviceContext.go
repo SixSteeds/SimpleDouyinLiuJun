@@ -3,23 +3,28 @@ package svc
 import (
 	gloabmiddleware "doushen_by_liujun/internal/middleware"
 	"doushen_by_liujun/service/media/api/internal/config"
+	"doushen_by_liujun/service/media/rpc/media"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"
+	"github.com/zeromicro/go-zero/zrpc"
 )
 
 type ServiceContext struct {
 	Config            config.Config
 	RedisClient       *redis.Redis
 	JwtAuthMiddleware rest.Middleware
-	KqPusherClient    *kq.Pusher
+
+	MediaRpcClient media.Media
+
+	KqPusherClient *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:      c,
-		RedisClient: redis.MustNewRedis(c.RedisConf),
-
+		Config:            c,
+		RedisClient:       redis.MustNewRedis(c.RedisConf),
+		MediaRpcClient:    media.NewMedia(zrpc.MustNewClient(c.MediaRpcConf)),
 		JwtAuthMiddleware: gloabmiddleware.NewJwtAuthMiddleware().Handle,
 		KqPusherClient:    kq.NewPusher(c.MediaKqPusherConf.Brokers, c.MediaKqPusherConf.Topic),
 	}

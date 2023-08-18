@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+<<<<<<< HEAD
+    <data-source source="LOCAL" name="aliyun" uuid="4cbb3768-0540-4de2-92e8-2542284aa1d6">
+=======
     <data-source source="LOCAL" name="@8.137.50.160" uuid="4cbb3768-0540-4de2-92e8-2542284aa1d6">
+>>>>>>> 54b9037c0c4cf9a7f75c7cee9f10f9808e5c2748
       <driver-ref>mysql.8</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
@@ -11,17 +15,7 @@
       </jdbc-additional-properties>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
-    <data-source source="LOCAL" name="Redis" uuid="363726a6-2ffb-4778-b4d2-b465979a1743">
-      <driver-ref>redis</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>jdbc.RedisDriver</jdbc-driver>
-      <jdbc-url>jdbc:redis://43.136.243.177 :6379/0</jdbc-url>
-      <jdbc-additional-properties>
-        <property name="com.intellij.clouds.kubernetes.db.enabled" value="false" />
-      </jdbc-additional-properties>
-      <working-dir>$ProjectFileDir$</working-dir>
-    </data-source>
-    <data-source source="LOCAL" name="0@localhost" uuid="8458e6d8-2011-4f91-bac8-d5629967583e">
+    <data-source source="LOCAL" name="localhost" uuid="8458e6d8-2011-4f91-bac8-d5629967583e">
       <driver-ref>redis</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>jdbc.RedisDriver</jdbc-driver>

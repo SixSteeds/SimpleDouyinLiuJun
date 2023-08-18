@@ -2,8 +2,8 @@
 package types
 
 type RegisterReq struct {
-	Username string `json:"username"` // 注册用户名，最长32个字符
-	Password string `json:"password"` // 密码，最长32个字符
+	Username string `form:"username"` // 注册用户名，最长32个字符
+	Password string `form:"password"` // 密码，最长32个字符
 }
 
 type RegisterResp struct {
@@ -14,8 +14,8 @@ type RegisterResp struct {
 }
 
 type LoginReq struct {
-	Username string `json:"username"` // 登录用户名
-	Password string `json:"password"` //  登录密码
+	Username string `form:"username"` // 登录用户名
+	Password string `form:"password"` //  登录密码
 }
 
 type LoginResp struct {
@@ -73,9 +73,9 @@ type FollowerListResp struct {
 }
 
 type FollowReq struct {
-	Token      string `json:"token"`       // 用户鉴权token
-	ToUserId   int64  `json:"to_user_id"`  // 对方用户id
-	ActionType int32  `json:"action_type"` // 1-关注，2-取消关注
+	Token      string `form:"token"`       // 用户鉴权token
+	ToUserId   int64  `form:"to_user_id"`  // 对方用户id
+	ActionType int32  `form:"action_type"` // 1-关注，2-取消关注
 }
 
 type FollowResp struct {
