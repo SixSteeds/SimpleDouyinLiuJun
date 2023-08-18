@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -31,6 +32,7 @@ type (
 		FindOne(ctx context.Context, id int64, userId int64) (*Userdetail, error)
 		Update(ctx context.Context, data *Userinfo) error
 		Delete(ctx context.Context, id int64) error
+		FindByIds(ctx context.Context, ids []int64, userId int64) (*[]*Userdetail, error)
 		CheckOne(ctx context.Context, username string, password string) (*int64, error)
 	}
 
@@ -82,7 +84,25 @@ func (m *defaultUserinfoModel) Delete(ctx context.Context, id int64) error {
 	}, liujunUserUserinfoIdKey)
 	return err
 }
-
+func (m *defaultUserinfoModel) FindByIds(ctx context.Context, ids []int64, userId int64) (*[]*Userdetail, error) {
+	var resp []*Userdetail
+	var idStrings []string
+	for _, id := range ids {
+		idStrings = append(idStrings, "select u.id,u.username,u.avatar,u.background_image,u.signature," +
+			"EXISTS (SELECT 1 FROM follows WHERE user_id = "+strconv.FormatInt(userId, 10)+" AND follow_id = u.id) AS is_follow" +
+			" from userinfo u where u.id = "+strconv.FormatInt(id, 10)+" and u.is_delete = 0")
+	}
+	combined := strings.Join(idStrings, " UNION ALL ")
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, combined)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
 func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int64) (*Userdetail, error) {
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id, userId)
 	var resp Userdetail

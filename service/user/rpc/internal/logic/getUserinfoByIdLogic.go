@@ -25,7 +25,13 @@ func NewGetUserinfoByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *G
 
 func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.GetUserinfoByIdResp, error) {
 	// todo: add your logic here and delete this line
+	//userId查id这个人
 
+	//info, err := l.svcCtx.UserinfoModel.FindByIds(l.ctx, []int64{47, 48, 47}, in.UserID)
+	//fmt.Println(err)
+	//fmt.Println("u呼呼呼呼呼呼呼呼")
+	//fmt.Println((*info)[0].Username.String, (*info)[1].Username.String, (*info)[2].Username.String)
+	//return nil, nil
 	info, err := l.svcCtx.UserinfoModel.FindOne(l.ctx, in.Id, in.UserID)
 	if err != nil {
 		return nil, err
