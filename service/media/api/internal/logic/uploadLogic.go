@@ -31,6 +31,8 @@ func NewUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadLogi
 
 func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err error) {
 	// todo: add your logic here and delete this line
+
+	fmt.Println("进入上传api逻辑")
 	token, err := util.ParseToken(req.Token)
 	if err != nil {
 		return &types.UploadResp{
@@ -48,7 +50,7 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 			StatusCode: 500,
 		}, nil
 	}
-	data, err := util.NewSnowflake(3)
+	data, err := util.NewSnowflake(common.MediaApiMachineId)
 	if err != nil {
 		return &types.UploadResp{
 			StatusMsg:  "雪花算法报错",

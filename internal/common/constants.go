@@ -12,3 +12,13 @@ const AccessKey = "qYSQWz-EEJSJDAsg3Q7QqVy-GmpGLclb5lREXqO1"
 const SecretKey = "NkIglvJgXyoO6s1sh7rX2O1KBwltzLjuF4sPj3QY"
 const BucketName = "interestoriented"
 const QiliuyunDomain = "https://staraway.love/"
+
+// 雪花算法机器id
+const UserApiMachineId = 1
+const UserRpcMachineId = 2
+const MediaApiMachineId = 3
+const MediaRpcMachineId = 4
+const ContentApiMachineId = 5
+const ContentRpcMachineId = 6
+const ChatApiMachineId = 7
+const ChatRpcMachineId = 8

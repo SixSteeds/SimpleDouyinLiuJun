@@ -218,6 +218,7 @@ message FeedVideo{
   int64 favorite_count = 6; // 视频的点赞总数
   int64 comment_count = 7; // 视频的评论总数
   bool is_favorite = 8; // true-已点赞，false-未点赞
+  int64 next_time = 9; // 视频创建时间
 }
 
 message FeedListReq {
