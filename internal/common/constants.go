@@ -1,5 +1,7 @@
 package common
 
+const DefaultPass = "liujun"
+
 // jwt相关
 const JwtSecret = "bGl1anVu"
 const JwtExpire = 7200
@@ -22,3 +24,19 @@ const ContentApiMachineId = 5
 const ContentRpcMachineId = 6
 const ChatApiMachineId = 7
 const ChatRpcMachineId = 8
+
+/*
+redis缓存前缀
+*/
+
+// 点赞别人数量
+const CntCacheUserLikePrefix = "CntCache:User_Like:"
+
+// 用户获赞数
+const CntCacheUserLikedPrefix = "CntCache:User_Liked:"
+
+// 用户作品总数
+const CntCacheUserWorkPrefix = "CntCache:User_Work:"
+
+// 用videoId取userID
+const VideoCache2User = "VideoCache:UserId:"

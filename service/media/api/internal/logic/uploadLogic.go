@@ -57,18 +57,33 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 			StatusCode: 500,
 		}, nil
 	}
+	snowId := data.Generate()
 	_, err = l.svcCtx.MediaRpcClient.SaveVideo(l.ctx, &pb.SaveVideoReq{
 		UserId:   token.UserID,
 		PlayUrl:  common.QiliuyunDomain + fileName,
 		CoverUrl: common.DefaultBackImage,
 		Title:    req.Title,
-		Id:       data.Generate(),
+		Id:       snowId,
 	})
 	if err != nil {
 		return nil, err
 	}
+	_, err = l.svcCtx.RedisClient.Incr(common.CntCacheUserWorkPrefix + strconv.FormatInt(token.UserID, 10))
+	if err != nil {
+		return &types.UploadResp{
+			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+			StatusCode: common.REDIS_ERROR,
+		}, nil
+	}
+	err = l.svcCtx.RedisClient.SetCtx(l.ctx, common.VideoCache2User+strconv.FormatInt(token.UserID, 10), strconv.FormatInt(snowId, 10))
+	if err != nil {
+		return &types.UploadResp{
+			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+			StatusCode: common.REDIS_ERROR,
+		}, nil
+	}
 	return &types.UploadResp{
 		StatusMsg:  "上传成功",
-		StatusCode: 0,
+		StatusCode: common.OK,
 	}, nil
 }
