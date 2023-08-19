@@ -1,6 +1,7 @@
 Name: media
 Host: 0.0.0.0
 Port: 8083
+MaxBytes: 1048576000
 
 
 
@@ -12,7 +13,17 @@ MediaRpcConf:
 #    Pass: liujun
 #    User: root
 
+MediaKqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+    - 127.0.0.1:9093
+    - 127.0.0.1:9094
+    - 127.0.0.1:9095
+  Topic: media
+
+
 
 RedisConf:
-  Host: 0.0.0.0:6379
+  Host: 0.0.0.0:8094
   Pass: "liujun"
+

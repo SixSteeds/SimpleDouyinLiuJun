@@ -60,8 +60,6 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 			Success: false,
 		}, err
 	}
-
-	logx.Error("save user success")
 	if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_success"); err != nil {
 		log.Fatal(err)
 	}

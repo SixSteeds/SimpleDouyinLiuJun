@@ -1,0 +1,42 @@
+package logic
+
+import (
+	"context"
+	"doushen_by_liujun/service/media/rpc/internal/model"
+	"doushen_by_liujun/service/media/rpc/internal/svc"
+	"doushen_by_liujun/service/media/rpc/pb"
+	"fmt"
+
+	"github.com/zeromicro/go-zero/core/logx"
+)
+
+type SaveVideoLogic struct {
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+	logx.Logger
+}
+
+func NewSaveVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveVideoLogic {
+	return &SaveVideoLogic{
+		ctx:    ctx,
+		svcCtx: svcCtx,
+		Logger: logx.WithContext(ctx),
+	}
+}
+
+func (l *SaveVideoLogic) SaveVideo(in *pb.SaveVideoReq) (*pb.SaveVideoResp, error) {
+	// todo: add your logic here and delete this line
+	fmt.Println("进入上传rpc逻辑")
+	_, err := l.svcCtx.MediaModel.Save(l.ctx, &model.Video{
+		Id:       in.Id,
+		UserId:   in.UserId,
+		CoverUrl: in.CoverUrl,
+		PlayUrl:  in.PlayUrl,
+		Title:    in.Title,
+	})
+	if err != nil {
+		logx.Error(err)
+		return nil, err
+	}
+	return &pb.SaveVideoResp{}, nil
+}

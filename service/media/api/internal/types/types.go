@@ -2,9 +2,9 @@
 package types
 
 type UploadReq struct {
-	Token string `form:"token"` // 用户鉴权token
-	Data  []byte `form:"data"`  // 视频数据
-	Title string `form:"title"` // 视频标题
+	Token string `form:"token"`  // 用户鉴权token
+	Title string `form:"title"`  // 视频标题
+	Data  []byte `header:"data"` // 视频数据
 }
 
 type UploadResp struct {

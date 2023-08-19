@@ -27,6 +27,10 @@ type (
 	DelVideoReq         = pb.DelVideoReq
 	DelVideoResp        = pb.DelVideoResp
 	Favorite            = pb.Favorite
+	FeedListReq         = pb.FeedListReq
+	FeedListResp        = pb.FeedListResp
+	FeedUser            = pb.FeedUser
+	FeedVideo           = pb.FeedVideo
 	GetCommentByIdReq   = pb.GetCommentByIdReq
 	GetCommentByIdResp  = pb.GetCommentByIdResp
 	GetFavoriteByIdReq  = pb.GetFavoriteByIdReq
@@ -66,6 +70,7 @@ type (
 		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
+		GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
 	}
 
 	defaultContent struct {
@@ -155,4 +160,9 @@ func (m *defaultContent) GetVideoById(ctx context.Context, in *GetVideoByIdReq, 
 func (m *defaultContent) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.SearchVideo(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetFeedList(ctx, in, opts...)
 }

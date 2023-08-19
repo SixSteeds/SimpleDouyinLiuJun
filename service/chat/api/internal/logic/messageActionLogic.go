@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
+	"log"
 
 	"doushen_by_liujun/service/chat/api/internal/svc"
 	"doushen_by_liujun/service/chat/api/internal/types"
@@ -38,6 +39,9 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 	case 1:
 		// send message
 		if err = l.SendMessage(token, content, toUserID); err != nil {
+			if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_SendMessage_false"); err != nil {
+				log.Fatal(err)
+			}
 			resp = &types.MessageActionReqResp{
 				StatusCode: 1,
 				StatusMsg:  "fail to send message",
@@ -58,6 +62,9 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 		StatusCode: 0,
 		StatusMsg:  "send message successfully",
 	}
+	if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_success"); err != nil {
+		log.Fatal(err)
+	}
 
 	return resp, nil
 }
@@ -66,8 +73,12 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 	// TODO：get permission
 	res, err := util.ParseToken(token)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		return fmt.Errorf("fail to parse token, error = %s", err)
 	}
+
 	// get userId
 	userId := res.UserID
 
@@ -82,7 +93,13 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 	}
 	_, err = l.svcCtx.ChatRpcClient.AddChatMessage(l.ctx, request)
 	if err != nil {
+		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_AddChatMessage_false"); err != nil {
+			log.Fatal(err)
+		}
+
+		logx.Error(err)
 		return fmt.Errorf("fail to send message, error = %s", err)
 	}
+
 	return nil
 }

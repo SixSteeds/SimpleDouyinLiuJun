@@ -99,3 +99,8 @@ func (s *ContentServer) SearchVideo(ctx context.Context, in *pb.SearchVideoReq) 
 	l := logic.NewSearchVideoLogic(ctx, s.svcCtx)
 	return l.SearchVideo(in)
 }
+
+func (s *ContentServer) GetFeedList(ctx context.Context, in *pb.FeedListReq) (*pb.FeedListResp, error) {
+	l := logic.NewGetFeedListLogic(ctx, s.svcCtx)
+	return l.GetFeedList(in)
+}

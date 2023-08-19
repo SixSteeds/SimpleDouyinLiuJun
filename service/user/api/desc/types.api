@@ -1,8 +1,8 @@
 type (
     // 定义登录接口的请求体
     RegisterReq {
-        Username string `json:"username"`// 注册用户名，最长32个字符
-        Password string `json:"password"`// 密码，最长32个字符
+        Username string `form:"username"`// 注册用户名，最长32个字符
+        Password string `form:"password"`// 密码，最长32个字符
     }
         // 定义登录接口的响应体
     RegisterResp {
@@ -14,8 +14,8 @@ type (
 )
 type (
     LoginReq {
-        Username string `json:"username"`// 登录用户名
-        Password string `json:"password"`//  登录密码
+        Username string `form:"username"`// 登录用户名
+        Password string `form:"password"`//  登录密码
     }
     LoginResp {
         StatusCode int32 `json:"status_code"`         // 状态码，0-成功，其他值-失败
@@ -84,9 +84,9 @@ type (
 
 type (
     FollowReq {
-        Token string `json:"token"`           // 用户鉴权token
-        ToUserId int64 `json:"to_user_id"`    // 对方用户id
-        ActionType int32 `json:"action_type"` // 1-关注，2-取消关注
+        Token string `form:"token"`           // 用户鉴权token
+        ToUserId int64 `form:"to_user_id"`    // 对方用户id
+        ActionType int32 `form:"action_type"` // 1-关注，2-取消关注
     }
 
     FollowResp {

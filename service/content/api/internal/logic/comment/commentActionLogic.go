@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
+	"log"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
@@ -31,6 +32,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 	//1.根据 token 获取 userid
 	parsToken, err0 := util.ParseToken(req.Token)
 	if err0 != nil {
+		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_CommentAction_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		// 返回token失效错误
 		return &types.CommentActionResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
@@ -46,6 +50,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			IsDelete: 0,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_AddComment_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
@@ -60,6 +67,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			Id: req.CommentId,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_DelComment_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
@@ -67,6 +77,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			}, nil
 		}
 		logx.Error("api-commentAction-用户删除评论成功")
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_CommentAction_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.CommentActionResp{
 		StatusCode: common.OK,

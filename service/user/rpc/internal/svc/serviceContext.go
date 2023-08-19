@@ -23,7 +23,7 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		Config:         c,
 		UserinfoModel:  model.NewUserinfoModel(sqlConn, c.Cache),
 		FollowsModel:   model.NewFollowsModel(sqlConn, c.Cache),
-		KqPusherClient: kq.NewPusher(c.LoginKqPusherConf.Brokers, c.LoginKqPusherConf.Topic),
+		KqPusherClient: kq.NewPusher(c.UserKqPusherConf.Brokers, c.UserKqPusherConf.Topic),
 		RedisClient:    redis.MustNewRedis(c.RedisConf),
 	}
 }
