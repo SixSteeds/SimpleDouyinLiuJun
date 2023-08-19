@@ -19,6 +19,8 @@ import (
 var (
 	followsFieldNames          = builder.RawFieldNames(&Follows{})
 	followsRows                = strings.Join(followsFieldNames, ",")
+
+
 	followsRowsExpectAutoSet   = strings.Join(stringx.Remove(followsFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
 	followsRowsWithPlaceHolder = strings.Join(stringx.Remove(followsFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 

@@ -20,7 +20,9 @@ import (
 var (
 	userinfoFieldNames          = builder.RawFieldNames(&Userinfo{})
 	userinfoRows                = strings.Join(userinfoFieldNames, ",")
-	userinfoRowsExpectAutoSet   = strings.Join(stringx.Remove(userinfoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+
+	// 此处去掉id以便于使用雪花算法生成id，加上is_delete以便于软删除
+	userinfoRowsExpectAutoSet   = strings.Join(stringx.Remove(userinfoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`","`is_delete`", "`update_time`", "`updated_at`"), ",")
 	userinfoRowsWithPlaceHolder = strings.Join(stringx.Remove(userinfoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunUserUserinfoIdPrefix = "cache:liujunUser:userinfo:id:"
@@ -124,31 +126,9 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int
 }
 
 func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username, password string) (*int64, error) {
-	//var resp Userinfo
-	//var conn sqlx.SqlConn
-	////var err = m.QueryRowCtx(ctx, &resp, nil, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-	////	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userinfoRows, m.table)
-	////	return conn.QueryRowCtx(ctx, v, query, id)
-	////})
-	//println(username, password, "username, password")
-	//query := fmt.Sprintf("select 'id' from %s where 'username' = ? and 'password' = ? ", m.table)
-	//err := conn.QueryRowCtx(ctx, &resp, query, username, password)
-	//println(username, password, "username, password=================")
-	//switch err {
-	//case nil:
-	//	return &resp, nil
-	//case sqlc.ErrNotFound:
-	//	return nil, ErrNotFound
-	//default:
-	//	return nil, err
-	//}
-
-	//liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, 0)
 	var resp int64
 	query := fmt.Sprintf("SELECT id FROM %s WHERE username = ? AND password = ?", m.table)
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, username, password)
-	//query := fmt.Sprintf("select id from %s where username = ? and password = ? ",m.table)
-	//err := conn.QueryRowCtx(ctx, &resp, query, username, password)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -162,8 +142,8 @@ func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username, password 
 func (m *defaultUserinfoModel) Insert(ctx context.Context, data *Userinfo) (sql.Result, error) {
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, userinfoRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Id, data.Username, data.Password, data.Avatar, data.BackgroundImage, data.Signature, data.IsDelete, data.Name)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, userinfoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.Username, data.Password, data.Avatar, data.BackgroundImage, data.Signature, data.Name)
 	}, liujunUserUserinfoIdKey)
 	return ret, err
 }

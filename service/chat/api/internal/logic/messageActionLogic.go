@@ -96,6 +96,8 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_AddChatMessage_false"); err != nil {
 			log.Fatal(err)
 		}
+
+		logx.Error(err)
 		return fmt.Errorf("fail to send message, error = %s", err)
 	}
 

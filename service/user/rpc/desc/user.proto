@@ -157,15 +157,15 @@ message DelUserinfoResp {
 }
 message CheckIsFollowReq{
   string userid = 1; //id
-  string followid=2;
+  string followid = 2;
 }
 message CheckIsFollowResp{
-  bool isFollowed=1;
+  bool isFollowed = 1;
 
 }
 message GetUserinfoByIdReq {
   int64 id = 1; //id
-  int64 userID=2;//当前用户
+  int64 userID = 2;//当前用户
 }
 
 message GetUserinfoByIdResp {
@@ -226,13 +226,15 @@ message SaveUserResp{
 }
 
 message CheckUserReq{
-   string username = 1;
-   string password = 2;
+  string username = 1;
+  string password = 2;
 }
 
 message CheckUserResp{
-   int64 userId = 1;
+  int64 userId = 1;
 }
+
+
 
 
 // ------------------------------------ 

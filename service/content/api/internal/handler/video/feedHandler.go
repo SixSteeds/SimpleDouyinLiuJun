@@ -2,6 +2,7 @@ package video
 
 import (
 	"net/http"
+	"time"
 
 	"doushen_by_liujun/service/content/api/internal/logic/video"
 	"doushen_by_liujun/service/content/api/internal/svc"
@@ -16,7 +17,9 @@ func FeedHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
-
+		if req.LatestTime == 0 {
+			req.LatestTime = time.Now().Unix()
+		}
 		l := video.NewFeedLogic(r.Context(), svcCtx)
 		resp, err := l.Feed(&req)
 		if err != nil {

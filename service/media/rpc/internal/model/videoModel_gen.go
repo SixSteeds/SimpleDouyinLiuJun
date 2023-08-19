@@ -102,7 +102,10 @@ func (m *defaultVideoModel) Insert(ctx context.Context, data *Video) (sql.Result
 	return ret, err
 }
 
+
+
 func (m *defaultVideoModel) Save(ctx context.Context, data *Video) (sql.Result, error) {
+	fmt.Println("进入上传数据库逻辑")
 	liujunContentVideoIdKey := fmt.Sprintf("%s%v", cacheLiujunContentVideoIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?)", m.table, videoRowsExpectAutoSet)
