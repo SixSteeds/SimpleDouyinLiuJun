@@ -32,6 +32,8 @@ type (
 		Update(ctx context.Context, data *Userinfo) error
 		Delete(ctx context.Context, id int64) error
 		CheckOne(ctx context.Context, username string, password string) (*int64, error)
+		FindUserById(ctx context.Context, id int64) (*Userinfo, error)
+		FindUserListByIdList(ctx context.Context, userIdList *[]int64) (*[]*Userinfo, error)
 	}
 
 	defaultUserinfoModel struct {
@@ -76,6 +78,27 @@ func (m *defaultUserinfoModel) withSession(session sqlx.Session) *defaultUserinf
 	}
 }
 
+func (m *defaultUserinfoModel) FindUserListByIdList(ctx context.Context, userIdList *[]int64) (*[]*Userinfo, error) {
+	var resp []*Userinfo
+	// []int64 转换为 “,” 分隔的 string
+	var str_arr = make([]string, len(*userIdList))
+	for k, v := range *userIdList {
+		str_arr[k] = fmt.Sprintf("%d", v)
+	}
+	var IdListStr = strings.Join(str_arr, ",")
+	query := fmt.Sprintf("select %s from %s where `id` in (%s) and `is_delete`!= '1'", userinfoRows, m.table, IdListStr)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+
 func (m *defaultUserinfoModel) Delete(ctx context.Context, id int64) error {
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
@@ -105,6 +128,21 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64,userId int6
 		return nil, err
 	}
 }
+
+func (m *defaultUserinfoModel) FindUserById(ctx context.Context, id int64) (*Userinfo, error) {
+	var resp Userinfo
+	query := fmt.Sprintf("select %s from %s where `id` = ? ", userinfoRows,  m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, id)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 
 func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username , password string) (*int64, error) {
 	//var resp Userinfo

@@ -13,39 +13,45 @@ import (
 )
 
 type (
-	AddCommentReq       = pb.AddCommentReq
-	AddCommentResp      = pb.AddCommentResp
-	AddFavoriteReq      = pb.AddFavoriteReq
-	AddFavoriteResp     = pb.AddFavoriteResp
-	AddVideoReq         = pb.AddVideoReq
-	AddVideoResp        = pb.AddVideoResp
-	Comment             = pb.Comment
-	DelCommentReq       = pb.DelCommentReq
-	DelCommentResp      = pb.DelCommentResp
-	DelFavoriteReq      = pb.DelFavoriteReq
-	DelFavoriteResp     = pb.DelFavoriteResp
-	DelVideoReq         = pb.DelVideoReq
-	DelVideoResp        = pb.DelVideoResp
-	Favorite            = pb.Favorite
-	GetCommentByIdReq   = pb.GetCommentByIdReq
-	GetCommentByIdResp  = pb.GetCommentByIdResp
-	GetFavoriteByIdReq  = pb.GetFavoriteByIdReq
-	GetFavoriteByIdResp = pb.GetFavoriteByIdResp
-	GetVideoByIdReq     = pb.GetVideoByIdReq
-	GetVideoByIdResp    = pb.GetVideoByIdResp
-	SearchCommentReq    = pb.SearchCommentReq
-	SearchCommentResp   = pb.SearchCommentResp
-	SearchFavoriteReq   = pb.SearchFavoriteReq
-	SearchFavoriteResp  = pb.SearchFavoriteResp
-	SearchVideoReq      = pb.SearchVideoReq
-	SearchVideoResp     = pb.SearchVideoResp
-	UpdateCommentReq    = pb.UpdateCommentReq
-	UpdateCommentResp   = pb.UpdateCommentResp
-	UpdateFavoriteReq   = pb.UpdateFavoriteReq
-	UpdateFavoriteResp  = pb.UpdateFavoriteResp
-	UpdateVideoReq      = pb.UpdateVideoReq
-	UpdateVideoResp     = pb.UpdateVideoResp
-	Video               = pb.Video
+	AddCommentReq                     = pb.AddCommentReq
+	AddCommentResp                    = pb.AddCommentResp
+	AddFavoriteReq                    = pb.AddFavoriteReq
+	AddFavoriteResp                   = pb.AddFavoriteResp
+	AddVideoReq                       = pb.AddVideoReq
+	AddVideoResp                      = pb.AddVideoResp
+	Comment                           = pb.Comment
+	DelCommentReq                     = pb.DelCommentReq
+	DelCommentResp                    = pb.DelCommentResp
+	DelFavoriteReq                    = pb.DelFavoriteReq
+	DelFavoriteResp                   = pb.DelFavoriteResp
+	DelVideoReq                       = pb.DelVideoReq
+	DelVideoResp                      = pb.DelVideoResp
+	Favorite                          = pb.Favorite
+	GetCommentByIdReq                 = pb.GetCommentByIdReq
+	GetCommentByIdResp                = pb.GetCommentByIdResp
+	GetFavoriteByIdReq                = pb.GetFavoriteByIdReq
+	GetFavoriteByIdResp               = pb.GetFavoriteByIdResp
+	GetUserFavoritedCntByIdReq        = pb.GetUserFavoritedCntByIdReq
+	GetUserFavoritedCntByIdResp       = pb.GetUserFavoritedCntByIdResp
+	GetUserPublishAndLikedCntByIdReq  = pb.GetUserPublishAndLikedCntByIdReq
+	GetUserPublishAndLikedCntByIdResp = pb.GetUserPublishAndLikedCntByIdResp
+	GetVideoByIdReq                   = pb.GetVideoByIdReq
+	GetVideoByIdResp                  = pb.GetVideoByIdResp
+	GetVideoListByIdListReq           = pb.GetVideoListByIdListReq
+	GetVideoListByIdListResp          = pb.GetVideoListByIdListResp
+	SearchCommentReq                  = pb.SearchCommentReq
+	SearchCommentResp                 = pb.SearchCommentResp
+	SearchFavoriteReq                 = pb.SearchFavoriteReq
+	SearchFavoriteResp                = pb.SearchFavoriteResp
+	SearchVideoReq                    = pb.SearchVideoReq
+	SearchVideoResp                   = pb.SearchVideoResp
+	UpdateCommentReq                  = pb.UpdateCommentReq
+	UpdateCommentResp                 = pb.UpdateCommentResp
+	UpdateFavoriteReq                 = pb.UpdateFavoriteReq
+	UpdateFavoriteResp                = pb.UpdateFavoriteResp
+	UpdateVideoReq                    = pb.UpdateVideoReq
+	UpdateVideoResp                   = pb.UpdateVideoResp
+	Video                             = pb.Video
 
 	Content interface {
 		// -----------------------璇勮淇℃伅-----------------------
@@ -66,6 +72,9 @@ type (
 		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
+		GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
+		GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
+		GetVideoListByIdList(ctx context.Context, in *GetVideoListByIdListReq, opts ...grpc.CallOption) (*GetVideoListByIdListResp, error)
 	}
 
 	defaultContent struct {
@@ -155,4 +164,19 @@ func (m *defaultContent) GetVideoById(ctx context.Context, in *GetVideoByIdReq, 
 func (m *defaultContent) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.SearchVideo(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetUserFavoritedCnt(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetUserPublishAndLikedCntById(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetVideoListByIdList(ctx context.Context, in *GetVideoListByIdListReq, opts ...grpc.CallOption) (*GetVideoListByIdListResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetVideoListByIdList(ctx, in, opts...)
 }

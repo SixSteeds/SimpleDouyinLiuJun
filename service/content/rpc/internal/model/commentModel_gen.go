@@ -5,6 +5,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -68,10 +69,13 @@ func (m *defaultCommentModel) withSession(session sqlx.Session) *defaultCommentM
 
 func (m *defaultCommentModel) Delete(ctx context.Context, id int64) error {
 	liujunContentCommentIdKey := fmt.Sprintf("%s%v", cacheLiujunContentCommentIdPrefix, id)
-	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
+	res, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
 		query := fmt.Sprintf("delete from %s where `id` = ?", m.table)
 		return conn.ExecCtx(ctx, query, id)
 	}, liujunContentCommentIdKey)
+	if affected,_ := res.RowsAffected();affected==0{//如果影响0行，报错删除操作无效
+		err = errors.New("model-delete-commentId不存在！")
+	}
 	return err
 }
 
@@ -134,9 +138,9 @@ func (m *defaultCommentModel) FindConmentsByVideoId(ctx context.Context, id int6
 
 //根据（用户id，视频id）字段查找comment表
 func (m *defaultCommentModel) FindCommentByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Comment, error) {
-	liujunContentFavoriteUserIdVideoIdKey := fmt.Sprintf("%s%v:%v", cacheLiujunContentCommentUserIdVedioIdPrefix, userid, videoid)
+	liujunContentCommentUserIdVideoIdKey := fmt.Sprintf("%s%v:%v", cacheLiujunContentCommentUserIdVedioIdPrefix, userid, videoid)
 	var resp Comment
-	err := m.QueryRowIndexCtx(ctx, &resp, liujunContentFavoriteUserIdVideoIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
+	err := m.QueryRowIndexCtx(ctx, &resp, liujunContentCommentUserIdVideoIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
 		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `video_id` = ? limit 1", commentRows, m.table)
 		if err:= conn.QueryRowCtx(ctx,&resp,query,userid,videoid); err!= nil{
 			return nil, err

@@ -99,3 +99,18 @@ func (s *ContentServer) SearchVideo(ctx context.Context, in *pb.SearchVideoReq) 
 	l := logic.NewSearchVideoLogic(ctx, s.svcCtx)
 	return l.SearchVideo(in)
 }
+
+func (s *ContentServer) GetUserFavoritedCnt(ctx context.Context, in *pb.GetUserFavoritedCntByIdReq) (*pb.GetUserFavoritedCntByIdResp, error) {
+	l := logic.NewGetUserFavoritedCntLogic(ctx, s.svcCtx)
+	return l.GetUserFavoritedCnt(in)
+}
+
+func (s *ContentServer) GetUserPublishAndLikedCntById(ctx context.Context, in *pb.GetUserPublishAndLikedCntByIdReq) (*pb.GetUserPublishAndLikedCntByIdResp, error) {
+	l := logic.NewGetUserPublishAndLikedCntByIdLogic(ctx, s.svcCtx)
+	return l.GetUserPublishAndLikedCntById(in)
+}
+
+func (s *ContentServer) GetVideoListByIdList(ctx context.Context, in *pb.GetVideoListByIdListReq) (*pb.GetVideoListByIdListResp, error) {
+	l := logic.NewGetVideoListByIdListLogic(ctx, s.svcCtx)
+	return l.GetVideoListByIdList(in)
+}

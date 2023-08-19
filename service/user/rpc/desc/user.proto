@@ -209,6 +209,21 @@ message CheckUserResp{
    int64 userId = 1;
 }
 
+message GetUserByIdReq {
+  int64 userID=1; //用户id
+}
+
+message GetUserByIdResp {
+  Userinfo userinfo = 1; //用户信息
+}
+
+message GetUserListByIdListReq{
+  repeated int64 userIdList = 1;//用户id数组
+}
+
+message GetUserListByIdListResp{
+  repeated Userinfo userList = 1; //user数组
+}
 
 // ------------------------------------ 
 // Rpc Func
@@ -236,5 +251,6 @@ service user{
   rpc CheckIsFollow(CheckIsFollowReq) returns (CheckIsFollowResp);
   rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
 
-
+  rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp);
+  rpc GetUserListByIdList(GetUserListByIdListReq) returns (GetUserListByIdListResp);
 }

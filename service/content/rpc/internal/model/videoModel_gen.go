@@ -31,6 +31,8 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
+		FindVideoListByUserId(ctx context.Context, userid int64) (*[]*Video, error)
+		FindVideoListByIdList(ctx context.Context, videoIdList *[]int64) (*[]*Video, error)
 	}
 
 	defaultVideoModel struct {
@@ -64,6 +66,40 @@ func (m *defaultVideoModel) withSession(session sqlx.Session) *defaultVideoModel
 	}
 }
 
+func (m *defaultVideoModel) FindVideoListByIdList(ctx context.Context, videoIdList *[]int64) (*[]*Video, error) {
+	var resp []*Video
+	// []int64 转换为 “,” 分隔的 string
+	var str_arr = make([]string, len(*videoIdList))
+	for k, v := range *videoIdList {
+		str_arr[k] = fmt.Sprintf("%d", v)
+	}
+	var IdListStr = strings.Join(str_arr, ",")
+	query := fmt.Sprintf("select %s from %s where `id` in (%s) and `is_delete`!= '1'", videoRows, m.table, IdListStr)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultVideoModel) FindVideoListByUserId(ctx context.Context, userid int64) (*[]*Video, error) {
+	var resp []*Video
+	query := fmt.Sprintf("select * from %s where `user_id` = ? and `is_delete`!= '1'",  m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userid)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
 func (m *defaultVideoModel) Delete(ctx context.Context, id int64) error {
 	liujunContentVideoIdKey := fmt.Sprintf("%s%v", cacheLiujunContentVideoIdPrefix, id)
 	_, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
@@ -74,12 +110,9 @@ func (m *defaultVideoModel) Delete(ctx context.Context, id int64) error {
 }
 
 func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
-	liujunContentVideoIdKey := fmt.Sprintf("%s%v", cacheLiujunContentVideoIdPrefix, id)
 	var resp Video
-	err := m.QueryRowCtx(ctx, &resp, liujunContentVideoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", videoRows, m.table)
-		return conn.QueryRowCtx(ctx, v, query, id)
-	})
+	query := fmt.Sprintf("select %s from %s where `id` = ? ", videoRows,  m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
 		return &resp, nil

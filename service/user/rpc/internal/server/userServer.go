@@ -108,3 +108,13 @@ func (s *UserServer) GetFriendsById(ctx context.Context, in *pb.GetFriendsByIdRe
 	l := logic.NewGetFriendsByIdLogic(ctx, s.svcCtx)
 	return l.GetFriendsById(in)
 }
+
+func (s *UserServer) GetUserById(ctx context.Context, in *pb.GetUserByIdReq) (*pb.GetUserByIdResp, error) {
+	l := logic.NewGetUserByIdLogic(ctx, s.svcCtx)
+	return l.GetUserById(in)
+}
+
+func (s *UserServer) GetUserListByIdList(ctx context.Context, in *pb.GetUserListByIdListReq) (*pb.GetUserListByIdListResp, error) {
+	l := logic.NewGetUserListByIdListLogic(ctx, s.svcCtx)
+	return l.GetUserListByIdList(in)
+}

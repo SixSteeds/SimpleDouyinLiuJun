@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
+	"fmt"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -34,15 +35,17 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 	}
 	var resp []*pb.Favorite
 	for _, item := range *favoriteList {
-		resp = append(resp, &pb.Favorite{
-			Id:         item.Id,
-			VideoId:    item.VideoId,
-			UserId:     item.UserId,
-			CreateTime: item.CreateTime.Unix(),
-			UpdateTime: item.UpdateTime.Unix(),
-		})
+		if item.IsDelete == 0 { //逻辑删除的不返回给api
+			resp = append(resp, &pb.Favorite{
+				Id:         item.Id,
+				VideoId:    item.VideoId,
+				UserId:     item.UserId,
+				CreateTime: item.CreateTime.Unix(),
+				UpdateTime: item.UpdateTime.Unix(),
+			})
+		}
 	}
-	logx.Error("rpc-查询用户点赞列表成功")
+	fmt.Println("【rpc-SearchFavorite-查询用户点赞列表成功】")
 	return &pb.SearchFavoriteResp{
 		Favorite: resp,
 	}, nil

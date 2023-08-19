@@ -36,6 +36,10 @@ type (
 	GetFollowsCountByIdResp   = pb.GetFollowsCountByIdResp
 	GetFriendsByIdReq         = pb.GetFriendsByIdReq
 	GetFriendsByIdResp        = pb.GetFriendsByIdResp
+	GetUserByIdReq            = pb.GetUserByIdReq
+	GetUserByIdResp           = pb.GetUserByIdResp
+	GetUserListByIdListReq    = pb.GetUserListByIdListReq
+	GetUserListByIdListResp   = pb.GetUserListByIdListResp
 	GetUserinfoByIdReq        = pb.GetUserinfoByIdReq
 	GetUserinfoByIdResp       = pb.GetUserinfoByIdResp
 	SaveUserReq               = pb.SaveUserReq
@@ -70,6 +74,8 @@ type (
 		GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error)
 		CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 		GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
+		GetUserById(ctx context.Context, in *GetUserByIdReq, opts ...grpc.CallOption) (*GetUserByIdResp, error)
+		GetUserListByIdList(ctx context.Context, in *GetUserListByIdListReq, opts ...grpc.CallOption) (*GetUserListByIdListResp, error)
 	}
 
 	defaultUser struct {
@@ -168,4 +174,14 @@ func (m *defaultUser) CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, o
 func (m *defaultUser) GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetFriendsById(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserById(ctx context.Context, in *GetUserByIdReq, opts ...grpc.CallOption) (*GetUserByIdResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetUserById(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUserListByIdList(ctx context.Context, in *GetUserListByIdListReq, opts ...grpc.CallOption) (*GetUserListByIdListResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetUserListByIdList(ctx, in, opts...)
 }
