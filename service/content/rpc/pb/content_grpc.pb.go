@@ -19,22 +19,23 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Content_AddComment_FullMethodName      = "/pb.content/AddComment"
-	Content_UpdateComment_FullMethodName   = "/pb.content/UpdateComment"
-	Content_DelComment_FullMethodName      = "/pb.content/DelComment"
-	Content_GetCommentById_FullMethodName  = "/pb.content/GetCommentById"
-	Content_SearchComment_FullMethodName   = "/pb.content/SearchComment"
-	Content_AddFavorite_FullMethodName     = "/pb.content/AddFavorite"
-	Content_UpdateFavorite_FullMethodName  = "/pb.content/UpdateFavorite"
-	Content_DelFavorite_FullMethodName     = "/pb.content/DelFavorite"
-	Content_GetFavoriteById_FullMethodName = "/pb.content/GetFavoriteById"
-	Content_SearchFavorite_FullMethodName  = "/pb.content/SearchFavorite"
-	Content_AddVideo_FullMethodName        = "/pb.content/AddVideo"
-	Content_UpdateVideo_FullMethodName     = "/pb.content/UpdateVideo"
-	Content_DelVideo_FullMethodName        = "/pb.content/DelVideo"
-	Content_GetVideoById_FullMethodName    = "/pb.content/GetVideoById"
-	Content_SearchVideo_FullMethodName     = "/pb.content/SearchVideo"
-	Content_GetFeedList_FullMethodName     = "/pb.content/GetFeedList"
+	Content_AddComment_FullMethodName           = "/pb.content/AddComment"
+	Content_UpdateComment_FullMethodName        = "/pb.content/UpdateComment"
+	Content_DelComment_FullMethodName           = "/pb.content/DelComment"
+	Content_GetCommentById_FullMethodName       = "/pb.content/GetCommentById"
+	Content_SearchComment_FullMethodName        = "/pb.content/SearchComment"
+	Content_AddFavorite_FullMethodName          = "/pb.content/AddFavorite"
+	Content_UpdateFavorite_FullMethodName       = "/pb.content/UpdateFavorite"
+	Content_DelFavorite_FullMethodName          = "/pb.content/DelFavorite"
+	Content_GetFavoriteById_FullMethodName      = "/pb.content/GetFavoriteById"
+	Content_SearchFavorite_FullMethodName       = "/pb.content/SearchFavorite"
+	Content_AddVideo_FullMethodName             = "/pb.content/AddVideo"
+	Content_UpdateVideo_FullMethodName          = "/pb.content/UpdateVideo"
+	Content_DelVideo_FullMethodName             = "/pb.content/DelVideo"
+	Content_GetVideoById_FullMethodName         = "/pb.content/GetVideoById"
+	Content_SearchVideo_FullMethodName          = "/pb.content/SearchVideo"
+	Content_GetFeedList_FullMethodName          = "/pb.content/GetFeedList"
+	Content_GetWorkCountByUserId_FullMethodName = "/pb.content/GetWorkCountByUserId"
 )
 
 // ContentClient is the client API for Content service.
@@ -60,6 +61,7 @@ type ContentClient interface {
 	GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 	SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 	GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
+	GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
 }
 
 type contentClient struct {
@@ -214,6 +216,15 @@ func (c *contentClient) GetFeedList(ctx context.Context, in *FeedListReq, opts .
 	return out, nil
 }
 
+func (c *contentClient) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {
+	out := new(GetWorkCountByUserIdResp)
+	err := c.cc.Invoke(ctx, Content_GetWorkCountByUserId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContentServer is the server API for Content service.
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility
@@ -237,6 +248,7 @@ type ContentServer interface {
 	GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error)
 	SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error)
 	GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error)
+	GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error)
 	mustEmbedUnimplementedContentServer()
 }
 
@@ -291,6 +303,9 @@ func (UnimplementedContentServer) SearchVideo(context.Context, *SearchVideoReq) 
 }
 func (UnimplementedContentServer) GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeedList not implemented")
+}
+func (UnimplementedContentServer) GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWorkCountByUserId not implemented")
 }
 func (UnimplementedContentServer) mustEmbedUnimplementedContentServer() {}
 
@@ -593,6 +608,24 @@ func _Content_GetFeedList_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Content_GetWorkCountByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkCountByUserIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetWorkCountByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetWorkCountByUserId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetWorkCountByUserId(ctx, req.(*GetWorkCountByUserIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Content_ServiceDesc is the grpc.ServiceDesc for Content service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -663,6 +696,10 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFeedList",
 			Handler:    _Content_GetFeedList_Handler,
+		},
+		{
+			MethodName: "GetWorkCountByUserId",
+			Handler:    _Content_GetWorkCountByUserId_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

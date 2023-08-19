@@ -233,6 +233,16 @@ message FeedListResp {
 
 
 
+message GetWorkCountByUserIdReq{
+  int64 user_id = 1;
+}
+
+message GetWorkCountByUserIdResp{
+  int64 workCount = 1;
+}
+
+
+
 
 // ------------------------------------ 
 // Rpc Func
@@ -261,6 +271,8 @@ service content{
 
 
   rpc GetFeedList(FeedListReq) returns (FeedListResp);
+
+  rpc GetWorkCountByUserId(GetWorkCountByUserIdReq) returns (GetWorkCountByUserIdResp);
 
 
 }
