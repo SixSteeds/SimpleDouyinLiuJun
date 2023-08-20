@@ -39,7 +39,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 		}
 		return &types.FollowResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  "token失效",
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 		}, err
 	}
 	if l.bucket.TakeAvailable(1) == 0 {
@@ -66,7 +66,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 			}(strconv.Itoa(int(logger.UserID)), strconv.FormatInt(req.ToUserId, 10))
 			return &types.FollowResp{
 				StatusCode: common.OK,
-				StatusMsg:  "关注成功",
+				StatusMsg:  common.MapErrMsg(common.OK),
 			}, nil
 		} else {
 			go func(userId, followId string) { //新开协程执行延迟写的操作
@@ -90,7 +90,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 
 			return &types.FollowResp{
 				StatusCode: common.OK,
-				StatusMsg:  "取关成功",
+				StatusMsg:  common.MapErrMsg(common.OK),
 			}, err
 		}
 	} else {
@@ -106,7 +106,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				}
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
-					StatusMsg:  "关注失败",
+					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 				}, err
 			}
 			if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_AddFollows_success"); err != nil {
@@ -114,7 +114,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,
-				StatusMsg:  "关注成功",
+				StatusMsg:  common.MapErrMsg(common.OK),
 			}, nil
 		} else {
 			_, err := l.svcCtx.UserRpcClient.DelFollows(l.ctx, &pb.DelFollowsReq{
@@ -127,7 +127,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				}
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
-					StatusMsg:  "删除关注失败",
+					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 				}, err
 			}
 			if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_DelFollows_success"); err != nil {
@@ -135,7 +135,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,
-				StatusMsg:  "取关成功",
+				StatusMsg:  common.MapErrMsg(common.OK),
 			}, err
 		}
 	}

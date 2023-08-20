@@ -32,7 +32,7 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 	if e != nil {
 		return &types.FriendListResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  "无效token",
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FriendUser: nil,
 		}, e
 	}
@@ -45,7 +45,7 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 		}
 		return &types.FriendListResp{
 			StatusCode: common.DB_ERROR,
-			StatusMsg:  "查询好友列表失败",
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			FriendUser: nil,
 		}, err
 	}
@@ -90,7 +90,7 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 	}
 	return &types.FriendListResp{
 		StatusCode: common.OK,
-		StatusMsg:  "查询好友列表成功",
+		StatusMsg:  common.MapErrMsg(common.OK),
 		FriendUser: users,
 	}, nil
 }
