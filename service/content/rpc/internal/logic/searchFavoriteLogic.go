@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
+	"fmt"
 	"log"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
@@ -38,14 +39,17 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 	}
 	var resp []*pb.Favorite
 	for _, item := range *favoriteList {
-		resp = append(resp, &pb.Favorite{
-			Id:         item.Id,
-			VideoId:    item.VideoId,
-			UserId:     item.UserId,
-			CreateTime: item.CreateTime.Unix(),
-			UpdateTime: item.UpdateTime.Unix(),
-		})
+		if item.IsDelete == 0 { //逻辑删除的不返回给api
+			resp = append(resp, &pb.Favorite{
+				Id:         item.Id,
+				VideoId:    item.VideoId,
+				UserId:     item.UserId,
+				CreateTime: item.CreateTime.Unix(),
+				UpdateTime: item.UpdateTime.Unix(),
+			})
+		}
 	}
+	fmt.Println("【rpc-SearchFavorite-查询用户点赞列表成功】")
 	logx.Error("rpc-查询用户点赞列表成功")
 	if err := l.svcCtx.KqPusherClient.Push("content_rpc_searchFavoriteLogic_SearchFavorite_success"); err != nil {
 		log.Fatal(err)

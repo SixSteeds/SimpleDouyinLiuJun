@@ -35,6 +35,8 @@ type (
 		Delete(ctx context.Context, id int64) error
 		FindFavoriteByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Favorite, error)
 		FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error)
+		FindFavoriteListByVideoId(ctx context.Context, videoid int64) (*[]*Favorite, error)
+		FindFavoritedCntByVideoIdList(ctx context.Context, videoIdList *[]int64) (int64, error)
 	}
 
 	defaultFavoriteModel struct {
@@ -112,15 +114,9 @@ func (m *defaultFavoriteModel) Update(ctx context.Context, data *Favorite) error
 
 //根据（用户id，视频id）字段查找favorite表
 func (m *defaultFavoriteModel) FindFavoriteByUserIdVideoId(ctx context.Context, userid int64, videoid int64) (*Favorite, error) {
-	liujunContentFavoriteUserIdVideoIdKey := fmt.Sprintf("%s%v:%v", cacheLiujunContentFavoriteUserIdVideoIdPrefix, userid, videoid)
 	var resp Favorite
-	err := m.QueryRowIndexCtx(ctx, &resp, liujunContentFavoriteUserIdVideoIdKey, m.formatPrimary, func(ctx context.Context, conn sqlx.SqlConn, v interface{}) (i interface{}, e error) {
-		query := fmt.Sprintf("select %s from %s where `user_id` = ? and `video_id` = ? limit 1", favoriteRows, m.table)
-		if err:= conn.QueryRowCtx(ctx,&resp,query,userid,videoid); err!= nil{
-			return nil, err
-		}
-		return resp.Id,nil
-	},m.queryPrimary)
+	query := fmt.Sprintf("select %s from %s where `user_id` = ? and `video_id` = ? limit 1", favoriteRows, m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, userid, videoid)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -132,12 +128,9 @@ func (m *defaultFavoriteModel) FindFavoriteByUserIdVideoId(ctx context.Context, 
 }
 
 func (m *defaultFavoriteModel) FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error) {
-	liujunContentFavoriteListUserIdKey := fmt.Sprintf("%s%v", cacheLiujunContentFavoriteListUserIdPrefix, userid)
 	var resp []*Favorite
-	err := m.QueryRowCtx(ctx, &resp, liujunContentFavoriteListUserIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select %s from %s where `user_id` = ? ", favoriteRows, m.table)
-		return conn.QueryRowsCtx(ctx, v, query, userid)
-	})
+	query := fmt.Sprintf("select %s from %s where `user_id` = ? ", favoriteRows,  m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userid)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -147,6 +140,41 @@ func (m *defaultFavoriteModel) FindFavoriteListByUserId(ctx context.Context, use
 		return nil, err
 	}
 }
+
+func (m *defaultFavoriteModel) FindFavoriteListByVideoId(ctx context.Context, videoid int64) (*[]*Favorite, error) {
+	var resp []*Favorite
+	query := fmt.Sprintf("select %s from %s where `video_id` = ? ", favoriteRows,  m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, videoid)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultFavoriteModel) FindFavoritedCntByVideoIdList(ctx context.Context, videoIdList *[]int64) (int64, error) {
+	var favoritedCnt int64
+	// []int64 转换为 “,” 分隔的 string
+	var str_arr = make([]string, len(*videoIdList))
+	for k, v := range *videoIdList {
+		str_arr[k] = fmt.Sprintf("%d", v)
+	}
+	var IdListStr = strings.Join(str_arr, ",")
+	query := fmt.Sprintf("select count(*) from %s where `video_id` in (%s) and `is_delete`!= '1'", m.table, IdListStr)
+	err := m.QueryRowNoCacheCtx(ctx, &favoritedCnt, query)
+	switch err {
+	case nil:
+		return favoritedCnt, nil
+	case sqlc.ErrNotFound:
+		return 0, ErrNotFound
+	default:
+		return 0, err
+	}
+}
+
 
 func (m *defaultFavoriteModel) formatPrimary(primary any) string {
 	return fmt.Sprintf("%s%v", cacheLiujunContentFavoriteIdPrefix, primary)
