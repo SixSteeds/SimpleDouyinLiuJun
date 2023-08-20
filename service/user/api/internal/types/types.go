@@ -58,7 +58,7 @@ type FollowListReq struct {
 type FollowListResp struct {
 	StatusCode int32  `json:"status_code"`         // 状态码，0-成功，其他值-失败
 	StatusMsg  string `json:"status_msg,optional"` // 返回状态描述
-	FollowList []User `json:"user_list "`          // 关注列表
+	FollowList []User `json:"user_list"`          // 关注列表
 }
 
 type FollowerListReq struct {
