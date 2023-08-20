@@ -16,5 +16,6 @@ const TOKEN_GENERATE_ERROR int32 = 204
 const DB_ERROR int32 = 205
 const DB_UPDATE_AFFECTED_ZERO_ERROR int32 = 206
 const REDIS_ERROR int32 = 207
+const DATA_USE_UP int32 = 208
 
 //用户模块

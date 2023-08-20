@@ -38,7 +38,7 @@ type (
 
 		GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error)
 		GetWorkCountByUserId(ctx context.Context, user_id int64) (*int64, error)
-
+		GetPublishList(ctx context.Context, user_id int64, checkUserId int64) (*[]*FeedVideo, error)
 	}
 
 	defaultVideoModel struct {
@@ -106,7 +106,7 @@ func (m *defaultVideoModel) FindVideoListByIdList(ctx context.Context, videoIdLi
 
 func (m *defaultVideoModel) FindVideoListByUserId(ctx context.Context, userid int64) (*[]*Video, error) {
 	var resp []*Video
-	query := fmt.Sprintf("select * from %s where `user_id` = ? and `is_delete`!= '1'",  m.table)
+	query := fmt.Sprintf("select * from %s where `user_id` = ? and `is_delete`!= '1'", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, userid)
 	switch err {
 	case nil:
@@ -129,7 +129,7 @@ func (m *defaultVideoModel) Delete(ctx context.Context, id int64) error {
 
 func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, error) {
 	var resp Video
-	query := fmt.Sprintf("select %s from %s where `id` = ? ", videoRows,  m.table)
+	query := fmt.Sprintf("select %s from %s where `id` = ? ", videoRows, m.table)
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
@@ -170,6 +170,28 @@ func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, late
 		"ORDER BY v.create_time DESC "+
 		"LIMIT ?", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, formatTime, size)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (m *defaultVideoModel) GetPublishList(ctx context.Context, user_id int64, checkUserId int64) (*[]*FeedVideo, error) {
+	var resp []*FeedVideo
+	query := fmt.Sprintf("SELECT   "+
+		"v.id,"+
+		"v.user_id,"+
+		"v.play_url,"+
+		"v.cover_url,"+
+		"v.title,"+
+		"v.update_time,"+
+		"(SELECT COUNT(*) FROM favorite WHERE video_id = v.id) AS favorite_count,"+
+		"(SELECT COUNT(*) FROM comment WHERE video_id = v.id) AS comment_count,"+
+		"IF(EXISTS (SELECT 1 FROM favorite WHERE video_id = v.id AND user_id = ?), true, false) AS is_favorite "+
+		"FROM %s v "+
+		"WHERE v.is_delete = 0 and v.user_id = ? "+
+		"ORDER BY v.create_time DESC ", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, checkUserId)
 	if err != nil {
 		return nil, err
 	}
