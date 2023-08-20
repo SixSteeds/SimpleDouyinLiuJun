@@ -2,7 +2,7 @@ Name: user.rpc
 ListenOn: 0.0.0.0:8082
 Etcd:
   Hosts:
-    - 0.0.0.0:8090
+    - 127.0.0.1:8090
   Key: userRpc
 #  Pass: liujun
 #  User: root
