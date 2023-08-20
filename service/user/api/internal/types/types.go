@@ -26,7 +26,7 @@ type LoginResp struct {
 }
 
 type User struct {
-	UserId          int64  `json:"user_id"`                   // 用户id
+	UserId          int64  `json:"id"`                   // 用户id
 	Name            string `json:"name"`                      // 用户名称
 	FollowCount     int64  `json:"follow_count,optional"`     // 关注总数
 	FollowerCount   int64  `json:"follower_count,optional"`   // 粉丝总数
@@ -95,7 +95,7 @@ type FriendListResp struct {
 }
 
 type FriendUser struct {
-	UserId          int64  `json:"user_id"`          // 用户id
+	UserId          int64  `json:"id"`          // 用户id
 	Name            string `json:"name"`             // 用户名称
 	FollowCount     int64  `json:"follow_count"`     // 关注总数
 	FollowerCount   int64  `json:"follower_count"`   // 粉丝总数

@@ -58,10 +58,10 @@ type (
 
 	FollowUser struct{
 		Id         int64          `db:"id"`          // 主键
-		UserName     string         `db:"username"`
-		Avator   string         `db:"avator"`
-		BackgroundImage   string         `db:"background_image"`
-		Signature   string         `db:"signature"`
+		UserName     sql.NullString         `db:"username"`
+		Avator   sql.NullString         `db:"avator"`
+		BackgroundImage   sql.NullString         `db:"background_image"`
+		Signature   sql.NullString         `db:"signature"`
 		IsFollow         bool          `db:"is_follow"`
 	}
 )
@@ -119,7 +119,7 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
 		"TRUE AS is_follow"+
-		" from userinfo u,follows f where f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
+		" from userinfo u,follows f where f.user_id = ? and f.follow_id = u.id and u.id <> f.user_id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:
@@ -135,7 +135,7 @@ func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
 		"EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
-		" from userinfo u,follows f where f.follow_id = ? and f.user_id = u.id and u.is_delete = 0")
+		" from userinfo u,follows f where f.follow_id = ? and f.user_id = u.id and u.id <> f.follow_id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id,id)
 	switch err {
 	case nil:
@@ -151,7 +151,7 @@ func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64)
 	var resp []*FollowUser
 	query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
 		"TRUE AS is_follow"+
-		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id and f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
+		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id  and u.id <> f.user_id and f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
 	switch err {
 	case nil:

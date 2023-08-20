@@ -7,8 +7,8 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"strconv"
 )
 
@@ -39,9 +39,6 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 		Id: req.UserId,
 	})
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followListLogic_FollowList_GetFollowsById_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.FollowListResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  "查询关注列表失败",
@@ -84,9 +81,11 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 		}
 		users = append(users, user)
 	}
-	if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followListLogic_FollowList_success"); err != nil {
-		log.Fatal(err)
-	}
+	fmt.Println(types.FollowListResp{
+		StatusCode: common.OK,
+		StatusMsg:  "查询关注列表成功",
+		FollowList: users,
+	})
 	return &types.FollowListResp{
 		StatusCode: common.OK,
 		StatusMsg:  "查询关注列表成功",

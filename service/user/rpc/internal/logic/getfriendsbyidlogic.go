@@ -47,6 +47,7 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 		if len(followRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowsCount(l.ctx, item.Id)
+			num = num - 1 //剪掉自己
 			if err != nil {
 				return nil, err
 			}
@@ -60,6 +61,7 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 		if len(followerRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, item.Id)
+			num = num - 1 //剪掉自己
 			if err != nil {
 				return nil, err
 			}
@@ -74,10 +76,10 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			Id:              item.Id,
 			FollowerCount:   int64(followerNum),
 			FollowCount:     int64(followNum),
-			UserName:        item.UserName,
-			Avator:          item.Avator,
-			BackgroundImage: item.BackgroundImage,
-			Signature:       item.Signature,
+			UserName:        item.UserName.String,
+			Avator:          item.Avator.String,
+			BackgroundImage: item.BackgroundImage.String,
+			Signature:       item.Signature.String,
 			IsFollow:        item.IsFollow,
 		})
 	}

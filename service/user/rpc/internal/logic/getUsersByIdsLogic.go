@@ -46,6 +46,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 		if len(followRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowsCount(l.ctx, id)
+			num = num - 1 //剪掉自己
 			if err != nil {
 				return nil, err
 			}
@@ -59,6 +60,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 		if len(followerRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, id)
+			num = num - 1 //剪掉自己
 			if err != nil {
 				return nil, err
 			}

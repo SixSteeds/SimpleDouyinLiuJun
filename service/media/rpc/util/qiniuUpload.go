@@ -1,11 +1,11 @@
 package util
 
 import (
+	"bytes"
 	"context"
 	"doushen_by_liujun/internal/common"
 	"fmt"
 	"github.com/qiniu/go-sdk/v7/auth/qbox"
-	"github.com/qiniu/go-sdk/v7/sms/bytes"
 	"github.com/qiniu/go-sdk/v7/storage"
 	"os"
 )
