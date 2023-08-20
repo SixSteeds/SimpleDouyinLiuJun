@@ -38,7 +38,7 @@ service content {
 )
 service content {
 	@handler favoriteAction
-	get /action (FavoriteActionReq) returns (FavoriteActionResp)
+	post /action (FavoriteActionReq) returns (FavoriteActionResp)
 
 	@handler favoriteList
 	get /list (FavoriteListReq) returns (FavoriteListResp)
@@ -51,7 +51,7 @@ service content {
 )
 service content {
 	@handler commentAction
-	get /action (CommentActionReq) returns (CommentActionResp)
+	post /action (CommentActionReq) returns (CommentActionResp)
 
 	@handler commentList
 	get /list (CommentListReq) returns (CommentListResp)

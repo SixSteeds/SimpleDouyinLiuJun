@@ -3,6 +3,7 @@ package favorite
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
@@ -94,26 +95,26 @@ func executeCntRedis(l *FavoriteActionLogic, redisKey string, pipeline redis.Pip
 func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp *types.FavoriteActionResp, err error) {
 
 	//1.根据 token 获取 userid
-	//parsToken, err0 := util.ParseToken(req.Token)
-	//if err0 != nil {
-	//	// 返回token失效错误
-	//	return &types.FavoriteActionResp{
-	//		StatusCode: common.TOKEN_EXPIRE_ERROR,
-	//		StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
-	//	}, nil
-	//}
-	var test_useid int64 = 8
+	parsToken, err0 := util.ParseToken(req.Token)
+	if err0 != nil {
+		// 返回token失效错误
+		return &types.FavoriteActionResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+		}, nil
+	}
+	//var test_useid int64 = 8
 
 	// TODO 2.加入redis缓存
 	redisClient := l.svcCtx.RedisClient
 	videoLikedKey := constants.LikeCacheVideoLikedPrefix + strconv.FormatInt(req.VideoId, 10)
 	videoLikedCntKey := constants.CntCacheVideoLikedPrefix + strconv.FormatInt(req.VideoId, 10)
-	userLikeCntKey := constants.CntCacheUserLikePrefix + strconv.FormatInt(test_useid, 10)
+	userLikeCntKey := constants.CntCacheUserLikePrefix + strconv.FormatInt(parsToken.UserID, 10)
 
 	if action := req.ActionType; action == 1 { // actionType（1点赞，2取消）
 		// 2.新增点赞
 		// 2.1 查询 redis 点赞记录
-		likeRecord, err1 := redisClient.HgetCtx(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10))
+		likeRecord, err1 := redisClient.HgetCtx(l.ctx, videoLikedKey, strconv.FormatInt(parsToken.UserID, 10))
 		if err1 != nil && err1 != redis.Nil {
 			// 返回 redis 访问错误
 			return &types.FavoriteActionResp{
@@ -121,13 +122,13 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
 			}, err1
 		}
-		if len(likeRecord) != 0 && likeRecord == "1" {
+		if len(likeRecord) != 0 && likeRecord == "0" {
 			logx.Error("api-favoriteAction-已点赞，重复操作无效")
 		} else {
 			// 一起执行 pipeline 操作
 			e0 := redisClient.PipelinedCtx(l.ctx, func(pipeline redis.Pipeliner) error {
 				// 2.2 新增 redis video 被点赞记录
-				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "1")
+				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(parsToken.UserID, 10), "0")
 				// 2.3 redis 中 video 被点赞计数自增
 				pipeline.Incr(l.ctx, videoLikedCntKey)
 				// 2.4 redis 中 user 点赞计数自增
@@ -183,7 +184,7 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 	} else {
 		// 4.取消点赞
 		// 4.1 查询 redis 点赞记录
-		likeRecord, err1 := redisClient.HgetCtx(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10))
+		likeRecord, err1 := redisClient.HgetCtx(l.ctx, videoLikedKey, strconv.FormatInt(parsToken.UserID, 10))
 		if err1 != nil && err1 != redis.Nil {
 			// 返回 redis 访问错误
 			return &types.FavoriteActionResp{
@@ -191,13 +192,13 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
 			}, err1
 		}
-		if len(likeRecord) != 0 && likeRecord == "0" {
+		if len(likeRecord) != 0 && likeRecord == "1" {
 			logx.Error("api-favoriteAction-已取消点赞，重复操作无效")
 		} else {
 			// 一起执行 pipeline 操作
 			e0 := redisClient.PipelinedCtx(l.ctx, func(pipeline redis.Pipeliner) error {
 				// 4.2 取消 redis 视频点赞用户记录
-				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "0")
+				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(parsToken.UserID, 10), "1")
 				// 4.3 redis 中 video 被点赞计数自减
 				pipeline.Decr(l.ctx, videoLikedCntKey)
 				// 4.4 redis 中 user 点赞计数自减
