@@ -125,7 +125,7 @@ message SearchFavoriteReq {
 }
 
 message SearchFavoriteResp {
-  repeated Favorite favorite = 1; //favorite
+  repeated Favorite favorite = 1; //favorite数组
 }
 
 //--------------------------------瑙嗛淇℃伅--------------------------------
@@ -193,7 +193,30 @@ message SearchVideoResp {
   repeated Video video = 1; //video
 }
 
+message GetUserFavoritedCntByIdReq {
+  int64 userID=1; //用户id
+}
 
+message GetUserFavoritedCntByIdResp {
+  int64 cnt=1; //用户被喜欢数
+}
+
+message GetUserPublishAndLikedCntByIdReq {
+  int64 userId = 1;//用户id
+}
+
+message GetUserPublishAndLikedCntByIdResp {
+  int64 publishCnt=1; //用户发布作品数
+  int64 likedCnt=2; //用户被喜欢数
+}
+
+message GetVideoListByIdListReq{
+  repeated int64 videoIdList = 1;//视频id数组
+}
+
+message GetVideoListByIdListResp{
+  repeated Video videoList = 1; //video数组
+}
 
 message FeedUser{
   int64 id = 1; // 用户id
@@ -248,6 +271,7 @@ message GetWorkCountByUserIdResp{
 // Rpc Func
 // ------------------------------------ 
 
+
 service content{
 
   //-----------------------璇勮淇℃伅-----------------------
@@ -274,5 +298,7 @@ service content{
 
   rpc GetWorkCountByUserId(GetWorkCountByUserIdReq) returns (GetWorkCountByUserIdResp);
 
-
+   rpc GetUserFavoritedCnt(GetUserFavoritedCntByIdReq) returns (GetUserFavoritedCntByIdResp);
+   rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);
+   rpc GetVideoListByIdList(GetVideoListByIdListReq) returns (GetVideoListByIdListResp);
 }

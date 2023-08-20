@@ -37,6 +37,8 @@ const (
 	User_GetFollowersCountById_FullMethodName = "/pb.user/GetFollowersCountById"
 	User_CheckIsFollow_FullMethodName         = "/pb.user/CheckIsFollow"
 	User_GetFriendsById_FullMethodName        = "/pb.user/GetFriendsById"
+	User_GetUserById_FullMethodName           = "/pb.user/GetUserById"
+	User_GetUserListByIdList_FullMethodName   = "/pb.user/GetUserListByIdList"
 )
 
 // UserClient is the client API for User service.
@@ -63,6 +65,8 @@ type UserClient interface {
 	GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error)
 	CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 	GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
+	GetUserById(ctx context.Context, in *GetUserByIdReq, opts ...grpc.CallOption) (*GetUserByIdResp, error)
+	GetUserListByIdList(ctx context.Context, in *GetUserListByIdListReq, opts ...grpc.CallOption) (*GetUserListByIdListResp, error)
 }
 
 type userClient struct {
@@ -235,6 +239,24 @@ func (c *userClient) GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, 
 	return out, nil
 }
 
+func (c *userClient) GetUserById(ctx context.Context, in *GetUserByIdReq, opts ...grpc.CallOption) (*GetUserByIdResp, error) {
+	out := new(GetUserByIdResp)
+	err := c.cc.Invoke(ctx, User_GetUserById_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userClient) GetUserListByIdList(ctx context.Context, in *GetUserListByIdListReq, opts ...grpc.CallOption) (*GetUserListByIdListResp, error) {
+	out := new(GetUserListByIdListResp)
+	err := c.cc.Invoke(ctx, User_GetUserListByIdList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // UserServer is the server API for User service.
 // All implementations must embed UnimplementedUserServer
 // for forward compatibility
@@ -259,6 +281,8 @@ type UserServer interface {
 	GetFollowersCountById(context.Context, *GetFollowersCountByIdReq) (*GetFollowersCountByIdResp, error)
 	CheckIsFollow(context.Context, *CheckIsFollowReq) (*CheckIsFollowResp, error)
 	GetFriendsById(context.Context, *GetFriendsByIdReq) (*GetFriendsByIdResp, error)
+	GetUserById(context.Context, *GetUserByIdReq) (*GetUserByIdResp, error)
+	GetUserListByIdList(context.Context, *GetUserListByIdListReq) (*GetUserListByIdListResp, error)
 	mustEmbedUnimplementedUserServer()
 }
 
@@ -319,6 +343,12 @@ func (UnimplementedUserServer) CheckIsFollow(context.Context, *CheckIsFollowReq)
 }
 func (UnimplementedUserServer) GetFriendsById(context.Context, *GetFriendsByIdReq) (*GetFriendsByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFriendsById not implemented")
+}
+func (UnimplementedUserServer) GetUserById(context.Context, *GetUserByIdReq) (*GetUserByIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserById not implemented")
+}
+func (UnimplementedUserServer) GetUserListByIdList(context.Context, *GetUserListByIdListReq) (*GetUserListByIdListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserListByIdList not implemented")
 }
 func (UnimplementedUserServer) mustEmbedUnimplementedUserServer() {}
 
@@ -657,6 +687,42 @@ func _User_GetFriendsById_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _User_GetUserById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserById(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserById_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserById(ctx, req.(*GetUserByIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _User_GetUserListByIdList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserListByIdListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserServer).GetUserListByIdList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: User_GetUserListByIdList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserServer).GetUserListByIdList(ctx, req.(*GetUserListByIdListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // User_ServiceDesc is the grpc.ServiceDesc for User service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -735,6 +801,14 @@ var User_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFriendsById",
 			Handler:    _User_GetFriendsById_Handler,
+		},
+		{
+			MethodName: "GetUserById",
+			Handler:    _User_GetUserById_Handler,
+		},
+		{
+			MethodName: "GetUserListByIdList",
+			Handler:    _User_GetUserListByIdList_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

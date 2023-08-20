@@ -28,3 +28,5 @@ ContentKqPusherConf:
 Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun
+
+Mode: dev
