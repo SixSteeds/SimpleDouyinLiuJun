@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"strconv"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -36,8 +37,8 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 	for _, info := range *infos {
 		id := info.Id
 		redisClient := l.svcCtx.RedisClient
-		followKey := "followNum_" + strconv.Itoa(int(id))
-		followerKey := "followerNum_" + strconv.Itoa(int(id))
+		followKey := common.FollowNum + strconv.Itoa(int(id))
+		followerKey := common.FollowerNum + strconv.Itoa(int(id))
 		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 		followNum := 0
 		followerNum := 0
@@ -67,6 +68,24 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
+		workCount := 0
+		favoriteCount := 0
+		totalFavorited := 0
+		workCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(id)))
+		if len(workCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			workCount, _ = strconv.Atoi(workCountRecord)
+		}
+		favoriteCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(id)))
+		if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			favoriteCount, _ = strconv.Atoi(favoriteCountRecord)
+		}
+		totalFavoritedRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(id)))
+		if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			totalFavorited, _ = strconv.Atoi(totalFavoritedRecord)
+		}
 		users = append(users, &pb.Usersinfo{
 			Id:              info.Id,
 			FollowCount:     int64(followNum),
@@ -76,9 +95,9 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			Avatar:          info.Avatar.String,
 			BackgroundImage: info.BackgroundImage.String,
 			Signature:       info.Signature.String,
-			WorkCount:       0,
-			FavoriteCount:   0,
-			TotalFavorited:  0,
+			WorkCount:       int64(workCount),
+			FavoriteCount:   int64(favoriteCount),
+			TotalFavorited:  int64(totalFavorited),
 			Name:            info.Name.String,
 		})
 	}

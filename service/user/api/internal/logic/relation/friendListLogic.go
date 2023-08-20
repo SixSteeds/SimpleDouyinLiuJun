@@ -3,10 +3,12 @@ package relation
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"log"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,14 +28,14 @@ func NewFriendListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Friend
 }
 
 func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.FriendListResp, err error) {
-	//_, e := util.ParseToken(req.Token)
-	//if e != nil {
-	//	return &types.FriendListResp{
-	//		StatusCode: common.TOKEN_EXPIRE_ERROR,
-	//		StatusMsg:  "无效token",
-	//		FriendUser: nil,
-	//	}, e
-	//}
+	_, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.FriendListResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  "无效token",
+			FriendUser: nil,
+		}, e
+	}
 	friends, err := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
@@ -48,7 +50,26 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 		}, err
 	}
 	var users []types.FriendUser
+	redisClient := l.svcCtx.RedisClient
 	for _, item := range friends.Follows {
+		workCount := 0
+		favoriteCount := 0
+		totalFavorited := 0
+		workCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(item.Id)))
+		if len(workCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			workCount, _ = strconv.Atoi(workCountRecord)
+		}
+		favoriteCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(item.Id)))
+		if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			favoriteCount, _ = strconv.Atoi(favoriteCountRecord)
+		}
+		totalFavoritedRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(item.Id)))
+		if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，直接赋值0
+			//有记录
+			totalFavorited, _ = strconv.Atoi(totalFavoritedRecord)
+		}
 		user := types.FriendUser{
 			UserId:          item.Id,
 			Name:            item.UserName,
@@ -58,9 +79,9 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			Avatar:          item.Avator,
 			BackgroundImage: item.BackgroundImage,
 			Signature:       item.Signature,
-			TotalFavorited:  0, //后三个数据查别人的数据库
-			WorkCount:       0,
-			FavoriteCount:   0,
+			WorkCount:       int64(workCount),
+			FavoriteCount:   int64(favoriteCount),
+			TotalFavorited:  int64(totalFavorited),
 		}
 		users = append(users, user)
 	}

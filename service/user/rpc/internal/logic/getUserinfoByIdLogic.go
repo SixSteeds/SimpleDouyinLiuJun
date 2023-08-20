@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,11 +28,6 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 	// todo: add your logic here and delete this line
 	//userId查id这个人
 
-	//info, err := l.svcCtx.UserinfoModel.FindByIds(l.ctx, []int64{47, 48, 47}, in.UserID)
-	//fmt.Println(err)
-	//fmt.Println("u呼呼呼呼呼呼呼呼")
-	//fmt.Println((*info)[0].Username.String, (*info)[1].Username.String, (*info)[2].Username.String)
-	//return nil, nil
 	info, err := l.svcCtx.UserinfoModel.FindOne(l.ctx, in.Id, in.UserID)
 	if err != nil {
 		return nil, err
@@ -40,12 +36,30 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 		log.Fatal(err)
 	}
 	redisClient := l.svcCtx.RedisClient
-	followKey := "followNum_" + strconv.Itoa(int(in.Id))
-	followerKey := "followerNum_" + strconv.Itoa(int(in.Id))
+	followKey := common.FollowNum + strconv.Itoa(int(in.Id))
+	followerKey := common.FollowerNum + strconv.Itoa(int(in.Id))
 	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 	followNum := 0
 	followerNum := 0
 	expiration := 3600 //秒
+	workCount := 0
+	favoriteCount := 0
+	totalFavorited := 0
+	workCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(in.Id)))
+	if len(workCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+		//有记录
+		workCount, _ = strconv.Atoi(workCountRecord)
+	}
+	favoriteCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(in.Id)))
+	if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+		//有记录
+		favoriteCount, _ = strconv.Atoi(favoriteCountRecord)
+	}
+	totalFavoritedRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(in.Id)))
+	if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，直接赋值0
+		//有记录
+		totalFavorited, _ = strconv.Atoi(totalFavoritedRecord)
+	}
 	if len(followRecord) == 0 {
 		//没有记录，去查表
 		num, err := l.svcCtx.FollowsModel.FindFollowsCount(l.ctx, in.Id)
@@ -80,9 +94,9 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 		Avatar:          info.Avatar.String,
 		BackgroundImage: info.BackgroundImage.String,
 		Signature:       info.Signature.String,
-		WorkCount:       0,
-		FavoriteCount:   0,
-		TotalFavorited:  0,
+		WorkCount:       int64(workCount),
+		FavoriteCount:   int64(favoriteCount),
+		TotalFavorited:  int64(totalFavorited),
 	}
 	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getUserinfoByIdLogic_GetUserinfoById_success"); err != nil {
 		log.Fatal(err)

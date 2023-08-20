@@ -40,3 +40,9 @@ const CntCacheUserWorkPrefix = "CntCache:User_Work:"
 
 // 用videoId取userID
 const VideoCache2User = "VideoCache:UserId:"
+
+// 用户关注数量
+const FollowNum = "followNum_"
+
+// 用户粉丝数量
+const FollowerNum = "followerNum_"

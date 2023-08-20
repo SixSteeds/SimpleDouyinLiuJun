@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
@@ -37,8 +38,8 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 	var resp []*pb.Follows
 	redisClient := l.svcCtx.RedisClient
 	for _, item := range *follows {
-		followKey := "followNum_" + strconv.Itoa(int(item.Id))
-		followerKey := "followerNum_" + strconv.Itoa(int(item.Id))
+		followKey := common.FollowNum + strconv.Itoa(int(item.Id))
+		followerKey := common.FollowerNum + strconv.Itoa(int(item.Id))
 		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 		followNum := 0
 		followerNum := 0
