@@ -5,7 +5,6 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
-	"doushen_by_liujun/service/content/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"strconv"
@@ -102,7 +101,7 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 	//		StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 	//	}, nil
 	//}
-	var test_useid int64 = 7
+	var test_useid int64 = 8
 
 	// TODO 2.加入redis缓存
 	redisClient := l.svcCtx.RedisClient
@@ -172,18 +171,18 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 			//}
 
 			// TODO 3. 新增点赞数据库修改->新增redis写数据库定时任务
-			_, err4 := l.svcCtx.ContentRpcClient.AddFavorite(l.ctx, &pb.AddFavoriteReq{
-				UserId:   test_useid, //parsToken.UserID,
-				VideoId:  req.VideoId,
-				IsDelete: 0,
-			})
-			if err4 != nil {
-				// 返回数据库新增错误
-				return &types.FavoriteActionResp{
-					StatusCode: common.DB_ERROR,
-					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-				}, err4
-			}
+			//_, err4 := l.svcCtx.ContentRpcClient.AddFavorite(l.ctx, &pb.AddFavoriteReq{
+			//	UserId:   test_useid, //parsToken.UserID,
+			//	VideoId:  req.VideoId,
+			//	IsDelete: 0,
+			//})
+			//if err4 != nil {
+			//	// 返回数据库新增错误
+			//	return &types.FavoriteActionResp{
+			//		StatusCode: common.DB_ERROR,
+			//		StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			//	}, err4
+			//}
 			fmt.Println("【api-favoriteAction-用户点赞成功】")
 		}
 	} else {
@@ -248,17 +247,17 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 			//}
 
 			// TODO 5. 取消点赞数据库修改->新增redis写数据库定时任务
-			_, err4 := l.svcCtx.ContentRpcClient.DelFavorite(l.ctx, &pb.DelFavoriteReq{
-				UserId:  test_useid, //parsToken.UserID,
-				VideoId: req.VideoId,
-			})
-			if err4 != nil {
-				// 返回数据库删除错误
-				return &types.FavoriteActionResp{
-					StatusCode: common.DB_ERROR,
-					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-				}, err4
-			}
+			//_, err4 := l.svcCtx.ContentRpcClient.DelFavorite(l.ctx, &pb.DelFavoriteReq{
+			//	UserId:  test_useid, //parsToken.UserID,
+			//	VideoId: req.VideoId,
+			//})
+			//if err4 != nil {
+			//	// 返回数据库删除错误
+			//	return &types.FavoriteActionResp{
+			//		StatusCode: common.DB_ERROR,
+			//		StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			//	}, err4
+			//}
 			fmt.Println("【api-favoriteAction-用户取消点赞成功】")
 		}
 	}
