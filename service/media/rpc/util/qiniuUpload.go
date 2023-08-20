@@ -35,7 +35,7 @@ func Upload(ctx context.Context, video []byte, fileName string) (*storage.PutRet
 		putExtra := storage.RputV2Extra{
 			Recorder: recorder,
 			CustomVars: map[string]string{
-				"x:name": "分片上传文件",
+				"x:name": "分片视频上传",
 			},
 		}
 		reader := bytes.NewReader(video)
@@ -49,7 +49,7 @@ func Upload(ctx context.Context, video []byte, fileName string) (*storage.PutRet
 		ret := storage.PutRet{}
 		putExtra := storage.PutExtra{
 			Params: map[string]string{
-				"x:name": "直传文件",
+				"x:name": "视频直传",
 			},
 		}
 		err := formUploader.Put(context.Background(), &ret, upToken, fileName, bytes.NewReader(video), dataLen, &putExtra)

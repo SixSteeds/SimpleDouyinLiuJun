@@ -5,8 +5,6 @@ import (
 	"doushen_by_liujun/service/media/rpc/internal/model"
 	"doushen_by_liujun/service/media/rpc/internal/svc"
 	"doushen_by_liujun/service/media/rpc/pb"
-	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -26,7 +24,6 @@ func NewSaveVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveVid
 
 func (l *SaveVideoLogic) SaveVideo(in *pb.SaveVideoReq) (*pb.SaveVideoResp, error) {
 	// todo: add your logic here and delete this line
-	fmt.Println("进入上传rpc逻辑")
 	_, err := l.svcCtx.MediaModel.Save(l.ctx, &model.Video{
 		Id:       in.Id,
 		UserId:   in.UserId,
@@ -35,7 +32,7 @@ func (l *SaveVideoLogic) SaveVideo(in *pb.SaveVideoReq) (*pb.SaveVideoResp, erro
 		Title:    in.Title,
 	})
 	if err != nil {
-		logx.Error(err)
+		l.Logger.Error(err)
 		return nil, err
 	}
 	return &pb.SaveVideoResp{}, nil

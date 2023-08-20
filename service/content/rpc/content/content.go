@@ -45,6 +45,8 @@ type (
 	GetVideoListByIdListResp          = pb.GetVideoListByIdListResp
 	GetWorkCountByUserIdReq           = pb.GetWorkCountByUserIdReq
 	GetWorkCountByUserIdResp          = pb.GetWorkCountByUserIdResp
+	PublishListReq                    = pb.PublishListReq
+	PublishListResp                   = pb.PublishListResp
 	SearchCommentReq                  = pb.SearchCommentReq
 	SearchCommentResp                 = pb.SearchCommentResp
 	SearchFavoriteReq                 = pb.SearchFavoriteReq
@@ -79,6 +81,7 @@ type (
 		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 		GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
+		GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 		GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
 		GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
 		GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
@@ -177,6 +180,11 @@ func (m *defaultContent) SearchVideo(ctx context.Context, in *SearchVideoReq, op
 func (m *defaultContent) GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.GetFeedList(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetPublishList(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {

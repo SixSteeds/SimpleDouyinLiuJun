@@ -105,6 +105,11 @@ func (s *ContentServer) GetFeedList(ctx context.Context, in *pb.FeedListReq) (*p
 	return l.GetFeedList(in)
 }
 
+func (s *ContentServer) GetPublishList(ctx context.Context, in *pb.PublishListReq) (*pb.PublishListResp, error) {
+	l := logic.NewGetPublishListLogic(ctx, s.svcCtx)
+	return l.GetPublishList(in)
+}
+
 func (s *ContentServer) GetWorkCountByUserId(ctx context.Context, in *pb.GetWorkCountByUserIdReq) (*pb.GetWorkCountByUserIdResp, error) {
 	l := logic.NewGetWorkCountByUserIdLogic(ctx, s.svcCtx)
 	return l.GetWorkCountByUserId(in)
