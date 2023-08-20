@@ -3,6 +3,7 @@ package favorite
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
 	"fmt"

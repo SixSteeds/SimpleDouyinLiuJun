@@ -34,6 +34,8 @@ const (
 	Content_DelVideo_FullMethodName                      = "/pb.content/DelVideo"
 	Content_GetVideoById_FullMethodName                  = "/pb.content/GetVideoById"
 	Content_SearchVideo_FullMethodName                   = "/pb.content/SearchVideo"
+	Content_GetFeedList_FullMethodName                   = "/pb.content/GetFeedList"
+	Content_GetWorkCountByUserId_FullMethodName          = "/pb.content/GetWorkCountByUserId"
 	Content_GetUserFavoritedCnt_FullMethodName           = "/pb.content/GetUserFavoritedCnt"
 	Content_GetUserPublishAndLikedCntById_FullMethodName = "/pb.content/GetUserPublishAndLikedCntById"
 	Content_GetVideoListByIdList_FullMethodName          = "/pb.content/GetVideoListByIdList"
@@ -61,6 +63,8 @@ type ContentClient interface {
 	DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 	GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 	SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
+	GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
+	GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
 	GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
 	GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
 	GetVideoListByIdList(ctx context.Context, in *GetVideoListByIdListReq, opts ...grpc.CallOption) (*GetVideoListByIdListResp, error)
@@ -209,6 +213,24 @@ func (c *contentClient) SearchVideo(ctx context.Context, in *SearchVideoReq, opt
 	return out, nil
 }
 
+func (c *contentClient) GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error) {
+	out := new(FeedListResp)
+	err := c.cc.Invoke(ctx, Content_GetFeedList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *contentClient) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {
+	out := new(GetWorkCountByUserIdResp)
+	err := c.cc.Invoke(ctx, Content_GetWorkCountByUserId_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *contentClient) GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error) {
 	out := new(GetUserFavoritedCntByIdResp)
 	err := c.cc.Invoke(ctx, Content_GetUserFavoritedCnt_FullMethodName, in, out, opts...)
@@ -258,6 +280,8 @@ type ContentServer interface {
 	DelVideo(context.Context, *DelVideoReq) (*DelVideoResp, error)
 	GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error)
 	SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error)
+	GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error)
+	GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error)
 	GetUserFavoritedCnt(context.Context, *GetUserFavoritedCntByIdReq) (*GetUserFavoritedCntByIdResp, error)
 	GetUserPublishAndLikedCntById(context.Context, *GetUserPublishAndLikedCntByIdReq) (*GetUserPublishAndLikedCntByIdResp, error)
 	GetVideoListByIdList(context.Context, *GetVideoListByIdListReq) (*GetVideoListByIdListResp, error)
@@ -312,6 +336,12 @@ func (UnimplementedContentServer) GetVideoById(context.Context, *GetVideoByIdReq
 }
 func (UnimplementedContentServer) SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchVideo not implemented")
+}
+func (UnimplementedContentServer) GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetFeedList not implemented")
+}
+func (UnimplementedContentServer) GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetWorkCountByUserId not implemented")
 }
 func (UnimplementedContentServer) GetUserFavoritedCnt(context.Context, *GetUserFavoritedCntByIdReq) (*GetUserFavoritedCntByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserFavoritedCnt not implemented")
@@ -605,6 +635,42 @@ func _Content_SearchVideo_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Content_GetFeedList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(FeedListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetFeedList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetFeedList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetFeedList(ctx, req.(*FeedListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Content_GetWorkCountByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetWorkCountByUserIdReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetWorkCountByUserId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetWorkCountByUserId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetWorkCountByUserId(ctx, req.(*GetWorkCountByUserIdReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Content_GetUserFavoritedCnt_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetUserFavoritedCntByIdReq)
 	if err := dec(in); err != nil {
@@ -725,6 +791,14 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchVideo",
 			Handler:    _Content_SearchVideo_Handler,
+		},
+		{
+			MethodName: "GetFeedList",
+			Handler:    _Content_GetFeedList_Handler,
+		},
+		{
+			MethodName: "GetWorkCountByUserId",
+			Handler:    _Content_GetWorkCountByUserId_Handler,
 		},
 		{
 			MethodName: "GetUserFavoritedCnt",

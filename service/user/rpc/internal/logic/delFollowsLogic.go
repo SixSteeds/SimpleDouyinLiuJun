@@ -4,7 +4,9 @@ import (
 	"context"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"errors"
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 )
 
 type DelFollowsLogic struct {
@@ -23,10 +25,20 @@ func NewDelFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelFol
 
 func (l *DelFollowsLogic) DelFollows(in *pb.DelFollowsReq) (*pb.DelFollowsResp, error) {
 	// todo: add your logic here and delete this line
-	//e := l.svcCtx.FollowsModel.DeleteByUserIdAndFollowId(l.ctx, in.UserId, in.FollowId)
-	//if e != nil {
-	//	l.Logger.Info("删除关注失败", e)
-	//	return nil, errors.New("删除关注失败")
-	//}
+	if in.UserId == in.FollowId {
+		//不能取消关注自己
+		return nil, errors.New("不能取消关注自己")
+	}
+	e := l.svcCtx.FollowsModel.DeleteByUserIdAndFollowId(l.ctx, in.UserId, in.FollowId)
+	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_rpc_delFollowsLogic_DelFollows_DeleteByUserIdAndFollowId_false"); err != nil {
+			log.Fatal(err)
+		}
+		l.Logger.Info("删除关注失败", e)
+		return nil, e
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_rpc_delFollowsLogic_DelFollows_del_success"); err != nil {
+		log.Fatal(err)
+	}
 	return &pb.DelFollowsResp{}, nil
 }

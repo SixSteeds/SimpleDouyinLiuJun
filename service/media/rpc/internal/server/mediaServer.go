@@ -22,28 +22,32 @@ func NewMediaServer(svcCtx *svc.ServiceContext) *MediaServer {
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
-func (s *MediaServer) AddChatMessage(ctx context.Context, in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
-	l := logic.NewAddChatMessageLogic(ctx, s.svcCtx)
-	return l.AddChatMessage(in)
+func (s *MediaServer) AddVideo(ctx context.Context, in *pb.AddVideoReq) (*pb.AddVideoResp, error) {
+	l := logic.NewAddVideoLogic(ctx, s.svcCtx)
+	return l.AddVideo(in)
 }
 
-func (s *MediaServer) UpdateChatMessage(ctx context.Context, in *pb.UpdateChatMessageReq) (*pb.UpdateChatMessageResp, error) {
-	l := logic.NewUpdateChatMessageLogic(ctx, s.svcCtx)
-	return l.UpdateChatMessage(in)
+func (s *MediaServer) UpdateVideo(ctx context.Context, in *pb.UpdateVideoReq) (*pb.UpdateVideoResp, error) {
+	l := logic.NewUpdateVideoLogic(ctx, s.svcCtx)
+	return l.UpdateVideo(in)
 }
 
-func (s *MediaServer) DelChatMessage(ctx context.Context, in *pb.DelChatMessageReq) (*pb.DelChatMessageResp, error) {
-	l := logic.NewDelChatMessageLogic(ctx, s.svcCtx)
-	return l.DelChatMessage(in)
+func (s *MediaServer) DelVideo(ctx context.Context, in *pb.DelVideoReq) (*pb.DelVideoResp, error) {
+	l := logic.NewDelVideoLogic(ctx, s.svcCtx)
+	return l.DelVideo(in)
 }
 
-func (s *MediaServer) GetChatMessageById(ctx context.Context, in *pb.GetChatMessageByIdReq) (*pb.GetChatMessageByIdResp, error) {
-	l := logic.NewGetChatMessageByIdLogic(ctx, s.svcCtx)
-	return l.GetChatMessageById(in)
+func (s *MediaServer) GetVideoById(ctx context.Context, in *pb.GetVideoByIdReq) (*pb.GetVideoByIdResp, error) {
+	l := logic.NewGetVideoByIdLogic(ctx, s.svcCtx)
+	return l.GetVideoById(in)
 }
 
-func (s *MediaServer) SearchChatMessage(ctx context.Context, in *pb.SearchChatMessageReq) (*pb.SearchChatMessageResp, error) {
-	l := logic.NewSearchChatMessageLogic(ctx, s.svcCtx)
-	return l.SearchChatMessage(in)
+func (s *MediaServer) SearchVideo(ctx context.Context, in *pb.SearchVideoReq) (*pb.SearchVideoResp, error) {
+	l := logic.NewSearchVideoLogic(ctx, s.svcCtx)
+	return l.SearchVideo(in)
+}
+
+func (s *MediaServer) SaveVideo(ctx context.Context, in *pb.SaveVideoReq) (*pb.SaveVideoResp, error) {
+	l := logic.NewSaveVideoLogic(ctx, s.svcCtx)
+	return l.SaveVideo(in)
 }

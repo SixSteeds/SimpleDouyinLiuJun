@@ -42,6 +42,8 @@ type (
 	GetUserListByIdListResp   = pb.GetUserListByIdListResp
 	GetUserinfoByIdReq        = pb.GetUserinfoByIdReq
 	GetUserinfoByIdResp       = pb.GetUserinfoByIdResp
+	GetUsersByIdsReq          = pb.GetUsersByIdsReq
+	GetUsersByIdsResp         = pb.GetUsersByIdsResp
 	SaveUserReq               = pb.SaveUserReq
 	SaveUserResp              = pb.SaveUserResp
 	SearchFollowsReq          = pb.SearchFollowsReq
@@ -53,6 +55,7 @@ type (
 	UpdateUserinfoReq         = pb.UpdateUserinfoReq
 	UpdateUserinfoResp        = pb.UpdateUserinfoResp
 	Userinfo                  = pb.Userinfo
+	Usersinfo                 = pb.Usersinfo
 
 	User interface {
 		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
@@ -68,6 +71,7 @@ type (
 		UpdateUserinfo(ctx context.Context, in *UpdateUserinfoReq, opts ...grpc.CallOption) (*UpdateUserinfoResp, error)
 		DelUserinfo(ctx context.Context, in *DelUserinfoReq, opts ...grpc.CallOption) (*DelUserinfoResp, error)
 		GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error)
+		GetUsersByIds(ctx context.Context, in *GetUsersByIdsReq, opts ...grpc.CallOption) (*GetUsersByIdsResp, error)
 		SearchUserinfo(ctx context.Context, in *SearchUserinfoReq, opts ...grpc.CallOption) (*SearchUserinfoResp, error)
 		GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
 		GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error)
@@ -144,6 +148,11 @@ func (m *defaultUser) DelUserinfo(ctx context.Context, in *DelUserinfoReq, opts 
 func (m *defaultUser) GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetUserinfoById(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetUsersByIds(ctx context.Context, in *GetUsersByIdsReq, opts ...grpc.CallOption) (*GetUsersByIdsResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetUsersByIds(ctx, in, opts...)
 }
 
 func (m *defaultUser) SearchUserinfo(ctx context.Context, in *SearchUserinfoReq, opts ...grpc.CallOption) (*SearchUserinfoResp, error) {

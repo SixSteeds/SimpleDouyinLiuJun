@@ -12,6 +12,7 @@ func init() {
 	message[DB_ERROR] = "数据库繁忙,请稍后再试"
 	message[DB_UPDATE_AFFECTED_ZERO_ERROR] = "更新数据影响行数为0"
 	message[REDIS_ERROR] = "redis执行失败，请重新尝试"
+
 }
 
 func MapErrMsg(errcode int32) string {

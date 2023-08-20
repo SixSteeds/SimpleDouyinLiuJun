@@ -4,8 +4,10 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/content/rpc/pb"
+
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
+	"log"
 	"strconv"
 
 	constants "doushen_by_liujun/internal/common"
@@ -72,6 +74,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 	//}
 	var test_useid int64 = 7
 	videoCommentedCntKey := constants.CntCacheVideoCommentedPrefix + strconv.FormatInt(req.VideoId, 10)
+
 	if action := req.ActionType; action == 1 { // actionType（1评论，2删除评论）
 		// 2.新增评论
 		_, err1 := l.svcCtx.ContentRpcClient.AddComment(l.ctx, &pb.AddCommentReq{
@@ -81,6 +84,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			IsDelete: 0,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_AddComment_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.CommentActionResp{
 				StatusCode: common.REDIS_ERROR,
@@ -103,6 +109,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			Id: req.CommentId,
 		})
 		if err1 != nil {
+			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_DelComment_false"); err != nil {
+				log.Fatal(err)
+			}
 			// 返回数据库查询错误
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
@@ -119,6 +128,9 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			}, err2
 		}
 		fmt.Println("【api-commentAction-用户删除评论成功】")
+	}
+	if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_CommentAction_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.CommentActionResp{
 		StatusCode: common.OK,

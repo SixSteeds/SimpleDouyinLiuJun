@@ -11,6 +11,7 @@ import (
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+	"time"
 )
 
 const (
@@ -30,8 +31,8 @@ type ChatMessage struct {
 	UserId     int64  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`         //鍙戦€佷汉id
 	ToUserId   int64  `protobuf:"varint,3,opt,name=toUserId,proto3" json:"toUserId,omitempty"`     //鎺ユ敹浜篿d
 	Message    string `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`        //娑堟伅鍐呭
-	CreateTime int64  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime,omitempty"` //璇ユ潯璁板綍鍒涘缓鏃堕棿
-	UpdateTime int64  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"` //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 7; //閫昏緫鍒犻櫎
+	CreateTime time.Time  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime,omitempty"` //璇ユ潯璁板綍鍒涘缓鏃堕棿
+	UpdateTime time.Time  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"` //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 7; //閫昏緫鍒犻櫎
 }
 
 func (x *ChatMessage) Reset() {
@@ -94,18 +95,18 @@ func (x *ChatMessage) GetMessage() string {
 	return ""
 }
 
-func (x *ChatMessage) GetCreateTime() int64 {
+func (x *ChatMessage) GetCreateTime() time.Time {
 	if x != nil {
 		return x.CreateTime
 	}
-	return 0
+	return time.Time{}
 }
 
-func (x *ChatMessage) GetUpdateTime() int64 {
+func (x *ChatMessage) GetUpdateTime() time.Time {
 	if x != nil {
 		return x.UpdateTime
 	}
-	return 0
+	return time.Time{}
 }
 
 type AddChatMessageReq struct {
@@ -425,6 +426,11 @@ type GetChatMessageByIdReq struct {
 	unknownFields protoimpl.UnknownFields
 
 	Id int64 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"` //id
+	UserId int64  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
+	ToUserId int64  `protobuf:"varint,3,opt,name=toUserId,proto3" json:"toUserId,omitempty"`
+	Token string  `protobuf:"bytes,4,opt,name=token,proto3" json:"token,omitempty"` // 用户鉴权token
+	PreMsgTime time.Time `protobuf:"varint,5,opt,name=preMsgTime,proto3" json:"preMsgTime,omitempty"`
+
 }
 
 func (x *GetChatMessageByIdReq) Reset() {
@@ -471,7 +477,7 @@ type GetChatMessageByIdResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	ChatMessage *ChatMessage `protobuf:"bytes,1,opt,name=chatMessage,proto3" json:"chatMessage,omitempty"` //chatMessage
+	ChatMessage []*ChatMessage `protobuf:"bytes,1,opt,name=chatMessage,proto3" json:"chatMessage,omitempty"` //chatMessage
 }
 
 func (x *GetChatMessageByIdResp) Reset() {
@@ -506,7 +512,7 @@ func (*GetChatMessageByIdResp) Descriptor() ([]byte, []int) {
 	return file_chat_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *GetChatMessageByIdResp) GetChatMessage() *ChatMessage {
+func (x *GetChatMessageByIdResp) GetChatMessage() []*ChatMessage {
 	if x != nil {
 		return x.ChatMessage
 	}

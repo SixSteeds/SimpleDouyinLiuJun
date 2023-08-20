@@ -2,7 +2,7 @@ Name: user.rpc
 ListenOn: 0.0.0.0:8082
 Etcd:
   Hosts:
-    - 0.0.0.0:8090
+    - 127.0.0.1:8090
   Key: userRpc
 #  Pass: liujun
 #  User: root
@@ -14,4 +14,17 @@ Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun
 
+
 Mode: dev
+
+UserKqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+    - 127.0.0.1:9093
+    - 127.0.0.1:9094
+    - 127.0.0.1:9095
+  Topic: user
+
+RedisConf:
+  Host: 0.0.0.0:8094
+  Pass: "liujun"

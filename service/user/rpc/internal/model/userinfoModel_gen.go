@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,7 +20,9 @@ import (
 var (
 	userinfoFieldNames          = builder.RawFieldNames(&Userinfo{})
 	userinfoRows                = strings.Join(userinfoFieldNames, ",")
-	userinfoRowsExpectAutoSet   = strings.Join(stringx.Remove(userinfoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+
+	// 此处去掉id以便于使用雪花算法生成id，加上is_delete以便于软删除
+	userinfoRowsExpectAutoSet   = strings.Join(stringx.Remove(userinfoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`","`is_delete`", "`update_time`", "`updated_at`"), ",")
 	userinfoRowsWithPlaceHolder = strings.Join(stringx.Remove(userinfoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunUserUserinfoIdPrefix = "cache:liujunUser:userinfo:id:"
@@ -28,9 +31,10 @@ var (
 type (
 	userinfoModel interface {
 		Insert(ctx context.Context, data *Userinfo) (sql.Result, error)
-		FindOne(ctx context.Context, id int64,userId int64) (*Userdetail, error)
+		FindOne(ctx context.Context, id int64, userId int64) (*Userdetail, error)
 		Update(ctx context.Context, data *Userinfo) error
 		Delete(ctx context.Context, id int64) error
+		FindByIds(ctx context.Context, ids []int64, userId int64) (*[]*Userdetail, error)
 		CheckOne(ctx context.Context, username string, password string) (*int64, error)
 		FindUserById(ctx context.Context, id int64) (*Userinfo, error)
 		FindUserListByIdList(ctx context.Context, userIdList *[]int64) (*[]*Userinfo, error)
@@ -58,9 +62,8 @@ type (
 		Avatar          sql.NullString `db:"avatar"`           // 头像
 		BackgroundImage sql.NullString `db:"background_image"` // 头像
 		Signature       sql.NullString `db:"signature"`        // 个人简介
-		FollowCount            int64 `db:"follow_count"`             // 用户昵称
-		FollowerCount            int64 `db:"follower_count"`
-		IsFollow            bool `db:"is_follow"`
+		IsFollow        bool           `db:"is_follow"`
+		Name       sql.NullString `db:"name"`
 	}
 )
 
@@ -107,17 +110,33 @@ func (m *defaultUserinfoModel) Delete(ctx context.Context, id int64) error {
 	}, liujunUserUserinfoIdKey)
 	return err
 }
-
-func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64,userId int64) (*Userdetail, error) {
-	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id,userId)
+func (m *defaultUserinfoModel) FindByIds(ctx context.Context, ids []int64, userId int64) (*[]*Userdetail, error) {
+	var resp []*Userdetail
+	var idStrings []string
+	for _, id := range ids {
+		idStrings = append(idStrings, "select u.id,u.username,u.avatar,u.background_image,u.signature,u.name," +
+			"EXISTS (SELECT 1 FROM follows WHERE user_id = "+strconv.FormatInt(userId, 10)+" AND follow_id = u.id) AS is_follow" +
+			" from userinfo u where u.id = "+strconv.FormatInt(id, 10)+" and u.is_delete = 0")
+	}
+	combined := strings.Join(idStrings, " UNION ALL ")
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, combined)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int64) (*Userdetail, error) {
+	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id, userId)
 	var resp Userdetail
 	err := m.QueryRowCtx(ctx, &resp, liujunUserUserinfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature," +
-			"(SELECT COUNT(*) FROM follows WHERE follow_id = u.id) AS follower_count," +
-			"(SELECT COUNT(*) FROM follows WHERE user_id = u.id) AS follow_count" +
-			",EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow"+
+		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature,u.name," +
+			"EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow" +
 			" from userinfo u where u.id = ? and u.is_delete = 0")
-		return conn.QueryRowCtx(ctx, v, query,userId, id)
+		return conn.QueryRowCtx(ctx, v, query, userId, id)
 	})
 	switch err {
 	case nil:
@@ -128,6 +147,7 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64,userId int6
 		return nil, err
 	}
 }
+
 
 func (m *defaultUserinfoModel) FindUserById(ctx context.Context, id int64) (*Userinfo, error) {
 	var resp Userinfo
@@ -144,32 +164,11 @@ func (m *defaultUserinfoModel) FindUserById(ctx context.Context, id int64) (*Use
 }
 
 
-func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username , password string) (*int64, error) {
-	//var resp Userinfo
-	//var conn sqlx.SqlConn
-	////var err = m.QueryRowCtx(ctx, &resp, nil, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
-	////	query := fmt.Sprintf("select %s from %s where `id` = ? limit 1", userinfoRows, m.table)
-	////	return conn.QueryRowCtx(ctx, v, query, id)
-	////})
-	//println(username, password, "username, password")
-	//query := fmt.Sprintf("select 'id' from %s where 'username' = ? and 'password' = ? ", m.table)
-	//err := conn.QueryRowCtx(ctx, &resp, query, username, password)
-	//println(username, password, "username, password=================")
-	//switch err {
-	//case nil:
-	//	return &resp, nil
-	//case sqlc.ErrNotFound:
-	//	return nil, ErrNotFound
-	//default:
-	//	return nil, err
-	//}
+func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username, password string) (*int64, error) {
 
-	//liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, 0)
 	var resp int64
 	query := fmt.Sprintf("SELECT id FROM %s WHERE username = ? AND password = ?", m.table)
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, username, password)
-	//query := fmt.Sprintf("select id from %s where username = ? and password = ? ",m.table)
-	//err := conn.QueryRowCtx(ctx, &resp, query, username, password)
 	switch err {
 	case nil:
 		return &resp, nil
@@ -183,8 +182,8 @@ func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username , password
 func (m *defaultUserinfoModel) Insert(ctx context.Context, data *Userinfo) (sql.Result, error) {
 	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, data.Id)
 	ret, err := m.ExecCtx(ctx, func(ctx context.Context, conn sqlx.SqlConn) (result sql.Result, err error) {
-		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?, ?)", m.table, userinfoRowsExpectAutoSet)
-		return conn.ExecCtx(ctx, query, data.Id, data.Username, data.Password, data.Avatar, data.BackgroundImage, data.Signature, data.IsDelete, data.Name)
+		query := fmt.Sprintf("insert into %s (%s) values (?, ?, ?, ?, ?, ?, ?)", m.table, userinfoRowsExpectAutoSet)
+		return conn.ExecCtx(ctx, query, data.Id, data.Username, data.Password, data.Avatar, data.BackgroundImage, data.Signature, data.Name)
 	}, liujunUserUserinfoIdKey)
 	return ret, err
 }

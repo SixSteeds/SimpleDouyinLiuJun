@@ -3,7 +3,11 @@ package favorite
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+
 	constants "doushen_by_liujun/internal/common"
+
+	"log"
+
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -45,6 +49,11 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 	}
 	fmt.Println(favoriteListResp)
 	fmt.Println("查到favoriteList")
+	if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteListLogic_FavoriteList_SearchFavorite_false"); err != nil {
+		log.Fatal(err)
+	}
+
+	// TODO 2.依次根据 video_id 查询 video 表，返回点赞的所有视频（需要调别人的接口）
 	var favoriteList = favoriteListResp.GetFavorite()
 	var videoIdList []int64
 	for _, item := range favoriteList {
@@ -282,6 +291,11 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 
 	fmt.Println("【api-查询用户点赞列表成功】")
 	fmt.Print(videoList)
+	logx.Error("api-查询用户点赞列表成功")
+	fmt.Print(favoriteList)
+	if err := l.svcCtx.KqPusherClient.Push("content_api_favorite_favoriteListLogic_FavoriteList_success"); err != nil {
+		log.Fatal(err)
+	}
 	return &types.FavoriteListResp{
 		StatusCode: common.OK,
 		StatusMsg:  common.MapErrMsg(common.OK),

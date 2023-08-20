@@ -9,22 +9,22 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type UpdateChatMessageLogic struct {
+type GetVideoByIdLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewUpdateChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UpdateChatMessageLogic {
-	return &UpdateChatMessageLogic{
+func NewGetVideoByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetVideoByIdLogic {
+	return &GetVideoByIdLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *UpdateChatMessageLogic) UpdateChatMessage(in *pb.UpdateChatMessageReq) (*pb.UpdateChatMessageResp, error) {
+func (l *GetVideoByIdLogic) GetVideoById(in *pb.GetVideoByIdReq) (*pb.GetVideoByIdResp, error) {
 	// todo: add your logic here and delete this line
 
-	return &pb.UpdateChatMessageResp{}, nil
+	return &pb.GetVideoByIdResp{}, nil
 }

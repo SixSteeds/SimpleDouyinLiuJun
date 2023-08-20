@@ -1,8 +1,6 @@
-Name: media
+Name: chat
 Host: 0.0.0.0
 Port: 8087
-
-
 
 ChatRpcConf:
   Etcd:
@@ -11,6 +9,15 @@ ChatRpcConf:
     Key: chatRpc
 #    Pass: liujun
 #    User: root
+
+ChatKqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+    - 127.0.0.1:9093
+    - 127.0.0.1:9094
+    - 127.0.0.1:9095
+  Topic: chat
+
 
 RedisConf:
   Host: 0.0.0.0:8094

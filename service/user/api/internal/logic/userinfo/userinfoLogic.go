@@ -7,7 +7,9 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 	"strconv"
 )
 
@@ -26,8 +28,15 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 }
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
+	fmt.Println(req.Token, req.UserId)
 	logger, e := util.ParseToken(req.Token)
+	fmt.Println(logger.Username)
+	fmt.Println(logger.UserID)
+	fmt.Println(e)
 	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.UserinfoResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  "无效token",
@@ -35,12 +44,17 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		}, err
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
+	//IntUserId := 203
+
 	info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &pb.GetUserinfoByIdReq{
 		Id:     req.UserId,
 		UserID: int64(IntUserId),
 	})
 	var user types.User
 	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_GetUserinfoById_false"); err != nil {
+			log.Fatal(err)
+		}
 		return &types.UserinfoResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  e.Error(),
@@ -56,9 +70,12 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		Avatar:          info.Userinfo.Avatar,
 		BackgroundImage: info.Userinfo.BackgroundImage,
 		Signature:       info.Userinfo.Signature,
-		WorkCount:       0, //查表
-		FavoriteCount:   0, //查表
-		TotalFavorited:  0, //查表
+		WorkCount:       info.Userinfo.WorkCount,
+		FavoriteCount:   info.Userinfo.FavoriteCount,
+		TotalFavorited:  info.Userinfo.TotalFavorited, //查表
+	}
+	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_success"); err != nil {
+		log.Fatal(err)
 	}
 	return &types.UserinfoResp{
 		StatusCode: common.OK,

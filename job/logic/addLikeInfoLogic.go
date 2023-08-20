@@ -2,19 +2,22 @@ package logic
 
 import (
 	"context"
+
 	"database/sql"
 	constants "doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
-	"doushen_by_liujun/service/content/rpc/content"
-	"fmt"
-	"github.com/zeromicro/go-zero/core/logx"
+
 	"github.com/zeromicro/go-zero/core/stores/builder"
+
+	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 	"github.com/zeromicro/go-zero/core/stringx"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 type AddLikeInfoLogic struct {
@@ -22,7 +25,6 @@ type AddLikeInfoLogic struct {
 	conn sqlx.SqlConn
 	rds  *redis.Redis
 	logx.Logger
-	ContentRpcClient content.Content
 }
 
 func NewAddLikeInfoLogic(ctx context.Context, conn sqlx.SqlConn, rds *redis.Redis) *AddLikeInfoLogic {
@@ -133,14 +135,17 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		}
 
 	}
-	insertBatch = insertBatch[:len(insertBatch)-1] // 去掉最后一个逗号
-	query := fmt.Sprintf("insert into `favorite` (%s) values %s ", favoriteRowsExpectAutoSet, insertBatch)
-	_, err := l.conn.Exec(query)
-	if err != nil && err != sql.ErrNoRows {
-		fmt.Println("【Redis同步数据, Mysql更新失败】")
+	if len(insertBatch) != 0 {
+		insertBatch = insertBatch[:len(insertBatch)-1] // 去掉最后一个逗号
+		query := fmt.Sprintf("insert into `favorite` (%s) values %s ", favoriteRowsExpectAutoSet, insertBatch)
+		_, err := l.conn.Exec(query)
+		if err != nil && err != sql.ErrNoRows {
+			fmt.Println("【Redis同步数据, Mysql更新失败】")
+		}
+		fmt.Println(insertBatch)
 	}
 
-	fmt.Println(insertBatch)
 	fmt.Println("【Redis同步数据到Mysql完成】")
+
 	return
 }

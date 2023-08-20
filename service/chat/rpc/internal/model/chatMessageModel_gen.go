@@ -31,6 +31,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*ChatMessage, error)
 		Update(ctx context.Context, data *ChatMessage) error
 		Delete(ctx context.Context, id int64) error
+		GetChatMsgByIds(ctx context.Context, userId, toUserId int64)(*[]*ChatMessage, error)
 	}
 
 	defaultChatMessageModel struct {
@@ -61,6 +62,15 @@ func (m *defaultChatMessageModel) withSession(session sqlx.Session) *defaultChat
 		CachedConn: m.CachedConn.WithSession(session),
 		table:      "`chat_message`",
 	}
+}
+
+func (m *defaultChatMessageModel) GetChatMsgByIds(ctx context.Context, userId, toUserId int64) (*[]*ChatMessage, error) {
+	var result []*ChatMessage
+	querySql := fmt.Sprintf("SELECT user_id, to_user_id, message, create_time, update_time FROM chat_message WHERE user_id = ? AND to_user_id = ? AND is_delete = 0 ORDER BY create_time DESC")
+	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId); err != nil {
+		return nil, fmt.Errorf("fail to getChatMessage by ids, error = %s", err)
+	}
+	return &result, nil
 }
 
 func (m *defaultChatMessageModel) Delete(ctx context.Context, id int64) error {

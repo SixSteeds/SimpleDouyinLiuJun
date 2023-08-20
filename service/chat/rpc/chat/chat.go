@@ -45,7 +45,7 @@ func NewChat(cli zrpc.Client) Chat {
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
+
 func (m *defaultChat) AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error) {
 	client := pb.NewChatClient(m.cli.Conn())
 	return client.AddChatMessage(ctx, in, opts...)

@@ -22,7 +22,6 @@ func NewChatServer(svcCtx *svc.ServiceContext) *ChatServer {
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
 func (s *ChatServer) AddChatMessage(ctx context.Context, in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
 	l := logic.NewAddChatMessageLogic(ctx, s.svcCtx)
 	return l.AddChatMessage(in)

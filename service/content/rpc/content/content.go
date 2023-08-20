@@ -27,6 +27,10 @@ type (
 	DelVideoReq                       = pb.DelVideoReq
 	DelVideoResp                      = pb.DelVideoResp
 	Favorite                          = pb.Favorite
+	FeedListReq                       = pb.FeedListReq
+	FeedListResp                      = pb.FeedListResp
+	FeedUser                          = pb.FeedUser
+	FeedVideo                         = pb.FeedVideo
 	GetCommentByIdReq                 = pb.GetCommentByIdReq
 	GetCommentByIdResp                = pb.GetCommentByIdResp
 	GetFavoriteByIdReq                = pb.GetFavoriteByIdReq
@@ -39,6 +43,8 @@ type (
 	GetVideoByIdResp                  = pb.GetVideoByIdResp
 	GetVideoListByIdListReq           = pb.GetVideoListByIdListReq
 	GetVideoListByIdListResp          = pb.GetVideoListByIdListResp
+	GetWorkCountByUserIdReq           = pb.GetWorkCountByUserIdReq
+	GetWorkCountByUserIdResp          = pb.GetWorkCountByUserIdResp
 	SearchCommentReq                  = pb.SearchCommentReq
 	SearchCommentResp                 = pb.SearchCommentResp
 	SearchFavoriteReq                 = pb.SearchFavoriteReq
@@ -72,6 +78,8 @@ type (
 		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
+		GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
+		GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
 		GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
 		GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
 		GetVideoListByIdList(ctx context.Context, in *GetVideoListByIdListReq, opts ...grpc.CallOption) (*GetVideoListByIdListResp, error)
@@ -164,6 +172,16 @@ func (m *defaultContent) GetVideoById(ctx context.Context, in *GetVideoByIdReq, 
 func (m *defaultContent) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.SearchVideo(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetFeedList(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetWorkCountByUserId(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error) {

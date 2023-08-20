@@ -4,3 +4,6 @@
 *.iml
 out
 gen
+.log
+*.log
+script/conf/nginx_conf/log/*.log

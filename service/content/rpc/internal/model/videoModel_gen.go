@@ -17,9 +17,10 @@ import (
 )
 
 var (
-	videoFieldNames          = builder.RawFieldNames(&Video{})
-	videoRows                = strings.Join(videoFieldNames, ",")
-	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), ",")
+	videoFieldNames = builder.RawFieldNames(&Video{})
+	videoRows       = strings.Join(videoFieldNames, ",")
+	// 此处去掉id以便于使用雪花算法生成id，加上is_delete以便于软删除
+	videoRowsExpectAutoSet   = strings.Join(stringx.Remove(videoFieldNames, "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`is_delete`", "`update_time`", "`updated_at`"), ",")
 	videoRowsWithPlaceHolder = strings.Join(stringx.Remove(videoFieldNames, "`id`", "`create_at`", "`create_time`", "`created_at`", "`update_at`", "`update_time`", "`updated_at`"), "=?,") + "=?"
 
 	cacheLiujunContentVideoIdPrefix = "cache:liujunContent:video:id:"
@@ -31,8 +32,13 @@ type (
 		FindOne(ctx context.Context, id int64) (*Video, error)
 		Update(ctx context.Context, data *Video) error
 		Delete(ctx context.Context, id int64) error
+
 		FindVideoListByUserId(ctx context.Context, userid int64) (*[]*Video, error)
 		FindVideoListByIdList(ctx context.Context, videoIdList *[]int64) (*[]*Video, error)
+
+		GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error)
+		GetWorkCountByUserId(ctx context.Context, user_id int64) (*int64, error)
+
 	}
 
 	defaultVideoModel struct {
@@ -49,6 +55,18 @@ type (
 		CreateTime time.Time      `db:"create_time"` // 该条记录创建时间
 		UpdateTime time.Time      `db:"update_time"` // 该条最后一次更新时间
 		IsDelete   int64          `db:"is_delete"`   // 逻辑删除
+	}
+
+	FeedVideo struct {
+		Id            int64     `db:"id"`             // 主键
+		UserId        int64     `db:"user_id"`        // 视频作者id
+		PlayUrl       string    `db:"play_url"`       // 视频播放地址
+		CoverUrl      string    `db:"cover_url"`      // 视频封面地址
+		Title         string    `db:"title"`          // 视频标题
+		FavoriteCount int64     `db:"favorite_count"` // 视频被收藏次数
+		CommentCount  int64     `db:"comment_count"`  // 视频被评论次数
+		IsFavorite    bool      `db:"is_favorite"`    // 是否被当前用户点赞
+		UpdateTime    time.Time `db:"update_time"`    // 该条最后一次更新时间
 	}
 )
 
@@ -121,6 +139,41 @@ func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, erro
 	default:
 		return nil, err
 	}
+}
+
+func (m *defaultVideoModel) GetWorkCountByUserId(ctx context.Context, user_id int64) (*int64, error) {
+
+	var resp int64
+	query := fmt.Sprintf("select COUNT(*) from %s where `id` = ?", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
+}
+
+func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error) {
+	formatTime := time.Unix(*latest_time, 0)
+	var resp []*FeedVideo
+	query := fmt.Sprintf("SELECT   "+
+		"v.id,"+
+		"v.user_id,"+
+		"v.play_url,"+
+		"v.cover_url,"+
+		"v.title,"+
+		"v.update_time,"+
+		"(SELECT COUNT(*) FROM favorite WHERE video_id = v.id) AS favorite_count,"+
+		"(SELECT COUNT(*) FROM comment WHERE video_id = v.id) AS comment_count,"+
+		"IF(EXISTS (SELECT 1 FROM favorite WHERE video_id = v.id AND user_id = ?), true, false) AS is_favorite "+
+		"FROM %s v "+
+		"WHERE v.is_delete = 0 and update_time "+`<`+" ? "+
+		"ORDER BY v.create_time DESC "+
+		"LIMIT ?", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, formatTime, size)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }
 
 func (m *defaultVideoModel) Insert(ctx context.Context, data *Video) (sql.Result, error) {

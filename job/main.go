@@ -4,7 +4,6 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/job/logic"
-	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 
@@ -37,10 +36,6 @@ func main() {
 
 	// 标准构建
 	c.AddFunc("@every 5s", logic.NewAddLikeInfoLogic(ctx, conn, rds).AddLikeInfo)
-
-	c.AddFunc("0 30 * * * *", func() { fmt.Println("Every hour") })
-	c.AddFunc("@every 1s", func() { fmt.Println("Every second") })
-	c.AddFunc("@daily", func() { fmt.Println("Every day") })
 
 	//定时任务启动
 	c.Start()

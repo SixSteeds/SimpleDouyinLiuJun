@@ -7,7 +7,6 @@ services:
     image: bitnami/etcd:3.4.27
     container_name: etcd
     environment:
-
       ALLOW_NONE_AUTHENTICATION: "yes"
       ETCD_ADVERTISE_CLIENT_URLS: http://etcd-server:8090
     ports:
@@ -132,7 +131,8 @@ services:
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9092 # 监听器配置
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9092 #宿主机IP
 
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   kafka-2:
     image: 'bitnami/kafka:3.5.1'
@@ -156,7 +156,8 @@ services:
       KAFKA_CFG_NODE_ID: 2
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9093
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9093 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   kafka-3:
     image: 'bitnami/kafka:3.5.1'
@@ -179,7 +180,8 @@ services:
       KAFKA_CFG_NODE_ID: 3
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9094
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9094 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
   #broker only
   kafka-4:
@@ -203,7 +205,33 @@ services:
       KAFKA_CFG_PROCESS_ROLES: broker # Kafka进程角色，包括broker和controller
       KAFKA_CFG_LISTENERS: BROKER://:9095 # 监听器配置
       KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9095 #宿主机IP
-#      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+#  redis-primary:
+#    image: bitnami/redis-cluster
+#    ports:
+#      - '8093:6379'
+#    environment:
+#      - REDIS_REPLICATION_MODE=master
+#      - REDIS_PASSWORD=my_password
+#      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+#    volumes:
+#      - 'redis_data:/bitnami/redis/data'
+#
+#  redis-secondary:
+#    image: bitnami/redis-cluster
+#    ports:
+#      - '8093:6379'
+#    depends_on:
+#      - redis-primary
+#    environment:
+#      - REDIS_REPLICATION_MODE=slave
+#      - REDIS_MASTER_HOST=redis-primary
+#      - REDIS_MASTER_PORT_NUMBER=6379
+#      - REDIS_MASTER_PASSWORD=my_password
+#      - REDIS_PASSWORD=my_password
+#      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
 
 networks:
   liujun_net:
