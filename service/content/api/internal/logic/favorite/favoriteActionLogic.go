@@ -124,32 +124,26 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 		if len(likeRecord) != 0 && likeRecord == "1" {
 			logx.Error("api-favoriteAction-已点赞，重复操作无效")
 		} else {
-			// 执行 redis 事务
+			// 一起执行 pipeline 操作
 			e0 := redisClient.PipelinedCtx(l.ctx, func(pipeline redis.Pipeliner) error {
 				// 2.2 新增 redis video 被点赞记录
 				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "1")
 				// 2.3 redis 中 video 被点赞计数自增
-				err2 := executeCntRedis(l, videoLikedCntKey, pipeline, true)
-				if err2 != nil {
-					return err2
-				}
+				pipeline.Incr(l.ctx, videoLikedCntKey)
 				// 2.4 redis 中 user 点赞计数自增
-				err3 := executeCntRedis(l, userLikeCntKey, pipeline, true)
-				if err3 != nil {
-					return err3
-				}
-
+				pipeline.Incr(l.ctx, userLikeCntKey)
+				// 2.5 pipeline 执行
 				pipeline.Exec(l.ctx)
 				return nil
 			})
 			if e0 != nil && e0 != redis.Nil {
-				// 事务执行失败
+				// pipeline 操作失败
 				return &types.FavoriteActionResp{
 					StatusCode: common.REDIS_ERROR,
 					StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
 				}, e0
 			}
-			fmt.Println("执行事务成功")
+			fmt.Println("执行pipeline成功")
 			//// 2.2 新增 redis video 被点赞记录
 			//redisClient.HsetCtx(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "1")
 			//// 2.3 redis 中 video 被点赞计数自增
@@ -200,21 +194,15 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 		if len(likeRecord) != 0 && likeRecord == "0" {
 			logx.Error("api-favoriteAction-已取消点赞，重复操作无效")
 		} else {
-			// 执行 redis 事务
+			// 一起执行 pipeline 操作
 			e0 := redisClient.PipelinedCtx(l.ctx, func(pipeline redis.Pipeliner) error {
 				// 4.2 取消 redis 视频点赞用户记录
 				pipeline.HSet(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "0")
 				// 4.3 redis 中 video 被点赞计数自减
-				err2 := executeCntRedis(l, videoLikedCntKey, pipeline, false)
-				if err2 != nil {
-					return err2
-				}
+				pipeline.Decr(l.ctx, videoLikedCntKey)
 				// 4.4 redis 中 user 点赞计数自减
-				err3 := executeCntRedis(l, userLikeCntKey, pipeline, false)
-				if err3 != nil {
-					return err3
-				}
-
+				pipeline.Decr(l.ctx, userLikeCntKey)
+				// 2.5 pipeline 执行
 				pipeline.Exec(l.ctx)
 				return nil
 			})
@@ -225,7 +213,7 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 					StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
 				}, e0
 			}
-			fmt.Println("执行事务成功")
+			fmt.Println("执行pipeline成功")
 			//// 4.2 取消 redis 视频点赞用户记录
 			//redisClient.HsetCtx(l.ctx, videoLikedKey, strconv.FormatInt(test_useid, 10), "0")
 			//// 4.3 redis 中 video 被点赞计数自减
