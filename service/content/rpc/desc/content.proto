@@ -194,11 +194,11 @@ message SearchVideoResp {
 }
 
 message GetUserFavoritedCntByIdReq {
-  int64 userID=1; //用户id
+  int64 userID = 1; //用户id
 }
 
 message GetUserFavoritedCntByIdResp {
-  int64 cnt=1; //用户被喜欢数
+  int64 cnt = 1; //用户被喜欢数
 }
 
 message GetUserPublishAndLikedCntByIdReq {
@@ -206,8 +206,8 @@ message GetUserPublishAndLikedCntByIdReq {
 }
 
 message GetUserPublishAndLikedCntByIdResp {
-  int64 publishCnt=1; //用户发布作品数
-  int64 likedCnt=2; //用户被喜欢数
+  int64 publishCnt = 1; //用户发布作品数
+  int64 likedCnt = 2; //用户被喜欢数
 }
 
 message GetVideoListByIdListReq{
@@ -266,6 +266,17 @@ message GetWorkCountByUserIdResp{
 
 
 
+message PublishListReq {
+  int64 user_id = 1; //用户id
+  int64 CheckUserId = 2; // 拿多少条数据
+}
+
+message PublishListResp {
+  repeated FeedVideo video_list = 1; //videoList
+}
+
+
+
 
 // ------------------------------------ 
 // Rpc Func
@@ -295,10 +306,11 @@ service content{
 
 
   rpc GetFeedList(FeedListReq) returns (FeedListResp);
+  rpc GetPublishList(PublishListReq) returns (PublishListResp);
 
   rpc GetWorkCountByUserId(GetWorkCountByUserIdReq) returns (GetWorkCountByUserIdResp);
 
-   rpc GetUserFavoritedCnt(GetUserFavoritedCntByIdReq) returns (GetUserFavoritedCntByIdResp);
-   rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);
-   rpc GetVideoListByIdList(GetVideoListByIdListReq) returns (GetVideoListByIdListResp);
+  rpc GetUserFavoritedCnt(GetUserFavoritedCntByIdReq) returns (GetUserFavoritedCntByIdResp);
+  rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);
+  rpc GetVideoListByIdList(GetVideoListByIdListReq) returns (GetVideoListByIdListResp);
 }

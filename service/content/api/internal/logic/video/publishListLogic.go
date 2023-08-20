@@ -2,6 +2,10 @@ package video
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
+	"doushen_by_liujun/service/content/rpc/pb"
+	"fmt"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
@@ -25,6 +29,73 @@ func NewPublishListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Publi
 
 func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.PublishListResp, err error) {
 	// todo: add your logic here and delete this line
+	fmt.Println("进入feed流api逻辑")
+	var userId int64
+	token, err := util.ParseToken(req.Token)
+	if err != nil {
+		// 用户未登录
+		userId = 0
+	} else {
+		userId = token.UserID
+	}
+	list, err := l.svcCtx.ContentRpcClient.GetPublishList(l.ctx, &pb.PublishListReq{
+		CheckUserId: req.UserId,
+		UserId:      userId,
+	})
 
-	return
+	if err != nil {
+		return &types.PublishListResp{
+			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+		}, nil
+	}
+	if list == nil {
+		return &types.PublishListResp{
+			StatusCode: common.OK,
+			StatusMsg:  common.MapErrMsg(common.OK),
+		}, nil
+	}
+
+	videoList := list.VideoList
+
+	fmt.Println("完成feed流rpc逻辑")
+	var FeedVideos []types.Video
+
+	for _, video := range videoList {
+		fmt.Println("到这了44444")
+		user := video.Author
+		//在这打印一下author吧，
+		fmt.Println("到这了11111111111")
+		fmt.Println(user)
+		var author = &types.User{
+			Id:              user.Id,
+			Name:            user.Name,
+			FollowCount:     *user.FollowCount,
+			FollowerCount:   *user.FollowerCount,
+			IsFollow:        user.IsFollow,
+			Avatar:          *user.Avatar,
+			BackgroundImage: *user.BackgroundImage,
+			Signature:       *user.Signature,
+			TotalFavorited:  *user.TotalFavorited,
+			WorkCount:       *user.WorkCount,
+			FavoriteCount:   *user.FavoriteCount,
+		}
+		FeedVideos = append(FeedVideos, types.Video{
+			Id:            video.Id,
+			Author:        *author,
+			PlayUrl:       video.PlayUrl,
+			CoverUrl:      video.CoverUrl,
+			FavoriteCount: video.FavoriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    video.IsFavorite,
+			Title:         video.Title,
+		})
+	}
+	fmt.Println("完成对象转换逻辑")
+
+	return &types.PublishListResp{
+		StatusCode: common.OK,
+		StatusMsg:  common.MapErrMsg(common.OK),
+		VideoList:  FeedVideos,
+	}, nil
 }

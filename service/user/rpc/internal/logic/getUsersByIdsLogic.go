@@ -30,7 +30,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 	//userId查id这个人
 
 	infos, err := l.svcCtx.UserinfoModel.FindByIds(l.ctx, in.Ids, in.UserID)
-	if err != nil {
+	if err != nil || len(*infos) == 0 {
 		return nil, err
 	}
 	var users []*pb.Usersinfo

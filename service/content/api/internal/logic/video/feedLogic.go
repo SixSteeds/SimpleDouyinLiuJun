@@ -30,20 +30,38 @@ func NewFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FeedLogic {
 func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	// todo: add your logic here and delete this line
 	fmt.Println("进入feed流api逻辑")
+	fmt.Println(req.LatestTime)
+	fmt.Println(req.Token)
+	var userId int64
 	token, err := util.ParseToken(req.Token)
-	//去下面这个函数看看
+	if err != nil {
+		// 用户未登录
+		userId = 0
+	} else {
+		userId = token.UserID
+	}
 	list, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{
-		UserId:     token.UserID,
+		UserId:     userId,
 		LatestTime: req.LatestTime,
 		Size:       5,
 	})
-	videoList := list.VideoList
-	if err != nil || videoList == nil {
+	fmt.Println("到这了")
+	fmt.Println(list)
+
+	if err != nil {
 		return &types.FeedResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 		}, nil
 	}
+	if list == nil {
+		return &types.FeedResp{
+			StatusCode: common.DATA_USE_UP,
+			StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),
+		}, nil
+	}
+
+	videoList := list.VideoList
 
 	fmt.Println("完成feed流rpc逻辑")
 	var FeedVideos []types.Video

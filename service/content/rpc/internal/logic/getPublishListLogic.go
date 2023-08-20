@@ -2,33 +2,34 @@ package logic
 
 import (
 	"context"
-	"doushen_by_liujun/service/content/rpc/internal/svc"
-	"doushen_by_liujun/service/content/rpc/pb"
 	userPb "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
+
+	"doushen_by_liujun/service/content/rpc/internal/svc"
+	"doushen_by_liujun/service/content/rpc/pb"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetFeedListLogic struct {
+type GetPublishListLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetFeedListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFeedListLogic {
-	return &GetFeedListLogic{
+func NewGetPublishListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetPublishListLogic {
+	return &GetPublishListLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, error) {
+func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.PublishListResp, error) {
 	// todo: add your logic here and delete this line
 
-	fmt.Println("进入feed流rpc逻辑")
-	feedList, err := l.svcCtx.VideoModel.GetFeedList(l.ctx, in.UserId, &in.LatestTime, in.Size)
+	fmt.Println("进入GetPublishList rpc逻辑")
+	feedList, err := l.svcCtx.VideoModel.GetPublishList(l.ctx, in.UserId, in.CheckUserId)
 	fmt.Println(feedList)
 	if err != nil {
 		return nil, err
@@ -40,8 +41,6 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	// 将feedlist中的userId全部拿出来转换为一个数组
 	var userIds []int64
 	for _, feed := range *feedList {
-		fmt.Println("===========================================")
-		fmt.Println(feed.UserId)
 		userIds = append(userIds, feed.UserId)
 	}
 
@@ -50,17 +49,12 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 		Ids:    userIds,
 		UserID: in.UserId,
 	})
-	if err != nil {
-		return nil, err
-	}
-
-	fmt.Println(usersByIds)
 
 	fmt.Println("完成feed流rpc逻辑11111111111")
 	var FeedVideos []*pb.FeedVideo
-	var feedUserList []*pb.FeedUser
+	var feedUserList []pb.FeedUser
 	for _, user := range usersByIds.Users {
-		feedUserList = append(feedUserList, &pb.FeedUser{
+		feedUserList = append(feedUserList, pb.FeedUser{
 			Id:              user.Id,
 			Name:            user.Name,
 			FollowCount:     &user.FollowCount,
@@ -77,7 +71,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	for count, feed := range *feedList {
 		FeedVideos = append(FeedVideos, &pb.FeedVideo{
 			Id:            feed.Id,
-			Author:        feedUserList[count],
+			Author:        &feedUserList[count],
 			PlayUrl:       feed.PlayUrl,
 			CoverUrl:      feed.CoverUrl,
 			Title:         feed.Title,
@@ -92,7 +86,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	}
 
 	fmt.Println("获取到的feed流信息为：", FeedVideos)
-	return &pb.FeedListResp{
+	return &pb.PublishListResp{
 		VideoList: FeedVideos,
 	}, nil
 }

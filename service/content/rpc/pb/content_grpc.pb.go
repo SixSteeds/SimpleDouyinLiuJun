@@ -35,6 +35,7 @@ const (
 	Content_GetVideoById_FullMethodName                  = "/pb.content/GetVideoById"
 	Content_SearchVideo_FullMethodName                   = "/pb.content/SearchVideo"
 	Content_GetFeedList_FullMethodName                   = "/pb.content/GetFeedList"
+	Content_GetPublishList_FullMethodName                = "/pb.content/GetPublishList"
 	Content_GetWorkCountByUserId_FullMethodName          = "/pb.content/GetWorkCountByUserId"
 	Content_GetUserFavoritedCnt_FullMethodName           = "/pb.content/GetUserFavoritedCnt"
 	Content_GetUserPublishAndLikedCntById_FullMethodName = "/pb.content/GetUserPublishAndLikedCntById"
@@ -64,6 +65,7 @@ type ContentClient interface {
 	GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
 	SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 	GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
+	GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
 	GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
 	GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
@@ -222,6 +224,15 @@ func (c *contentClient) GetFeedList(ctx context.Context, in *FeedListReq, opts .
 	return out, nil
 }
 
+func (c *contentClient) GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error) {
+	out := new(PublishListResp)
+	err := c.cc.Invoke(ctx, Content_GetPublishList_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *contentClient) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {
 	out := new(GetWorkCountByUserIdResp)
 	err := c.cc.Invoke(ctx, Content_GetWorkCountByUserId_FullMethodName, in, out, opts...)
@@ -281,6 +292,7 @@ type ContentServer interface {
 	GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error)
 	SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error)
 	GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error)
+	GetPublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error)
 	GetUserFavoritedCnt(context.Context, *GetUserFavoritedCntByIdReq) (*GetUserFavoritedCntByIdResp, error)
 	GetUserPublishAndLikedCntById(context.Context, *GetUserPublishAndLikedCntByIdReq) (*GetUserPublishAndLikedCntByIdResp, error)
@@ -339,6 +351,9 @@ func (UnimplementedContentServer) SearchVideo(context.Context, *SearchVideoReq) 
 }
 func (UnimplementedContentServer) GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeedList not implemented")
+}
+func (UnimplementedContentServer) GetPublishList(context.Context, *PublishListReq) (*PublishListResp, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPublishList not implemented")
 }
 func (UnimplementedContentServer) GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetWorkCountByUserId not implemented")
@@ -653,6 +668,24 @@ func _Content_GetFeedList_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Content_GetPublishList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PublishListReq)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServer).GetPublishList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Content_GetPublishList_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServer).GetPublishList(ctx, req.(*PublishListReq))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _Content_GetWorkCountByUserId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetWorkCountByUserIdReq)
 	if err := dec(in); err != nil {
@@ -795,6 +828,10 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetFeedList",
 			Handler:    _Content_GetFeedList_Handler,
+		},
+		{
+			MethodName: "GetPublishList",
+			Handler:    _Content_GetPublishList_Handler,
 		},
 		{
 			MethodName: "GetWorkCountByUserId",
