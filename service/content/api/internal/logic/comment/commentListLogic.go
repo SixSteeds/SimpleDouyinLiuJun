@@ -36,7 +36,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		}
 		return &types.CommentListResp{
 			StatusCode:  common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:   "无效token",
+			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			CommentList: []types.Comment{},
 		}, e
 	}
@@ -50,7 +50,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		}
 		return &types.CommentListResp{
 			StatusCode:  common.DB_ERROR,
-			StatusMsg:   "查询评论列表失败",
+			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
 			CommentList: []types.Comment{},
 		}, e
 	}
@@ -67,7 +67,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	if e != nil {
 		return &types.CommentListResp{
 			StatusCode:  common.DB_ERROR,
-			StatusMsg:   "查询评论列表失败",
+			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
 			CommentList: []types.Comment{},
 		}, e
 	}
@@ -96,7 +96,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	}
 	return &types.CommentListResp{
 		StatusCode:  common.OK,
-		StatusMsg:   "查询评论列表成功",
+		StatusMsg:   common.MapErrMsg(common.OK),
 		CommentList: comments,
 	}, nil
 }

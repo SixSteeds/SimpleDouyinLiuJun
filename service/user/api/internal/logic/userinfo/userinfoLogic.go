@@ -3,11 +3,13 @@ package userinfo
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
 	"log"
+	"strconv"
 )
 
 type UserinfoLogic struct {
@@ -25,23 +27,19 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 }
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
-	//fmt.Println(req.Token, req.UserId)
-	//logger, e := util.ParseToken(req.Token)
-	//fmt.Println(logger.Username)
-	//fmt.Println(logger.UserID)
-	//fmt.Println(e)
-	//if e != nil {
-	//	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_ParseToken_false"); err != nil {
-	//		log.Fatal(err)
-	//	}
-	//	return &types.UserinfoResp{
-	//		StatusCode: common.TOKEN_EXPIRE_ERROR,
-	//		StatusMsg:  "无效token",
-	//		User:       types.User{},
-	//	}, err
-	//}
-	//IntUserId, _ := strconv.Atoi(logger.ID)
-	IntUserId := 203
+	logger, e := util.ParseToken(req.Token)
+	if e != nil {
+		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_ParseToken_false"); err != nil {
+			log.Fatal(err)
+		}
+		return &types.UserinfoResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			User:       types.User{},
+		}, err
+	}
+	IntUserId, _ := strconv.Atoi(logger.ID)
+	//IntUserId := 203
 
 	info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &pb.GetUserinfoByIdReq{
 		Id:     req.UserId,
@@ -54,7 +52,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		}
 		return &types.UserinfoResp{
 			StatusCode: common.DB_ERROR,
-			StatusMsg:  e.Error(),
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			User:       user,
 		}, err
 	}
@@ -76,7 +74,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 	}
 	return &types.UserinfoResp{
 		StatusCode: common.OK,
-		StatusMsg:  "查询成功",
+		StatusMsg:  common.MapErrMsg(common.OK),
 		User:       user,
 	}, nil
 }

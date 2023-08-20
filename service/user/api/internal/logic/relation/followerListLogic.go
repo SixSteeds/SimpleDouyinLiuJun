@@ -31,7 +31,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 	if e != nil {
 		return &types.FollowerListResp{
 			StatusCode:   common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:    "无效token",
+			StatusMsg:    common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FollowerList: nil,
 		}, e
 	}
@@ -44,7 +44,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		}
 		return &types.FollowerListResp{
 			StatusCode:   common.DB_ERROR,
-			StatusMsg:    "查询粉丝列表失败",
+			StatusMsg:    common.MapErrMsg(common.DB_ERROR),
 			FollowerList: nil,
 		}, e
 	}
@@ -89,7 +89,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 	}
 	return &types.FollowerListResp{
 		StatusCode:   common.OK,
-		StatusMsg:    "查询粉丝列表成功",
+		StatusMsg:    common.MapErrMsg(common.OK),
 		FollowerList: users,
 	}, nil
 }

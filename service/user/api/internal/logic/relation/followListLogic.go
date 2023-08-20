@@ -7,7 +7,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"strconv"
 )
@@ -31,7 +30,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 	if e != nil {
 		return &types.FollowListResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  "无效token",
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FollowList: nil,
 		}, e
 	}
@@ -41,7 +40,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 	if e != nil {
 		return &types.FollowListResp{
 			StatusCode: common.DB_ERROR,
-			StatusMsg:  "查询关注列表失败",
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			FollowList: nil,
 		}, e
 	}
@@ -81,14 +80,9 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 		}
 		users = append(users, user)
 	}
-	fmt.Println(types.FollowListResp{
-		StatusCode: common.OK,
-		StatusMsg:  "查询关注列表成功",
-		FollowList: users,
-	})
 	return &types.FollowListResp{
 		StatusCode: common.OK,
-		StatusMsg:  "查询关注列表成功",
+		StatusMsg:  common.MapErrMsg(common.OK),
 		FollowList: users,
 	}, nil
 }
