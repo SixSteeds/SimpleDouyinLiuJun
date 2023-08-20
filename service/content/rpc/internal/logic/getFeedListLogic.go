@@ -33,9 +33,15 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	if err != nil {
 		return nil, err
 	}
+	if len(*feedList) == 0 {
+		return nil, nil
+	}
+
 	// 将feedlist中的userId全部拿出来转换为一个数组
 	var userIds []int64
 	for _, feed := range *feedList {
+		fmt.Println("===========================================")
+		fmt.Println(feed.UserId)
 		userIds = append(userIds, feed.UserId)
 	}
 
@@ -44,13 +50,17 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 		Ids:    userIds,
 		UserID: in.UserId,
 	})
+	if err != nil {
+		return nil, err
+	}
+
 	fmt.Println(usersByIds)
 
 	fmt.Println("完成feed流rpc逻辑11111111111")
 	var FeedVideos []*pb.FeedVideo
-	var feedUserList []pb.FeedUser
+	var feedUserList []*pb.FeedUser
 	for _, user := range usersByIds.Users {
-		feedUserList = append(feedUserList, pb.FeedUser{
+		feedUserList = append(feedUserList, &pb.FeedUser{
 			Id:              user.Id,
 			Name:            user.Name,
 			FollowCount:     &user.FollowCount,
@@ -67,7 +77,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	for count, feed := range *feedList {
 		FeedVideos = append(FeedVideos, &pb.FeedVideo{
 			Id:            feed.Id,
-			Author:        &feedUserList[count],
+			Author:        feedUserList[count],
 			PlayUrl:       feed.PlayUrl,
 			CoverUrl:      feed.CoverUrl,
 			Title:         feed.Title,

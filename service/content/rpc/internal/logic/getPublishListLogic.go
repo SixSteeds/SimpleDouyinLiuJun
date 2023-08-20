@@ -34,6 +34,10 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 	if err != nil {
 		return nil, err
 	}
+	if len(*feedList) == 0 {
+		return nil, nil
+	}
+
 	// 将feedlist中的userId全部拿出来转换为一个数组
 	var userIds []int64
 	for _, feed := range *feedList {
@@ -45,7 +49,6 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 		Ids:    userIds,
 		UserID: in.UserId,
 	})
-	fmt.Println(usersByIds)
 
 	fmt.Println("完成feed流rpc逻辑11111111111")
 	var FeedVideos []*pb.FeedVideo

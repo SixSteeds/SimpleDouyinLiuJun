@@ -42,8 +42,6 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 		CheckUserId: req.UserId,
 		UserId:      userId,
 	})
-	fmt.Println("到这了")
-	fmt.Println(list)
 
 	if err != nil {
 		return &types.PublishListResp{
@@ -51,15 +49,14 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 		}, nil
 	}
-	videoList := list.VideoList
-	fmt.Println(videoList)
-	if len(videoList) == 0 {
+	if list == nil {
 		return &types.PublishListResp{
-			StatusCode: common.DATA_USE_UP,
-			StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),
-			VideoList:  nil,
+			StatusCode: common.OK,
+			StatusMsg:  common.MapErrMsg(common.OK),
 		}, nil
 	}
+
+	videoList := list.VideoList
 
 	fmt.Println("完成feed流rpc逻辑")
 	var FeedVideos []types.Video
