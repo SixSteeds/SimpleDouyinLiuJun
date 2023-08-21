@@ -46,16 +46,16 @@ services:
 
 
   #redis容器 - Redis container
-  #  redis:
-  #    image: redis:7.2-rc
-  #    container_name: redis
-  #    ports:
-  #      - 8094:8093
-  #    command: "redis-server --requirepass liujun  --appendonly yes"
-  #    privileged: true
-  #    restart: always
-  #    networks:
-  #      - liujun_net
+  redis:
+    image: redis:7.2-rc
+    container_name: redis
+    ports:
+      - 8094:8093
+    command: "redis-server --requirepass liujun  --appendonly yes"
+    privileged: true
+    restart: always
+    networks:
+      - liujun_net
 
 
 
@@ -118,7 +118,7 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
       KAFKA_CFG_NODE_ID: 1 # Kafka Broker ID
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9092 # 监听器配置
-      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9092 #宿主机IP
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9092 #宿主机IP
 
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
@@ -144,7 +144,7 @@ services:
 
       KAFKA_CFG_NODE_ID: 2
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9093
-      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9093 #宿主机IP
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9093 #宿主机IP
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
@@ -168,7 +168,7 @@ services:
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
       KAFKA_CFG_NODE_ID: 3
       KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9094
-      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9094 #宿主机IP
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9094 #宿主机IP
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
@@ -194,7 +194,7 @@ services:
       KAFKA_CFG_NODE_ID: 4 # Kafka Broker ID
       KAFKA_CFG_PROCESS_ROLES: broker # Kafka进程角色，包括broker和controller
       KAFKA_CFG_LISTENERS: BROKER://:9095 # 监听器配置
-      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://localhost:9095 #宿主机IP
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9095 #宿主机IP
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
@@ -202,114 +202,114 @@ services:
 
 
 
-  redis-master:
-    container_name: redis-master
-    image: redis:7.0.11-alpine
-    hostname: redis-master
-    networks:
-      - liujun_net
-    restart: always
-    ports:
-      - "8093:8093"
-    logging:
-      driver: json-file
-      options:
-        max-size: 100m
-        max-file: '3'
-#    volumes:
-#      - ./data/redisData/master:/data
-    command:
-      - "redis-server"
-      - "--port"
-      - "8093"
-#      - --bind
-#      - "0.0.0.0"
-#      - --port
+#  redis-master:
+#    container_name: redis-master
+#    image: redis:7.0.11-alpine
+#    hostname: redis-master
+#    networks:
+#      - liujun_net
+#    restart: always
+#    ports:
+#      - "8093:8093"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: '3'
+##    volumes:
+##      - ./data/redisData/master:/data
+#    command:
+#      - "redis-server"
+#      - "--port"
 #      - "8093"
-      - "--requirepass"
-      - "liujun"
-      - "--appendonly"
-      - "yes"
-      - "--protected-mode"
-      - "no"
-      - "--daemonize"
-      - "no"
-
-  redis-slave1:
-    container_name: redis-slave1
-    image: redis:7.0.11-alpine
-    networks:
-      - liujun_net
-    hostname: redis-slave1
-    restart: always
-    ports:
-      - "8094:8094"
-    logging:
-      driver: json-file
-      options:
-        max-size: 100m
-        max-file: '3'
-#    volumes:
-#      - ./data/redisData/slaver1:/data
-    command:
-      - "redis-server"
-      - "--slaveof"
-      - "127.0.0.1 8093"
-      - "--port"
-      - "8094"
-#      - --bind
-#      - "0.0.0.0"
-#      - --port
-#      - "8093"
-      - "--requirepass"
-      - "liujun"
-      - "--masterauth"
-      - "liujun"
-      - "--appendonly"
-      - "yes"
-      - "--protected-mode"
-      - "no"
-      - "--daemonize"
-      - "no"
-
-
-
-  redis-slave2:
-    container_name: redis-slave2
-    image: redis:7.0.11-alpine
-    hostname: redis-slave2
-    networks:
-      - liujun_net
-    restart: always
-    ports:
-      - "8095:8095"
-    logging:
-      driver: json-file
-      options:
-        max-size: 100m
-        max-file: '3'
-#    volumes:
-#      - ./data/redisData/slaver2:/data
-    command:
-      - "redis-server"
-      - "--slaveof"
-      - "127.0.0.1 8093"
-      - "--port"
-      - "8095"
-#      - --bind
-#      - "0.0.0.0"
-#      - --port
-#      - "8093"
-      - "--requirepass"
-      - "liujun"
-      - "--masterauth"
-      - "liujun"
-      - "--appendonly"
-      - "yes"
-      - "--protected-mode"
-      - "no"
-      - "--daemonize"
-      - "no"
+##      - --bind
+##      - "0.0.0.0"
+##      - --port
+##      - "8093"
+#      - "--requirepass"
+#      - "liujun"
+#      - "--appendonly"
+#      - "yes"
+#      - "--protected-mode"
+#      - "no"
+#      - "--daemonize"
+#      - "no"
+#
+#  redis-slave1:
+#    container_name: redis-slave1
+#    image: redis:7.0.11-alpine
+#    networks:
+#      - liujun_net
+#    hostname: redis-slave1
+#    restart: always
+#    ports:
+#      - "8094:8094"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: '3'
+##    volumes:
+##      - ./data/redisData/slaver1:/data
+#    command:
+#      - "redis-server"
+#      - "--slaveof"
+#      - "127.0.0.1 8093"
+#      - "--port"
+#      - "8094"
+##      - --bind
+##      - "0.0.0.0"
+##      - --port
+##      - "8093"
+#      - "--requirepass"
+#      - "liujun"
+#      - "--masterauth"
+#      - "liujun"
+#      - "--appendonly"
+#      - "yes"
+#      - "--protected-mode"
+#      - "no"
+#      - "--daemonize"
+#      - "no"
+#
+#
+#
+#  redis-slave2:
+#    container_name: redis-slave2
+#    image: redis:7.0.11-alpine
+#    hostname: redis-slave2
+#    networks:
+#      - liujun_net
+#    restart: always
+#    ports:
+#      - "8095:8095"
+#    logging:
+#      driver: json-file
+#      options:
+#        max-size: 100m
+#        max-file: '3'
+##    volumes:
+##      - ./data/redisData/slaver2:/data
+#    command:
+#      - "redis-server"
+#      - "--slaveof"
+#      - "127.0.0.1 8093"
+#      - "--port"
+#      - "8095"
+##      - --bind
+##      - "0.0.0.0"
+##      - --port
+##      - "8093"
+#      - "--requirepass"
+#      - "liujun"
+#      - "--masterauth"
+#      - "liujun"
+#      - "--appendonly"
+#      - "yes"
+#      - "--protected-mode"
+#      - "no"
+#      - "--daemonize"
+#      - "no"
 
 networks:
   liujun_net:
