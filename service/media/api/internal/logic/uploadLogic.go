@@ -30,31 +30,30 @@ func NewUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadLogi
 }
 
 func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err error) {
-	// todo: add your logic here and delete this line
 
 	fmt.Println("进入上传api逻辑")
 	token, err := util.ParseToken(req.Token)
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  "token解析失败",
-			StatusCode: 500,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_PARSE_ERROR),
+			StatusCode: common.TOKEN_PARSE_ERROR,
 		}, nil
 	}
 	//生成文件名
 	fileName := "doushen/" + strconv.FormatInt(token.UserID, 10) + uuid.New().String()[:5] + ".mp4"
 	_, err = util2.Upload(l.ctx, req.Data, fileName)
-	fmt.Println("上传成功")
+
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  "上传失败",
-			StatusCode: 500,
+			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
+			StatusCode: common.SERVER_COMMON_ERROR,
 		}, nil
 	}
 	data, err := util.NewSnowflake(common.MediaApiMachineId)
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  "雪花算法报错",
-			StatusCode: 500,
+			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
+			StatusCode: common.SERVER_COMMON_ERROR,
 		}, nil
 	}
 	snowId := data.Generate()
@@ -83,7 +82,7 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 		}, nil
 	}
 	return &types.UploadResp{
-		StatusMsg:  "上传成功",
+		StatusMsg:  common.MapErrMsg(common.OK),
 		StatusCode: common.OK,
 	}, nil
 }

@@ -1,5 +1,9 @@
 version: '3'
 
+# 本地容器
+
+
+
 services:
 
   #etcd容器 - Etcd container
@@ -8,7 +12,7 @@ services:
     container_name: etcd
     environment:
       ALLOW_NONE_AUTHENTICATION: "yes"
-#      ETCD_ADVERTISE_CLIENT_URLS: http://etcd-server:8090
+    #      ETCD_ADVERTISE_CLIENT_URLS: http://etcd-server:8090
     ports:
       - 8090:2379
     restart: always
@@ -41,36 +45,21 @@ services:
       - prometheus
 
 
-  #  #消息队列 - Message queue
-  #  kafka:
-  #    image: bitnami/kafka:3.3.2
-  #    container_name: kafka
+  #redis容器 - Redis container
+  #  redis:
+  #    image: redis:7.2-rc
+  #    container_name: redis
   #    ports:
-  #      - 8093:9092
-  #    environment:
-  #      - KAFKA_CFG_NODE_ID=0
-  #      - KAFKA_CFG_PROCESS_ROLES=controller,broker
-  #      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
-  #      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-  #      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
-  #      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-  #    restart: always
+  #      - 8094:8093
+  #    command: "redis-server --requirepass liujun  --appendonly yes"
   #    privileged: true
-  #    user: '1001'
+  #    restart: always
   #    networks:
   #      - liujun_net
 
-  #redis容器 - Redis container
-  redis:
-    image: redis:7.2-rc
-    container_name: redis
-    ports:
-      - 8094:6379
-    command: "redis-server --requirepass liujun  --appendonly yes"
-    privileged: true
-    restart: always
-    networks:
-      - liujun_net
+
+
+
   # nginx网关 - Nginx gateway
   nginx:
     image: nginx:stable-alpine3.17
@@ -183,6 +172,7 @@ services:
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
+
   #broker only
   kafka-4:
     image: 'bitnami/kafka:3.5.1'
@@ -208,30 +198,118 @@ services:
       # 生产环境关闭自动创建topic
       KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
 
-#  redis-primary:
-#    image: bitnami/redis-cluster
-#    ports:
-#      - '8093:6379'
-#    environment:
-#      - REDIS_REPLICATION_MODE=master
-#      - REDIS_PASSWORD=my_password
-#      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+
+
+
+
+  redis-master:
+    container_name: redis-master
+    image: redis:7.0.11-alpine
+    hostname: redis-master
+    networks:
+      - liujun_net
+    restart: always
+    ports:
+      - "8093:8093"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
 #    volumes:
-#      - 'redis_data:/bitnami/redis/data'
-#
-#  redis-secondary:
-#    image: bitnami/redis-cluster
-#    ports:
-#      - '8093:6379'
-#    depends_on:
-#      - redis-primary
-#    environment:
-#      - REDIS_REPLICATION_MODE=slave
-#      - REDIS_MASTER_HOST=redis-primary
-#      - REDIS_MASTER_PORT_NUMBER=6379
-#      - REDIS_MASTER_PASSWORD=my_password
-#      - REDIS_PASSWORD=my_password
-#      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+#      - ./data/redisData/master:/data
+    command:
+      - "redis-server"
+      - "--port"
+      - "8093"
+#      - --bind
+#      - "0.0.0.0"
+#      - --port
+#      - "8093"
+      - "--requirepass"
+      - "liujun"
+      - "--appendonly"
+      - "yes"
+      - "--protected-mode"
+      - "no"
+      - "--daemonize"
+      - "no"
+
+  redis-slave1:
+    container_name: redis-slave1
+    image: redis:7.0.11-alpine
+    networks:
+      - liujun_net
+    hostname: redis-slave1
+    restart: always
+    ports:
+      - "8094:8094"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+#    volumes:
+#      - ./data/redisData/slaver1:/data
+    command:
+      - "redis-server"
+      - "--slaveof"
+      - "127.0.0.1 8093"
+      - "--port"
+      - "8094"
+#      - --bind
+#      - "0.0.0.0"
+#      - --port
+#      - "8093"
+      - "--requirepass"
+      - "liujun"
+      - "--masterauth"
+      - "liujun"
+      - "--appendonly"
+      - "yes"
+      - "--protected-mode"
+      - "no"
+      - "--daemonize"
+      - "no"
+
+
+
+  redis-slave2:
+    container_name: redis-slave2
+    image: redis:7.0.11-alpine
+    hostname: redis-slave2
+    networks:
+      - liujun_net
+    restart: always
+    ports:
+      - "8095:8095"
+    logging:
+      driver: json-file
+      options:
+        max-size: 100m
+        max-file: '3'
+#    volumes:
+#      - ./data/redisData/slaver2:/data
+    command:
+      - "redis-server"
+      - "--slaveof"
+      - "127.0.0.1 8093"
+      - "--port"
+      - "8095"
+#      - --bind
+#      - "0.0.0.0"
+#      - --port
+#      - "8093"
+      - "--requirepass"
+      - "liujun"
+      - "--masterauth"
+      - "liujun"
+      - "--appendonly"
+      - "yes"
+      - "--protected-mode"
+      - "no"
+      - "--daemonize"
+      - "no"
 
 networks:
   liujun_net:

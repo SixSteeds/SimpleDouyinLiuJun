@@ -1,0 +1,28 @@
+version: '3.4'
+services:
+  master: #自定义服务名
+    image: redis:7.2.0
+    restart: always
+    container_name: redis-master
+#    network_mode: "host" # 网络模式 默认是 bridge 桥接模式
+    command: redis-server --port 8093 --requirepass liujun --protected-mode no --daemonize no #容器启动后，运行的命令
+    ports:
+      - 8093:8093  #宿主机的16380映射容器内部的16380端口
+      #volumes: #目录挂载 。分号 ： 右边代表容器内部的目录，分号左边表示宿主机的目录，
+      #- /app/redis-master/redis.conf:/redis.conf
+  slave1:
+    image: redis:7.2.0
+    restart: always
+    container_name: redis-slave-1
+#    network_mode: "host"
+    command: redis-server --slaveof 127.0.0.1 8093 --port 8094 --requirepass liujun --masterauth liujun --protected-mode no --daemonize no
+    ports:
+      - 8094:8094
+  slave2:
+    image: redis:7.2.0
+    restart: always
+    container_name: redis-slave-2
+#    network_mode: "host"
+    command: redis-server --slaveof 127.0.0.1 8093 --port 8095 --requirepass liujun --masterauth liujun --protected-mode no --daemonize no
+    ports:
+      - 8095:8095

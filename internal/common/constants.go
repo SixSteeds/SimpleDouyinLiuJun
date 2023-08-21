@@ -4,7 +4,6 @@ const DefaultPass = "liujun"
 
 // jwt相关
 const JwtSecret = "bGl1anVu"
-
 const JwtExpire = 7200
 const OrganizationName = " SixSteeds"
 
@@ -33,7 +32,9 @@ redis缓存前缀
 
 // 计数服务缓存
 const CntCacheUserLikePrefix = "CntCache:user_like_cnt:"
+
 const CntCacheVideoLikedPrefix = "CntCache:video_liked_cnt:"
+
 const CntCacheVideoCommentedPrefix = "CntCache:video_commented_cnt:"
 
 // 点赞记录缓存

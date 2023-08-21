@@ -13,6 +13,7 @@ func init() {
 	message[DB_UPDATE_AFFECTED_ZERO_ERROR] = "更新数据影响行数为0"
 	message[REDIS_ERROR] = "redis执行失败，请重新尝试"
 	message[DATA_USE_UP] = "数据库资源已经全部展示给你啦"
+	message[TOKEN_PARSE_ERROR] = "TOKEN解析失败"
 
 }
 

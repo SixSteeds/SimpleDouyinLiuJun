@@ -13,26 +13,10 @@ import (
 )
 
 type (
-	AddVideoReq      = pb.AddVideoReq
-	AddVideoResp     = pb.AddVideoResp
-	DelVideoReq      = pb.DelVideoReq
-	DelVideoResp     = pb.DelVideoResp
-	GetVideoByIdReq  = pb.GetVideoByIdReq
-	GetVideoByIdResp = pb.GetVideoByIdResp
-	SaveVideoReq     = pb.SaveVideoReq
-	SaveVideoResp    = pb.SaveVideoResp
-	SearchVideoReq   = pb.SearchVideoReq
-	SearchVideoResp  = pb.SearchVideoResp
-	UpdateVideoReq   = pb.UpdateVideoReq
-	UpdateVideoResp  = pb.UpdateVideoResp
-	Video            = pb.Video
+	SaveVideoReq  = pb.SaveVideoReq
+	SaveVideoResp = pb.SaveVideoResp
 
 	Media interface {
-		AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error)
-		UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
-		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
-		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
-		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 		SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error)
 	}
 
@@ -45,31 +29,6 @@ func NewMedia(cli zrpc.Client) Media {
 	return &defaultMedia{
 		cli: cli,
 	}
-}
-
-func (m *defaultMedia) AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error) {
-	client := pb.NewMediaClient(m.cli.Conn())
-	return client.AddVideo(ctx, in, opts...)
-}
-
-func (m *defaultMedia) UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error) {
-	client := pb.NewMediaClient(m.cli.Conn())
-	return client.UpdateVideo(ctx, in, opts...)
-}
-
-func (m *defaultMedia) DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error) {
-	client := pb.NewMediaClient(m.cli.Conn())
-	return client.DelVideo(ctx, in, opts...)
-}
-
-func (m *defaultMedia) GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error) {
-	client := pb.NewMediaClient(m.cli.Conn())
-	return client.GetVideoById(ctx, in, opts...)
-}
-
-func (m *defaultMedia) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
-	client := pb.NewMediaClient(m.cli.Conn())
-	return client.SearchVideo(ctx, in, opts...)
 }
 
 func (m *defaultMedia) SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error) {

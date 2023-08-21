@@ -11,6 +11,9 @@ import (
 )
 
 // Upload 视频上传
+// video： 前端传来的byte数组
+// fileName：文件名（访问路径应该为域名+桶+文件名）  也就是http://8.137.50.160:9000/test-bucket/video.mp4中的video.mp4
+// 返回值只需要错误err就行
 func Upload(ctx context.Context, video []byte, fileName string) (*storage.PutRet, error) {
 
 	fmt.Println("进入上传upload逻辑")
