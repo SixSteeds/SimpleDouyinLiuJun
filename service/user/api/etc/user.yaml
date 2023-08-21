@@ -28,6 +28,14 @@ UserKqPusherConf:
     - 127.0.0.1:9095
   Topic: user
 
+LoginLogKqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+    - 127.0.0.1:9093
+    - 127.0.0.1:9094
+    - 127.0.0.1:9095
+  Topic: loginLog
+
 
 RedisConf:
   Host: 0.0.0.0:8094

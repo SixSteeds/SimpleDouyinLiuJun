@@ -74,7 +74,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		message.Logintime = time.Now()
 		message.UserId = data.UserId
 		messageString := fmt.Sprintf("%v", message)
-		if err := l.svcCtx.KqPusherClient.Push(messageString); err != nil {
+		if err := l.svcCtx.LoginLogKqPusherClient.Push(messageString); err != nil {
 			l.Logger.Error("login方法kafka日志处理失败")
 		}
 	} else {
