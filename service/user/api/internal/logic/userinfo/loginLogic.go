@@ -5,8 +5,6 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"encoding/base64"
-	"fmt"
 	"log"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
@@ -30,15 +28,26 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
+	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Username) < 5 || len(req.Username) < 32 {
+		return &types.LoginResp{
+			StatusCode: common.REUQEST_PARAM_ERROR,
+			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+		}, err
+	}
+
 	data, err := l.svcCtx.UserRpcClient.CheckUser(l.ctx, &pb.CheckUserReq{
 		Username: req.Username,
 		Password: req.Password,
 	})
+
 	if err != nil {
 		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_CheckUser_false"); err != nil {
 			log.Fatal(err)
 		}
-		return nil, err
+		return &types.LoginResp{
+			StatusCode: common.AUTHORIZATION_ERROR,
+			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
+		}, err
 	}
 
 	token, err := util.GenToken(data.UserId, req.Username)
@@ -46,13 +55,14 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_genToken_false"); err != nil {
 			log.Fatal(err)
 		}
-		return nil, err
+		return &types.LoginResp{
+			StatusCode: common.REUQEST_PARAM_ERROR,
+			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+		}, err
 	}
 	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_success"); err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Println(base64.StdEncoding.EncodeToString([]byte(common.JwtSecret)))
 
 	return &types.LoginResp{
 		UserId:     data.UserId,

@@ -19,4 +19,6 @@ const REDIS_ERROR int32 = 207
 const DATA_USE_UP int32 = 208
 const TOKEN_PARSE_ERROR int32 = 209
 
-//用户模块
+// 用户模块
+const USERNAME_REPETITION = 220
+const AUTHORIZATION_ERROR = 221
