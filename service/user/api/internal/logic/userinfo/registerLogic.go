@@ -28,7 +28,12 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-
+	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Username) < 5 || len(req.Username) < 32 {
+		return &types.RegisterResp{
+			StatusCode: common.REUQEST_PARAM_ERROR,
+			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+		}, err
+	}
 	data, err := l.svcCtx.UserRpcClient.SaveUser(l.ctx, &pb.SaveUserReq{
 		Username: req.Username,
 		Password: req.Password,
@@ -39,8 +44,8 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 			log.Fatal(err)
 		}
 		return &types.RegisterResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.USERNAME_REPETITION,
+			StatusMsg:  common.MapErrMsg(common.USERNAME_REPETITION),
 		}, err
 	}
 	token, err := util.GenToken(data.Id, req.Username)

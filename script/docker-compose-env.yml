@@ -1,5 +1,9 @@
 version: '3'
 
+
+# 公用容器
+
+
 services:
   mysql:
     image: mysql:8.0.34-debian
@@ -24,6 +28,37 @@ services:
     restart: always
     networks:
       - liujun_net
+
+#  minio:
+#    container_name: minio
+#    image: minio/minio
+#    ports:
+#      - '9000:9000'
+##    volumes:
+##      - '/etc/docker/minio/data:/data'
+#    environment:
+#      MINIO_ACCESS_KEY: "minio"
+#      MINIO_SECRET_KEY: "minio@123"
+#    restart: always
+#    command: server --console-address ":9000" --address ":9091"
+#    user: '1001'
+#    networks:
+#      - liujun_net
+
+  minio:
+    image: minio/minio:RELEASE.2021-06-17T00-10-46Z
+    ports:
+      - "9000:9000"
+    environment:
+      - MINIO_ACCESS_KEY=taozixun
+      - MINIO_SECRET_KEY=taozixun
+    volumes:
+      - /etc/docker/minio/data:/data
+      - /etc/docker/minio/config:/root/.minio
+    command: server /data
+    networks:
+      - liujun_net
+
 
 networks:
   liujun_net:

@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"database/sql"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/internal/model"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -29,7 +30,7 @@ func NewSaveUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveUser
 
 func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 	// todo: add your logic here and delete this line
-	snowflake, err := util.NewSnowflake(2)
+	snowflake, err := util.NewSnowflake(common.UserRpcMachineId)
 	if err != nil {
 		if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_NewSnowflake_false"); err != nil {
 			log.Fatal(err)

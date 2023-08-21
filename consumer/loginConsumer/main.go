@@ -1,6 +1,8 @@
 package main
 
 import (
+	"doushen_by_liujun/internal/gloabalType"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-queue/kq"
@@ -8,7 +10,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 )
 
-var configFile = flag.String("f", "consumer/loginConsumer/etc/user.yaml", "the config file")
+var configFile = flag.String("f", "consumer/loginConsumer/etc/loginConsumer.yaml", "the config file")
 
 type KqConf struct {
 	service.ServiceConf
@@ -31,7 +33,18 @@ func main() {
 	conf.MustLoad(*configFile, &c)
 
 	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(func(k, v string) error {
-		fmt.Printf("=> %s\n", v)
+		var message gloabalType.LoginSuccessMessage
+		fmt.Println(k)
+		fmt.Println("===========================")
+		fmt.Println(v)
+
+		if err := json.Unmarshal([]byte(v), &message); err != nil {
+			// 处理反序列化错误
+			// ...
+		}
+		fmt.Println(message.IP)
+		fmt.Println(message.Logintime)
+		fmt.Println(message.UserId)
 		return nil
 	}))
 	defer q.Stop()

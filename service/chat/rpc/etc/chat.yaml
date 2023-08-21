@@ -2,11 +2,11 @@ Name: chat.rpc
 ListenOn: 0.0.0.0:8088
 Etcd:
   Hosts:
-  - 127.0.0.1:8090
+    - 0.0.0.0:8090
   Key: chatRpc
 
 DB:
-  DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_content?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
+  DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_chat?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 ChatKqPusherConf:
   Brokers:
