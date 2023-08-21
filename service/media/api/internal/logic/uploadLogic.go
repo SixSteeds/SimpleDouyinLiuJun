@@ -41,8 +41,8 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	}
 	//生成文件名
 	fileName := "doushen/" + strconv.FormatInt(token.UserID, 10) + uuid.New().String()[:5] + ".mp4"
-	_, err = util2.Upload(l.ctx, req.Data, fileName)
-
+	err = util2.Upload(l.ctx, req.Data, fileName)
+	fmt.Println("上传成功")
 	if err != nil {
 		return &types.UploadResp{
 			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),

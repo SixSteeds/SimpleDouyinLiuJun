@@ -3,6 +3,7 @@ package comment
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
 
 	"fmt"
@@ -62,24 +63,27 @@ func executeCntRedis(l *CommentActionLogic, redisKey string, incFlag bool) (err 
 }
 
 func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *types.CommentActionResp, err error) {
-
+	fmt.Println("try commentAction!")
 	//1.根据 token 获取 userid
-	//parsToken, err0 := util.ParseToken(req.Token)
-	//if err0 != nil {
-	//	// 返回token失效错误
-	//	return &types.CommentActionResp{
-	//		StatusCode: common.TOKEN_EXPIRE_ERROR,
-	//		StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
-	//	}, nil
-	//}
-	var test_useid int64 = 7
+	parsToken, err0 := util.ParseToken(req.Token)
+	if err0 != nil {
+		// 返回token失效错误
+		return &types.CommentActionResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+		}, nil
+	}
+	fmt.Println("commonAction work!")
+	//var test_useid int64 = 7
+
 	videoCommentedCntKey := constants.CntCacheVideoCommentedPrefix + strconv.FormatInt(req.VideoId, 10)
 
 	if action := req.ActionType; action == 1 { // actionType（1评论，2删除评论）
 		// 2.新增评论
+		fmt.Println("【添加评论】")
 		_, err1 := l.svcCtx.ContentRpcClient.AddComment(l.ctx, &pb.AddCommentReq{
 			VideoId:  req.VideoId,
-			UserId:   test_useid, //parsToken.UserID,
+			UserId:   parsToken.UserID,
 			Content:  req.CommentText,
 			IsDelete: 0,
 		})
