@@ -3,9 +3,12 @@ package userinfo
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/gloabalType"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"log"
+	"time"
 
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
@@ -28,7 +31,7 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
-	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Username) < 5 || len(req.Username) < 32 {
+	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) > 32 {
 		return &types.LoginResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
 			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
@@ -62,6 +65,20 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_loginLogic_Login_success"); err != nil {
 		log.Fatal(err)
+	}
+	ip := l.ctx.Value("ip")
+	ipString, ok := ip.(string)
+	message := gloabalType.LoginSuccessMessage{}
+	if ok {
+		message.IP = ipString
+		message.Logintime = time.Now()
+		message.UserId = data.UserId
+		messageString := fmt.Sprintf("%v", message)
+		if err := l.svcCtx.KqPusherClient.Push(messageString); err != nil {
+			l.Logger.Error("login方法kafka日志处理失败")
+		}
+	} else {
+		l.Logger.Error("nginx出问题啦")
 	}
 
 	return &types.LoginResp{
