@@ -10,8 +10,8 @@ const OrganizationName = " SixSteeds"
 
 // MinIO相关
 const UploadPath = "8.137.50.160:9000"
-const MinIOAccessKey = "liujun"
-const MinIOSecretKey = "liujun"
+const MinIOAccessKey = "taozixun"
+const MinIOSecretKey = "taozixun"
 const MinIOBucketName = "dousheng-video"
 
 // 七牛云相关
