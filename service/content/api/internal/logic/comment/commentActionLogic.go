@@ -2,6 +2,7 @@ package comment
 
 import (
 	"context"
+	"database/sql"
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -31,84 +32,51 @@ func NewCommentActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Com
 	}
 }
 
-func executeCntRedis(l *CommentActionLogic, redisKey string, incFlag bool) (err error) {
-	// incFlag=true：  redis计数自增，没有记录则新建 redis 中计数并设置初始值为1
-	// incFlag=false： redis计数自减，没有则返回 redis 查询错误
-	redisClient := l.svcCtx.RedisClient
-	if incFlag == true { //自增计数
-		info, e := redisClient.GetCtx(l.ctx, redisKey)
-		if e != nil && e != redis.Nil { //查询redis报错
-			return e
-		}
-		if len(info) == 0 {
-			// 没有记录，新增记录并令 cnt=1
-			redisClient.SetCtx(l.ctx, redisKey, "1")
-		} else {
-			// 有记录，cnt 自增1
-			redisClient.IncrCtx(l.ctx, redisKey)
-		}
-	} else { //自减计数
-		info, e := redisClient.GetCtx(l.ctx, redisKey)
-		if e != nil && e != redis.Nil { //查询redis报错
-			return e
-		}
-		if len(info) == 0 { // 没有记录无法再减少，返回错误
-			return redis.Nil
-		} else { // 有记录，cnt 自减1
-			redisClient.DecrCtx(l.ctx, redisKey)
-		}
-	}
-	fmt.Println("【executeCntRedis-执行成功】")
-	return nil
-}
-
 func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *types.CommentActionResp, err error) {
-	fmt.Println("try commentAction!")
-	//1.根据 token 获取 userid
+	/*
+		Author：    刘洋
+		Function：  评论、删除评论（ ActionType=1 评论，ActionType=2 删除 ）
+		Update：    08.21
+	*/
+	redisClient := l.svcCtx.RedisClient
+	videoCommentedCntKey := constants.CntCacheVideoCommentedPrefix + strconv.FormatInt(req.VideoId, 10)
+
+	// 1.根据 token 获取 userid
 	parsToken, err0 := util.ParseToken(req.Token)
 	if err0 != nil {
-		// 返回token失效错误
 		return &types.CommentActionResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 		}, nil
 	}
-	fmt.Println("commonAction work!")
-	//var test_useid int64 = 7
-
-	videoCommentedCntKey := constants.CntCacheVideoCommentedPrefix + strconv.FormatInt(req.VideoId, 10)
-
-	if action := req.ActionType; action == 1 { // actionType（1评论，2删除评论）
+	if action := req.ActionType; action == 1 { // actionType（1新增评论，2删除评论）
 		// 2.新增评论
-		fmt.Println("【添加评论】")
 		_, err1 := l.svcCtx.ContentRpcClient.AddComment(l.ctx, &pb.AddCommentReq{
 			VideoId:  req.VideoId,
 			UserId:   parsToken.UserID,
 			Content:  req.CommentText,
 			IsDelete: 0,
 		})
-		if err1 != nil {
+		if err1 != nil && err1 != sql.ErrNoRows {
 			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_AddComment_false"); err != nil {
 				log.Fatal(err)
 			}
-			// 返回数据库查询错误
 			return &types.CommentActionResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.DB_ERROR,
+				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			}, err1
 		}
 		// 2.1 redis 中 video 被评论计数自增
-		err2 := executeCntRedis(l, videoCommentedCntKey, true)
-		if err2 != nil {
-			// 返回 redis 访问错误
+		_, err2 := redisClient.IncrCtx(l.ctx, videoCommentedCntKey)
+		if err2 != nil && err2 != redis.Nil {
 			return &types.CommentActionResp{
 				StatusCode: common.REDIS_ERROR,
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			}, err2
+			}, nil
 		}
 		fmt.Println("【api-commentAction-用户评论成功】")
 	} else {
-		//3.删除评论
+		// 3.删除评论
 		_, err1 := l.svcCtx.ContentRpcClient.DelComment(l.ctx, &pb.DelCommentReq{
 			Id: req.CommentId,
 		})
@@ -116,20 +84,18 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_DelComment_false"); err != nil {
 				log.Fatal(err)
 			}
-			// 返回数据库查询错误
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-			}, err1
+			}, nil
 		}
 		// 3.1 redis 中 video 被评论计数自减
-		err2 := executeCntRedis(l, videoCommentedCntKey, false)
-		if err2 != nil {
-			// 返回 redis 访问错误
+		_, err2 := redisClient.DecrCtx(l.ctx, videoCommentedCntKey)
+		if err2 != nil && err2 != redis.Nil {
 			return &types.CommentActionResp{
 				StatusCode: common.REDIS_ERROR,
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			}, err2
+			}, nil
 		}
 		fmt.Println("【api-commentAction-用户删除评论成功】")
 	}
