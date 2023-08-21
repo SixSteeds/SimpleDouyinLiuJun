@@ -14,7 +14,7 @@ import (
 
 // Upload 视频上传
 func Upload(noUse context.Context, video []byte, fileName string) error {
-	timeout := 30 * time.Second
+	timeout := 60 * time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
 	fmt.Println("进来MINIO啦！！！！！！！")
@@ -56,7 +56,7 @@ func Upload(noUse context.Context, video []byte, fileName string) error {
 	if len(video) <= 5*1024*1024 {
 		fmt.Println("普通上传啦！！！！！！！")
 		// 文件大小小于等于 5MB，直接上传整个视频
-		_, err = client.PutObject(ctx, common.MinIOBucketName, fileName, bytes.NewReader(video), int64(len(video)), "", "", minio.PutObjectOptions{})
+		_, err = client.PutObject(ctx, common.MinIOBucketName, fileName, bytes.NewReader(video), int64(len(video)), "", "", minio.PutObjectOptions{ContentType: "video/mp4"})
 		if err != nil {
 			fmt.Println("普通上传出错", err)
 			return err
@@ -84,7 +84,7 @@ func uploadInParts(ctx context.Context, client *minio.Core, videoData []byte, bu
 	totalParts := int(math.Ceil(float64(len(videoData)) / float64(partSize)))
 
 	// 开始分片上传
-	uploadID, err := client.NewMultipartUpload(ctx, bucketName, fileName, minio.PutObjectOptions{})
+	uploadID, err := client.NewMultipartUpload(ctx, bucketName, fileName, minio.PutObjectOptions{ContentType: "video/mp4"})
 	if err != nil {
 		return err
 	}
@@ -107,7 +107,7 @@ func uploadInParts(ctx context.Context, client *minio.Core, videoData []byte, bu
 	}
 
 	// 完成分片上传
-	_, err = client.CompleteMultipartUpload(ctx, bucketName, fileName, uploadID, uploadedParts, minio.PutObjectOptions{})
+	_, err = client.CompleteMultipartUpload(ctx, bucketName, fileName, uploadID, uploadedParts, minio.PutObjectOptions{ContentType: "video/mp4"})
 	if err != nil {
 		return err
 	}
