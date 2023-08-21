@@ -32,7 +32,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	// parse token
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_ParseToken_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_ParseToken_false"); err != nil {
 			log.Fatal(err)
 		}
 		resp = &types.MessageChatReqResp{
@@ -47,16 +47,16 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	userId := res.UserID
 	toUserId := req.ToUserId
 
-	request := &pb.GetChatMessageByIdReq{
+	request := pb.GetChatMessageByIdReq{
 		UserId:     userId,
 		ToUserId:   toUserId,
 		PreMsgTime: time.Time{},
 	}
 
 	// get chat messages
-	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, request)
+	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
 			log.Fatal(err)
 		}
 		resp = &types.MessageChatReqResp{
@@ -84,7 +84,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 		StatusMsg:   "get chat messages successfully",
 		MessageList: messages,
 	}
-	if err := l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
+	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
 		log.Fatal(err)
 	}
 	return resp, nil
