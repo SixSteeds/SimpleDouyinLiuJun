@@ -26,15 +26,21 @@ func NewGetFeedListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFe
 
 func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, error) {
 	// todo: add your logic here and delete this line
-	fmt.Println("陶子勋收到的数据！！！！！！", in.UserId, in.LatestTime, in.Size)
+	fmt.Println("陶子勋收到的数据！！！！！！GetFeedList", in.UserId, in.LatestTime, in.Size)
 	fmt.Println("进入feed流rpc逻辑")
 	feedList, err := l.svcCtx.VideoModel.GetFeedList(l.ctx, in.UserId, &in.LatestTime, in.Size)
+	fmt.Println("在rpc里看model返回值")
 	fmt.Println(feedList)
+	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}
+	var FeedVideos []*pb.FeedVideo
 	if len(*feedList) == 0 {
-		return nil, nil
+		fmt.Println("model查询为空")
+		return &pb.FeedListResp{
+			VideoList: FeedVideos,
+		}, nil
 	}
 
 	// 将feedlist中的userId全部拿出来转换为一个数组 1692684
@@ -57,7 +63,6 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	fmt.Println(usersByIds)
 
 	fmt.Println("完成feed流rpc逻辑11111111111")
-	var FeedVideos []*pb.FeedVideo
 	var feedUserList []*pb.FeedUser
 	for _, user := range usersByIds.Users {
 		feedUserList = append(feedUserList, &pb.FeedUser{
@@ -91,7 +96,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 		return nil, err
 	}
 
-	fmt.Println("获取到的feed流信息为：", FeedVideos)
+	fmt.Println("tttttttt获取到的feed流信息为：", FeedVideos)
 	return &pb.FeedListResp{
 		VideoList: FeedVideos,
 	}, nil

@@ -30,7 +30,7 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 
 	fmt.Println("进入GetPublishList rpc逻辑")
 	feedList, err := l.svcCtx.VideoModel.GetPublishList(l.ctx, in.UserId, in.CheckUserId)
-	fmt.Println(feedList)
+	//fmt.Println(feedList)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 		UserID: in.UserId,
 	})
 
-	fmt.Println("完成feed流rpc逻辑11111111111")
+	//fmt.Println("完成feed流rpc逻辑11111111111")
 	var FeedVideos []*pb.FeedVideo
 	var feedUserList []pb.FeedUser
 	for _, user := range usersByIds.Users {
@@ -85,7 +85,8 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 		return nil, err
 	}
 
-	fmt.Println("获取到的feed流信息为：", FeedVideos)
+	//fmt.Println("获取到的feed流信息为：", FeedVideos)
+	fmt.Println("退出GetPublishList rpc逻辑")
 	return &pb.PublishListResp{
 		VideoList: FeedVideos,
 	}, nil

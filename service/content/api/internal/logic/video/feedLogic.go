@@ -46,13 +46,15 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	} else {
 		lastTime = req.LatestTime
 	}
+	fmt.Println("我要去rpc了")
 	list, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{
 		UserId:     userId,
 		LatestTime: lastTime,
 		Size:       5,
 	})
-	fmt.Println("到这了")
+	fmt.Println("我回到api了，我来看看list是什么")
 	fmt.Println(list)
+	fmt.Println(err)
 
 	if err != nil {
 		fmt.Println("陶子勋陶子勋陶子勋，listerr", err)

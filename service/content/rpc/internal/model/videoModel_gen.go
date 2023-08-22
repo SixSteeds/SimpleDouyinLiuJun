@@ -172,6 +172,9 @@ func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, late
 		"ORDER BY v.create_time DESC "+
 		"LIMIT ?", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, formatTime, size)
+	fmt.Println("在model里的错误和数据")
+	fmt.Println(err)
+	fmt.Println(resp)
 	if err != nil {
 		return nil, err
 	}
