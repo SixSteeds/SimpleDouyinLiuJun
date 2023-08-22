@@ -40,8 +40,8 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 			UserId:     item.UserId,
 			ToUserId:   item.ToUserId,
 			Message:    item.Message,
-			CreateTime: item.CreateTime,
-			UpdateTime: item.UpdateTime,
+			CreateTime: item.CreateTime.String(),
+			UpdateTime: item.UpdateTime.String(),
 		})
 	}
 	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
