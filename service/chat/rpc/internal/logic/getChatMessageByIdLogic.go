@@ -32,7 +32,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
 			log.Fatal(err)
 		}
-		return nil, fmt.Errorf("fail to getChatMsgByIds, error = ?", err)
+		return nil, fmt.Errorf("fail to getChatMsgByIds, error = %s", err)
 	}
 	for _, item := range *message {
 		results = append(results, &pb.ChatMessage{
