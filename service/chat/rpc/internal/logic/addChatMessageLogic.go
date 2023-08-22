@@ -34,7 +34,7 @@ func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddC
 	rand.Seed(time.Now().UnixNano())
 	snowflake, err := util.NewSnowflake(int64(rand.Intn(1023)))
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_NewSnowflake_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_NewSnowflake_false"); err != nil {
 			log.Fatal(err)
 		}
 		return nil, fmt.Errorf("fail to generate id, error = %s", err)
@@ -52,13 +52,13 @@ func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddC
 	}
 	_, err = l.svcCtx.ChatMessageModel.Insert(l.ctx, request)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_Insert_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_Insert_false"); err != nil {
 			log.Fatal(err)
 		}
 		return nil, fmt.Errorf("fail to add chat message record, error = %s", err)
 	}
 
-	if err := l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_success"); err != nil {
+	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_addChatMessageLogic_AddChatMessage_success"); err != nil {
 		log.Fatal(err)
 	}
 	return &pb.AddChatMessageResp{}, nil

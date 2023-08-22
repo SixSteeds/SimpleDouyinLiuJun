@@ -32,7 +32,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
 			log.Fatal(err)
 		}
-		return nil, fmt.Errorf("fail to getChatMsgByIds, error = ?", err)
+		return nil, fmt.Errorf("fail to getChatMsgByIds, error = %s", err)
 	}
 	for _, item := range *message {
 		results = append(results, &pb.ChatMessage{
@@ -40,8 +40,8 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 			UserId:     item.UserId,
 			ToUserId:   item.ToUserId,
 			Message:    item.Message,
-			CreateTime: item.CreateTime,
-			UpdateTime: item.UpdateTime,
+			CreateTime: item.CreateTime.String(),
+			UpdateTime: item.UpdateTime.String(),
 		})
 	}
 	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
