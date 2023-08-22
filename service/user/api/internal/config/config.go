@@ -14,4 +14,8 @@ type Config struct {
 		Brokers []string
 		Topic   string
 	}
+	LoginLogKqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 }

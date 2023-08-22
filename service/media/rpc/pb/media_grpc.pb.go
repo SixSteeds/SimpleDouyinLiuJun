@@ -19,23 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Media_AddVideo_FullMethodName     = "/pb.media/AddVideo"
-	Media_UpdateVideo_FullMethodName  = "/pb.media/UpdateVideo"
-	Media_DelVideo_FullMethodName     = "/pb.media/DelVideo"
-	Media_GetVideoById_FullMethodName = "/pb.media/GetVideoById"
-	Media_SearchVideo_FullMethodName  = "/pb.media/SearchVideo"
-	Media_SaveVideo_FullMethodName    = "/pb.media/SaveVideo"
+	Media_SaveVideo_FullMethodName = "/pb.media/SaveVideo"
 )
 
 // MediaClient is the client API for Media service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type MediaClient interface {
-	AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error)
-	UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
-	DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
-	GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
-	SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 	SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error)
 }
 
@@ -45,51 +35,6 @@ type mediaClient struct {
 
 func NewMediaClient(cc grpc.ClientConnInterface) MediaClient {
 	return &mediaClient{cc}
-}
-
-func (c *mediaClient) AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error) {
-	out := new(AddVideoResp)
-	err := c.cc.Invoke(ctx, Media_AddVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaClient) UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error) {
-	out := new(UpdateVideoResp)
-	err := c.cc.Invoke(ctx, Media_UpdateVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaClient) DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error) {
-	out := new(DelVideoResp)
-	err := c.cc.Invoke(ctx, Media_DelVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaClient) GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error) {
-	out := new(GetVideoByIdResp)
-	err := c.cc.Invoke(ctx, Media_GetVideoById_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *mediaClient) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
-	out := new(SearchVideoResp)
-	err := c.cc.Invoke(ctx, Media_SearchVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *mediaClient) SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...grpc.CallOption) (*SaveVideoResp, error) {
@@ -105,11 +50,6 @@ func (c *mediaClient) SaveVideo(ctx context.Context, in *SaveVideoReq, opts ...g
 // All implementations must embed UnimplementedMediaServer
 // for forward compatibility
 type MediaServer interface {
-	AddVideo(context.Context, *AddVideoReq) (*AddVideoResp, error)
-	UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error)
-	DelVideo(context.Context, *DelVideoReq) (*DelVideoResp, error)
-	GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error)
-	SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error)
 	SaveVideo(context.Context, *SaveVideoReq) (*SaveVideoResp, error)
 	mustEmbedUnimplementedMediaServer()
 }
@@ -118,21 +58,6 @@ type MediaServer interface {
 type UnimplementedMediaServer struct {
 }
 
-func (UnimplementedMediaServer) AddVideo(context.Context, *AddVideoReq) (*AddVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddVideo not implemented")
-}
-func (UnimplementedMediaServer) UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateVideo not implemented")
-}
-func (UnimplementedMediaServer) DelVideo(context.Context, *DelVideoReq) (*DelVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelVideo not implemented")
-}
-func (UnimplementedMediaServer) GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetVideoById not implemented")
-}
-func (UnimplementedMediaServer) SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchVideo not implemented")
-}
 func (UnimplementedMediaServer) SaveVideo(context.Context, *SaveVideoReq) (*SaveVideoResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SaveVideo not implemented")
 }
@@ -147,96 +72,6 @@ type UnsafeMediaServer interface {
 
 func RegisterMediaServer(s grpc.ServiceRegistrar, srv MediaServer) {
 	s.RegisterService(&Media_ServiceDesc, srv)
-}
-
-func _Media_AddVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaServer).AddVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Media_AddVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServer).AddVideo(ctx, req.(*AddVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Media_UpdateVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaServer).UpdateVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Media_UpdateVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServer).UpdateVideo(ctx, req.(*UpdateVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Media_DelVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaServer).DelVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Media_DelVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServer).DelVideo(ctx, req.(*DelVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Media_GetVideoById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetVideoByIdReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaServer).GetVideoById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Media_GetVideoById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServer).GetVideoById(ctx, req.(*GetVideoByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Media_SearchVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(MediaServer).SearchVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Media_SearchVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MediaServer).SearchVideo(ctx, req.(*SearchVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _Media_SaveVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -264,26 +99,6 @@ var Media_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "pb.media",
 	HandlerType: (*MediaServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "AddVideo",
-			Handler:    _Media_AddVideo_Handler,
-		},
-		{
-			MethodName: "UpdateVideo",
-			Handler:    _Media_UpdateVideo_Handler,
-		},
-		{
-			MethodName: "DelVideo",
-			Handler:    _Media_DelVideo_Handler,
-		},
-		{
-			MethodName: "GetVideoById",
-			Handler:    _Media_GetVideoById_Handler,
-		},
-		{
-			MethodName: "SearchVideo",
-			Handler:    _Media_SearchVideo_Handler,
-		},
 		{
 			MethodName: "SaveVideo",
 			Handler:    _Media_SaveVideo_Handler,

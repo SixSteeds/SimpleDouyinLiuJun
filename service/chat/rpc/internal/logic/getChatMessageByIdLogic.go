@@ -29,7 +29,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 	var results []*pb.ChatMessage
 	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
 			log.Fatal(err)
 		}
 		return nil, fmt.Errorf("fail to getChatMsgByIds, error = ?", err)
@@ -44,7 +44,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 			UpdateTime: item.UpdateTime,
 		})
 	}
-	if err := l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
+	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
 		log.Fatal(err)
 	}
 	return &pb.GetChatMessageByIdResp{ChatMessage: results}, nil
