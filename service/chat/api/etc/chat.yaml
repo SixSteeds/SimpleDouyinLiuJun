@@ -10,6 +10,14 @@ ChatRpcConf:
 #    Pass: liujun
 #    User: root
 
+UserRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:8090
+    Key: userRpc
+#    Pass: liujun
+#    User: root
+
 ChatKqPusherConf:
   Brokers:
     - 127.0.0.1:9092

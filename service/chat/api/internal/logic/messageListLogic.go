@@ -3,13 +3,11 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/util"
+	"doushen_by_liujun/service/chat/api/internal/svc"
+	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
 	"log"
-	"time"
-
-	"doushen_by_liujun/service/chat/api/internal/svc"
-	"doushen_by_liujun/service/chat/api/internal/types"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -50,7 +48,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	request := pb.GetChatMessageByIdReq{
 		UserId:     userId,
 		ToUserId:   toUserId,
-		PreMsgTime: time.Time{},
+		PreMsgTime: req.PreMsgTime,
 	}
 
 	// get chat messages
