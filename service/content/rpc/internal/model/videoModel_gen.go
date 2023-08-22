@@ -154,6 +154,8 @@ func (m *defaultVideoModel) GetWorkCountByUserId(ctx context.Context, user_id in
 
 func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error) {
 	formatTime := time.Unix(*latest_time, 0)
+	fmt.Println("陶子勋来看看formatTime",formatTime)
+	fmt.Println(user_id,size)
 	var resp []*FeedVideo
 	query := fmt.Sprintf("SELECT   "+
 		"v.id,"+
