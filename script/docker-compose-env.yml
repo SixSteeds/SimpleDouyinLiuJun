@@ -5,7 +5,7 @@ version: '3'
 services:
   #抽帧 docker pull jrottenberg/ffmpeg
   ffmpeg:
-    image: jrottenberg/ffmpeg:latest
+    image: jrottenberg/ffmpeg:3-scratch
     container_name: ffmpeg
 
   #etcd容器 - Etcd container
@@ -34,7 +34,7 @@ services:
 
   #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
   grafana:
-    image: grafana/grafana:8.0.6
+    image: grafana/grafana:10.0.4
     container_name: grafana
     hostname: grafana
     user: root
@@ -60,6 +60,7 @@ services:
     networks:
       - liujun_net
 
+  # kafka消息队列
   kafka:
     image: docker.io/bitnami/kafka:3.5
     container_name: kafka
@@ -96,6 +97,7 @@ services:
       - liujun_net
 
 
+  # 容器网络
 networks:
   liujun_net:
     driver: bridge
