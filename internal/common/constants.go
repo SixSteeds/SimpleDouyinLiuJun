@@ -8,10 +8,12 @@ const JwtExpire = 7200
 const OrganizationName = " SixSteeds"
 
 // MinIO相关
-const UploadPath = "8.137.50.160:9000"
+const HTTP = "http://"
+const MinIOEndPoint = "8.137.50.160:9000"
 const MinIOAccessKey = "taozixun"
 const MinIOSecretKey = "taozixun"
-const MinIOBucketName = "dousheng-video"
+const MinIOVideoBucketName = "dousheng-video"
+const MinIOCoverBucketName = "dousheng-cover"
 
 // 七牛云相关
 const DefaultBackImage = " https://staraway.love/02c05856-e60c-44a0-9e85-6c2ba7ae9e0942d98a82be40d551ce6e123abbd0718292f80a71_raw.jpg"
