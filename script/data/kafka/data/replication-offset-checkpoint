@@ -13,7 +13,7 @@ __consumer_offsets 19 0
 __consumer_offsets 25 0
 __consumer_offsets 33 0
 __consumer_offsets 41 0
-__consumer_offsets 37 3
+__consumer_offsets 37 9
 __consumer_offsets 8 0
 __consumer_offsets 24 0
 __consumer_offsets 49 0
@@ -36,7 +36,7 @@ __consumer_offsets 47 0
 __consumer_offsets 18 0
 __consumer_offsets 7 0
 __consumer_offsets 48 0
-loginLog 0 1
+loginLog 0 5
 __consumer_offsets 22 0
 __consumer_offsets 46 0
 __consumer_offsets 23 0

@@ -9,7 +9,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 )
 
 type AddFollowsLogic struct {
@@ -42,9 +41,6 @@ func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, 
 	data, err := util.NewSnowflake(47)
 	if err != nil {
 		l.Logger.Info("雪花算法报错", err)
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_addFollowsLogic_AddFollows_NewSnowflake_false"); err != nil {
-			log.Fatal(err)
-		}
 		return nil, errors.New("雪花算法报错")
 
 	}
@@ -60,15 +56,8 @@ func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, 
 	})
 	if err != nil {
 		l.Logger.Info("写入数据库报错", err)
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_addFollowsLogic_AddFollows_Insert_false"); err != nil {
-			log.Fatal(err)
-		}
 		return nil, errors.New("写入数据库报错")
 
-	}
-
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_addFollowsLogic_AddFollows_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.AddFollowsResp{}, nil
 }

@@ -1,5 +1,7 @@
 Name: user.rpc
 ListenOn: 0.0.0.0:8082
+
+
 Etcd:
   Hosts:
     - 0.0.0.0:8090
@@ -11,7 +13,7 @@ DB:
   DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_user?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
 Cache:
-  - Host: 0.0.0.0:8094
+  - Host: 127.0.0.1:8094
     Pass: liujun
 
 
@@ -26,5 +28,5 @@ UserKqPusherConf:
   Topic: user
 
 RedisConf:
-  Host: 0.0.0.0:8094
+  Host: 127.0.0.1:8094
   Pass: "liujun"

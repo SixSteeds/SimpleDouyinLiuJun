@@ -4,7 +4,6 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	"fmt"
-	"log"
 	"strconv"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -31,9 +30,6 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 	follows, err := l.svcCtx.FollowsModel.FindFriendsByUserId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFriendsByIdLogic_GetFriendById_FindFriendsByUserId_false"); err != nil {
-		log.Fatal(err)
 	}
 	var resp []*pb.Follows
 	redisClient := l.svcCtx.RedisClient
@@ -82,9 +78,6 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			Signature:       item.Signature.String,
 			IsFollow:        item.IsFollow,
 		})
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFriendsByIdLogic_GetFriendById_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.GetFriendsByIdResp{
 		Follows: resp,

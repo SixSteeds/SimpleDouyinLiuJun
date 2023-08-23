@@ -8,7 +8,6 @@ import (
 	"doushen_by_liujun/service/user/rpc/internal/model"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"log"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -32,9 +31,6 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 	// todo: add your logic here and delete this line
 	snowflake, err := util.NewSnowflake(common.UserRpcMachineId)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_NewSnowflake_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &pb.SaveUserResp{
 			Success: false,
 		}, nil
@@ -55,9 +51,6 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 		Password: password,
 	})
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_insert_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &pb.SaveUserResp{
 			Success: false,
 		}, err
@@ -67,9 +60,6 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 	data, err := util.NewSnowflake(47)
 	if err != nil {
 		l.Logger.Info("雪花算法报错", err)
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_addFollowsLogic_AddFollows_NewSnowflake_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &pb.SaveUserResp{
 			Success: false,
 		}, nil
@@ -84,10 +74,6 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 		return &pb.SaveUserResp{
 			Success: false,
 		}, nil
-	}
-
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_saveUserLogic_SaveUser_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.SaveUserResp{
 		Success: true,

@@ -37,7 +37,11 @@ func NewAddLikeInfoLogic(ctx context.Context, conn sqlx.SqlConn, rds *redis.Redi
 }
 
 func (l *AddLikeInfoLogic) AddLikeInfo() {
-	// 定时将 redis 中的点赞数据同步到数据库
+	/*
+		Author：    刘洋
+		Function：  定时将 redis 中点赞数据同步到数据库
+		Update：    08.21
+	*/
 	redisClient := l.rds
 	videoLikedKeyPrefix := constants.LikeCacheVideoLikedPrefix
 
@@ -49,7 +53,6 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		// redis.scan 从 cursor=0 开始，当返回 nextCursor=0 时说明遍历完
 		keysResp, nextCur, err0 := redisClient.Scan(cur, videoLikedKeyPrefix+"*", count)
 		if err0 != nil && err0 != redis.Nil {
-			// 返回 redis 访问错误
 			fmt.Println("【redis访问错误，同步数据到Mysql失败！】")
 		}
 		keys = append(keys, keysResp...)
@@ -57,6 +60,10 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 			break
 		}
 		cur = nextCur
+	}
+	if len(keys) == 0 {
+		fmt.Println("【Redis同步数据到Mysql完成】")
+		return
 	}
 	fmt.Println(keys)
 	// 2.根据所有点赞信息中的 key，获取所有(key,field,val)对
@@ -71,7 +78,6 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 			// redis.scan 从 cursor=0 开始，当返回 nextCursor=0 时说明遍历完
 			keysResp, nextCur, err0 := redisClient.Hscan(item, cur, "*", count)
 			if err0 != nil && err0 != redis.Nil {
-				// 返回 redis 访问错误
 				fmt.Println("【redis访问错误，同步数据到Mysql失败！】")
 			}
 			for i := 0; i < len(keysResp); i += 2 {
@@ -84,7 +90,6 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		}
 	}
 	fmt.Println(hash)
-
 	// 3.根据所有 videoId(key), userId(field) 查询并新增 favorite 表
 	type Favorite struct {
 		Id         int64     `db:"id"`          // 主键
@@ -114,23 +119,19 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 			fmt.Println("【Redis同步数据, Mysql更新失败】")
 		}
 		if resp.Id != 0 {
-			//fmt.Println("查到")
-			// 3.2如果记录存在，则进行更新
+			// 3.2 如果记录存在，则进行更新
 			query := fmt.Sprintf("update `favorite` set %s where `id` = ?", favoriteRowsWithPlaceHolder)
 			_, err := l.conn.Exec(query, videoId, userId, isDelete, resp.Id)
 			if err != nil && err != sql.ErrNoRows {
 				fmt.Println("【Redis同步数据, Mysql更新失败】")
 			}
-
 		} else {
-			//fmt.Println("没查到")
 			// 3.3 如果记录不存在，则拼接字符串 insertBatch 等到后续批量插入
-			//雪花算法生成id
 			snowflake, err1 := util.NewSnowflake(3)
 			if err1 != nil && err != sql.ErrNoRows {
 				fmt.Println("【Redis同步数据, Mysql更新失败时snowflake生成id失败】")
 			}
-			snowId := snowflake.Generate()
+			snowId := snowflake.Generate() //雪花算法生成id
 			insertBatch += "(" + strconv.FormatInt(snowId, 10) + "," + arr[0] + "," + arr[1] + "," + v + ")" + ","
 		}
 
@@ -144,8 +145,6 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		}
 		fmt.Println(insertBatch)
 	}
-
 	fmt.Println("【Redis同步数据到Mysql完成】")
-
 	return
 }

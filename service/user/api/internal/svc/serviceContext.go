@@ -18,7 +18,6 @@ type ServiceContext struct {
 	JwtAuthMiddleware      rest.Middleware
 	RedisClient            *redis.Redis
 	LoginLogKqPusherClient *kq.Pusher
-	KqPusherClient         *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -28,7 +27,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		UserRpcClient:          user.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
 		RedisClient:            redis.MustNewRedis(c.RedisConf),
 		JwtAuthMiddleware:      gloabmiddleware.NewJwtAuthMiddleware().Handle,
-		KqPusherClient:         kq.NewPusher(c.UserKqPusherConf.Brokers, c.UserKqPusherConf.Topic),
 		LoginLogKqPusherClient: kq.NewPusher(c.LoginLogKqPusherConf.Brokers, c.LoginLogKqPusherConf.Topic),
 	}
 }
