@@ -17,6 +17,7 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			httpx.ErrorCtx(r.Context(), w, err)
 			return
 		}
+
 		ctx := context.WithValue(r.Context(), "ip", r.Header.Get("X-Real-IP"))
 		l := userinfo.NewLoginLogic(ctx, svcCtx)
 		resp, err := l.Login(&req)
