@@ -6,7 +6,6 @@ import (
 	"doushen_by_liujun/service/user/rpc/pb"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 )
 
 type DelFollowsLogic struct {
@@ -31,14 +30,8 @@ func (l *DelFollowsLogic) DelFollows(in *pb.DelFollowsReq) (*pb.DelFollowsResp, 
 	}
 	e := l.svcCtx.FollowsModel.DeleteByUserIdAndFollowId(l.ctx, in.UserId, in.FollowId)
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_rpc_delFollowsLogic_DelFollows_DeleteByUserIdAndFollowId_false"); err != nil {
-			log.Fatal(err)
-		}
 		l.Logger.Info("删除关注失败", e)
 		return nil, e
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_delFollowsLogic_DelFollows_del_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.DelFollowsResp{}, nil
 }

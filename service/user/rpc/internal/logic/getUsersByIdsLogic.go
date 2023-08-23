@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"fmt"
 	"strconv"
 
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -39,7 +40,8 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 		redisClient := l.svcCtx.RedisClient
 		followKey := common.FollowNum + strconv.Itoa(int(id))
 		followerKey := common.FollowerNum + strconv.Itoa(int(id))
-		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
+		//followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
+		followRecord, _ := redisClient.Get(followKey)
 		followNum := 0
 		followerNum := 0
 		expiration := 3600 //秒
@@ -57,6 +59,9 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			followNum, _ = strconv.Atoi(followRecord)
 		}
 		followerRecord, _ := redisClient.GetCtx(l.ctx, followerKey)
+		fmt.Println("使用get")
+		_, _ = redisClient.Get(followerKey)
+		fmt.Println("使用get结束")
 		if len(followerRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, id)

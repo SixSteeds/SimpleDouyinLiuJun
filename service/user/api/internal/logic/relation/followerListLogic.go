@@ -8,7 +8,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"strconv"
 )
 
@@ -39,9 +38,6 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		Id: req.UserId,
 	})
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followerListLogic_FollowerList_GetFollowersById_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.FollowerListResp{
 			StatusCode:   common.DB_ERROR,
 			StatusMsg:    common.MapErrMsg(common.DB_ERROR),
@@ -83,9 +79,6 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 			TotalFavorited:  int64(totalFavorited),
 		}
 		users = append(users, user)
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followerListLogic_FollowerList_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &types.FollowerListResp{
 		StatusCode:   common.OK,

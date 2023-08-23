@@ -50,8 +50,13 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 		PreMsgTime: req.PreMsgTime,
 	}
 
+	fmt.Println("come here")
+	fmt.Println(userId)
+	fmt.Println(toUserId)
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
+
+	fmt.Println(message)
 	if err != nil {
 		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
 			log.Fatal(err)

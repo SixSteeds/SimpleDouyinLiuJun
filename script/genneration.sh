@@ -16,7 +16,10 @@
 
 
 
-
+# 创建topic
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic loginLog
+# 查看topic列表
+kafka-topics.sh --bootstrap-server localhost:9092 --list
 
 
 

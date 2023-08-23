@@ -9,7 +9,6 @@ import (
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/juju/ratelimit"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"math/rand"
 	"strconv"
 	"time"
@@ -34,9 +33,6 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_ParseToken_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.FollowResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -101,16 +97,10 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				FollowId: strconv.FormatInt(req.ToUserId, 10),
 			})
 			if err != nil {
-				if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_AddFollows_false"); err != nil {
-					log.Fatal(err)
-				}
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 				}, nil
-			}
-			if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_AddFollows_success"); err != nil {
-				log.Fatal(err)
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,
@@ -122,16 +112,10 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				FollowId: strconv.FormatInt(req.ToUserId, 10),
 			})
 			if err != nil {
-				if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_DelFollows_false"); err != nil {
-					log.Fatal(err)
-				}
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 				}, nil
-			}
-			if err := l.svcCtx.KqPusherClient.Push("user_api_relation_followLogic_Follow_DelFollows_success"); err != nil {
-				log.Fatal(err)
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,

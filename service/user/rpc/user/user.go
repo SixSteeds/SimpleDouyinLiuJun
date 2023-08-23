@@ -15,16 +15,12 @@ import (
 type (
 	AddFollowsReq             = pb.AddFollowsReq
 	AddFollowsResp            = pb.AddFollowsResp
-	AddUserinfoReq            = pb.AddUserinfoReq
-	AddUserinfoResp           = pb.AddUserinfoResp
 	CheckIsFollowReq          = pb.CheckIsFollowReq
 	CheckIsFollowResp         = pb.CheckIsFollowResp
 	CheckUserReq              = pb.CheckUserReq
 	CheckUserResp             = pb.CheckUserResp
 	DelFollowsReq             = pb.DelFollowsReq
 	DelFollowsResp            = pb.DelFollowsResp
-	DelUserinfoReq            = pb.DelUserinfoReq
-	DelUserinfoResp           = pb.DelUserinfoResp
 	Follows                   = pb.Follows
 	GetFollowersByIdReq       = pb.GetFollowersByIdReq
 	GetFollowersByIdResp      = pb.GetFollowersByIdResp
@@ -32,8 +28,6 @@ type (
 	GetFollowersCountByIdResp = pb.GetFollowersCountByIdResp
 	GetFollowsByIdReq         = pb.GetFollowsByIdReq
 	GetFollowsByIdResp        = pb.GetFollowsByIdResp
-	GetFollowsCountByIdReq    = pb.GetFollowsCountByIdReq
-	GetFollowsCountByIdResp   = pb.GetFollowsCountByIdResp
 	GetFriendsByIdReq         = pb.GetFriendsByIdReq
 	GetFriendsByIdResp        = pb.GetFriendsByIdResp
 	GetUserByIdReq            = pb.GetUserByIdReq
@@ -46,35 +40,18 @@ type (
 	GetUsersByIdsResp         = pb.GetUsersByIdsResp
 	SaveUserReq               = pb.SaveUserReq
 	SaveUserResp              = pb.SaveUserResp
-	SearchFollowsReq          = pb.SearchFollowsReq
-	SearchFollowsResp         = pb.SearchFollowsResp
-	SearchUserinfoReq         = pb.SearchUserinfoReq
-	SearchUserinfoResp        = pb.SearchUserinfoResp
-	UpdateFollowsReq          = pb.UpdateFollowsReq
-	UpdateFollowsResp         = pb.UpdateFollowsResp
-	UpdateUserinfoReq         = pb.UpdateUserinfoReq
-	UpdateUserinfoResp        = pb.UpdateUserinfoResp
 	Userinfo                  = pb.Userinfo
 	Usersinfo                 = pb.Usersinfo
 
 	User interface {
-		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 		AddFollows(ctx context.Context, in *AddFollowsReq, opts ...grpc.CallOption) (*AddFollowsResp, error)
-		UpdateFollows(ctx context.Context, in *UpdateFollowsReq, opts ...grpc.CallOption) (*UpdateFollowsResp, error)
 		DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error)
 		GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
-		SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error)
 		SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error)
 		CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error)
-		// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
-		AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error)
-		UpdateUserinfo(ctx context.Context, in *UpdateUserinfoReq, opts ...grpc.CallOption) (*UpdateUserinfoResp, error)
-		DelUserinfo(ctx context.Context, in *DelUserinfoReq, opts ...grpc.CallOption) (*DelUserinfoResp, error)
 		GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error)
 		GetUsersByIds(ctx context.Context, in *GetUsersByIdsReq, opts ...grpc.CallOption) (*GetUsersByIdsResp, error)
-		SearchUserinfo(ctx context.Context, in *SearchUserinfoReq, opts ...grpc.CallOption) (*SearchUserinfoResp, error)
 		GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
-		GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error)
 		GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error)
 		CheckIsFollow(ctx context.Context, in *CheckIsFollowReq, opts ...grpc.CallOption) (*CheckIsFollowResp, error)
 		GetFriendsById(ctx context.Context, in *GetFriendsByIdReq, opts ...grpc.CallOption) (*GetFriendsByIdResp, error)
@@ -93,15 +70,9 @@ func NewUser(cli zrpc.Client) User {
 	}
 }
 
-// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 func (m *defaultUser) AddFollows(ctx context.Context, in *AddFollowsReq, opts ...grpc.CallOption) (*AddFollowsResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.AddFollows(ctx, in, opts...)
-}
-
-func (m *defaultUser) UpdateFollows(ctx context.Context, in *UpdateFollowsReq, opts ...grpc.CallOption) (*UpdateFollowsResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.UpdateFollows(ctx, in, opts...)
 }
 
 func (m *defaultUser) DelFollows(ctx context.Context, in *DelFollowsReq, opts ...grpc.CallOption) (*DelFollowsResp, error) {
@@ -114,11 +85,6 @@ func (m *defaultUser) GetFollowsById(ctx context.Context, in *GetFollowsByIdReq,
 	return client.GetFollowsById(ctx, in, opts...)
 }
 
-func (m *defaultUser) SearchFollows(ctx context.Context, in *SearchFollowsReq, opts ...grpc.CallOption) (*SearchFollowsResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.SearchFollows(ctx, in, opts...)
-}
-
 func (m *defaultUser) SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.SaveUser(ctx, in, opts...)
@@ -127,22 +93,6 @@ func (m *defaultUser) SaveUser(ctx context.Context, in *SaveUserReq, opts ...grp
 func (m *defaultUser) CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.CheckUser(ctx, in, opts...)
-}
-
-// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
-func (m *defaultUser) AddUserinfo(ctx context.Context, in *AddUserinfoReq, opts ...grpc.CallOption) (*AddUserinfoResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.AddUserinfo(ctx, in, opts...)
-}
-
-func (m *defaultUser) UpdateUserinfo(ctx context.Context, in *UpdateUserinfoReq, opts ...grpc.CallOption) (*UpdateUserinfoResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.UpdateUserinfo(ctx, in, opts...)
-}
-
-func (m *defaultUser) DelUserinfo(ctx context.Context, in *DelUserinfoReq, opts ...grpc.CallOption) (*DelUserinfoResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.DelUserinfo(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error) {
@@ -155,19 +105,9 @@ func (m *defaultUser) GetUsersByIds(ctx context.Context, in *GetUsersByIdsReq, o
 	return client.GetUsersByIds(ctx, in, opts...)
 }
 
-func (m *defaultUser) SearchUserinfo(ctx context.Context, in *SearchUserinfoReq, opts ...grpc.CallOption) (*SearchUserinfoResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.SearchUserinfo(ctx, in, opts...)
-}
-
 func (m *defaultUser) GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.GetFollowersById(ctx, in, opts...)
-}
-
-func (m *defaultUser) GetFollowsCountById(ctx context.Context, in *GetFollowsCountByIdReq, opts ...grpc.CallOption) (*GetFollowsCountByIdResp, error) {
-	client := pb.NewUserClient(m.cli.Conn())
-	return client.GetFollowsCountById(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetFollowersCountById(ctx context.Context, in *GetFollowersCountByIdReq, opts ...grpc.CallOption) (*GetFollowersCountByIdResp, error) {

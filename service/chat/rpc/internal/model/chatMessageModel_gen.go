@@ -66,10 +66,14 @@ func (m *defaultChatMessageModel) withSession(session sqlx.Session) *defaultChat
 
 func (m *defaultChatMessageModel) GetChatMsgByIds(ctx context.Context, userId, toUserId int64) (*[]*ChatMessage, error) {
 	var result []*ChatMessage
+	fmt.Println("进入model")
+	fmt.Println(userId)
+	fmt.Println(toUserId)
 	querySql := fmt.Sprintf("SELECT * FROM %s WHERE `user_id` = ? AND `to_user_id` = ? AND `is_delete` = 0 ORDER BY `create_time` DESC", m.table)
 	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId); err != nil {
 		return nil, fmt.Errorf("fail to getChatMessage by ids, error = %s", err)
 	}
+	fmt.Println(result)
 	return &result, nil
 }
 

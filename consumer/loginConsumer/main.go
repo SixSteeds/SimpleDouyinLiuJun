@@ -1,8 +1,7 @@
 package main
 
 import (
-	"doushen_by_liujun/internal/gloabalType"
-	"encoding/json"
+	"doushen_by_liujun/consumer/loginConsumer/logic"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-queue/kq"
@@ -32,21 +31,8 @@ func main() {
 	var c KqConf
 	conf.MustLoad(*configFile, &c)
 
-	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(func(k, v string) error {
-		var message gloabalType.LoginSuccessMessage
-		fmt.Println(k)
-		fmt.Println("===========================")
-		fmt.Println(v)
+	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(logic.LoginLogHandle))
 
-		if err := json.Unmarshal([]byte(v), &message); err != nil {
-			// 处理反序列化错误
-			// ...
-		}
-		fmt.Println(message.IP)
-		fmt.Println(message.Logintime)
-		fmt.Println(message.UserId)
-		return nil
-	}))
 	defer q.Stop()
 	fmt.Println("Starting consumer...")
 	q.Start()
