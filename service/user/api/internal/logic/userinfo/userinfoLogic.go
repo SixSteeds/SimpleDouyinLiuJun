@@ -36,7 +36,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			User:       types.User{},
-		}, err
+		}, nil
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
 	//IntUserId := 203
@@ -54,7 +54,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			User:       user,
-		}, err
+		}, nil
 	}
 	user = types.User{
 		UserId:          info.Userinfo.Id,

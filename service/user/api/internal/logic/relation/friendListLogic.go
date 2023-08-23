@@ -34,7 +34,7 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FriendUser: nil,
-		}, e
+		}, nil
 	}
 	friends, err := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
@@ -47,7 +47,7 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			FriendUser: nil,
-		}, err
+		}, nil
 	}
 	var users []types.FriendUser
 	redisClient := l.svcCtx.RedisClient

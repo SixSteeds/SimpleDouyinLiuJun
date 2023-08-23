@@ -50,7 +50,7 @@ services:
     image: redis:7.2-rc
     container_name: redis
     ports:
-      - 8094:8093
+      - 8094:6379
     command: "redis-server --requirepass liujun  --appendonly yes"
     privileged: true
     restart: always
