@@ -3,6 +3,10 @@ version: '3'
 # 本地容器
 
 services:
+  #抽帧 docker pull jrottenberg/ffmpeg
+  ffmpeg:
+    image: jrottenberg/ffmpeg:latest
+    container_name: ffmpeg
 
   #etcd容器 - Etcd container
   etcd:
