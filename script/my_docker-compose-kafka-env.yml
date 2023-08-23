@@ -1,0 +1,107 @@
+version: '3.4'
+services:
+  kafka-1:
+    image: 'bitnami/kafka:3.5.1'
+    networks:
+      - liujun_net
+    container_name: kafka-1
+    ports:
+      - '9092:9092'
+    #    volumes:
+    #      - ./data/kafka/node-1:/bitnami/kafka
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: yes # 允许明文监听器
+      KAFKA_ENABLE_KRAFT: yes # 启用Kraft模式
+      KAFKA_KRAFT_CLUSTER_ID: MTIzNDU2Nzg5MGFiY2RlZg # Kafka Kraft集群ID
+      KAFKA_CFG_PROCESS_ROLES: broker,controller # Kafka进程角色，包括broker和controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER # Controller监听器名称
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT # 监听器安全协议映射
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091 # Controller选举投票配置
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
+      KAFKA_CFG_NODE_ID: 1 # Kafka Broker ID
+      KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9092 # 监听器配置
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9092 #宿主机IP
+
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+  kafka-2:
+    image: 'bitnami/kafka:3.5.1'
+    networks:
+      - liujun_net
+    container_name: kafka-2
+    ports:
+      - '9093:9093'
+    #    volumes:
+    #      - ./data/kafka/node-2:/bitnami/kafka
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: yes # 允许明文监听器
+      KAFKA_ENABLE_KRAFT: yes # 启用Kraft模式
+      KAFKA_KRAFT_CLUSTER_ID: MTIzNDU2Nzg5MGFiY2RlZg # Kafka Kraft集群ID
+      KAFKA_CFG_PROCESS_ROLES: broker,controller # Kafka进程角色，包括broker和controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER # Controller监听器名称
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT # 监听器安全协议映射
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091 # Controller选举投票配置
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
+
+
+      KAFKA_CFG_NODE_ID: 2
+      KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9093
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9093 #宿主机IP
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+  kafka-3:
+    image: 'bitnami/kafka:3.5.1'
+    networks:
+      - liujun_net
+    container_name: kafka-3
+    #    volumes:
+    #      - ./data/kafka/node-3:/bitnami/kafka
+    ports:
+      - '9094:9094'
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: yes # 允许明文监听器
+      KAFKA_ENABLE_KRAFT: yes # 启用Kraft模式
+      KAFKA_KRAFT_CLUSTER_ID: MTIzNDU2Nzg5MGFiY2RlZg # Kafka Kraft集群ID
+      KAFKA_CFG_PROCESS_ROLES: broker,controller # Kafka进程角色，包括broker和controller
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER # Controller监听器名称
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT # 监听器安全协议映射
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091 # Controller选举投票配置
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
+      KAFKA_CFG_NODE_ID: 3
+      KAFKA_CFG_LISTENERS: CONTROLLER://:9091,BROKER://:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9094 #宿主机IP
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+
+  #broker only
+  kafka-4:
+    image: 'bitnami/kafka:3.5.1'
+    networks:
+      - liujun_net
+    container_name: kafka-4
+    #    volumes:
+    #      - ./data/kafka/node-4:/bitnami/kafka
+    ports:
+      - '9095:9095'
+    environment:
+      ALLOW_PLAINTEXT_LISTENER: yes # 允许明文监听器
+      KAFKA_ENABLE_KRAFT: yes # 启用Kraft模式
+      KAFKA_KRAFT_CLUSTER_ID: MTIzNDU2Nzg5MGFiY2RlZg # Kafka Kraft集群ID
+      KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER # Controller监听器名称
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: BROKER:PLAINTEXT,CONTROLLER:PLAINTEXT # 监听器安全协议映射
+      KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9091,2@kafka-2:9091,3@kafka-3:9091 # Controller选举投票配置
+      KAFKA_CFG_INTER_BROKER_LISTENER_NAME: BROKER # Broker之间通信使用的监听器名称
+      KAFKA_CFG_NODE_ID: 4 # Kafka Broker ID
+      KAFKA_CFG_PROCESS_ROLES: broker # Kafka进程角色，包括broker和controller
+      KAFKA_CFG_LISTENERS: BROKER://:9095 # 监听器配置
+      KAFKA_CFG_ADVERTISED_LISTENERS: BROKER://host.docker.internal:9095 #宿主机IP
+      # 生产环境关闭自动创建topic
+      KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE: true
+
+
+networks:
+  liujun_net:
+    driver: bridge

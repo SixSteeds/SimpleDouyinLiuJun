@@ -28,7 +28,7 @@ func NewRegisterLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Register
 }
 
 func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterResp, err error) {
-	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Username) < 5 || len(req.Username) < 32 {
+	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) < 32 {
 		return &types.RegisterResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
 			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),

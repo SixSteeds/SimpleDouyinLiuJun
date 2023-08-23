@@ -15,8 +15,9 @@
 #kafka-topics.sh --bootstrap-server localhost:9092 --create --topic <topic-name> --partitions <num-partitions> --replication-factor <replication-factor>
 
 
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic loginLog --partitions 3 --replication-factor 2
 
 
-
+kafka-topics.sh --bootstrap-server localhost:9092 --create --topic loginLog
 
 

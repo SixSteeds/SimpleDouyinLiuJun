@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/internal/gloabalType"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"encoding/json"
 	"fmt"
 	"log"
 	"time"
@@ -35,7 +36,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		return &types.LoginResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
 			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
-		}, err
+		}, nil
 	}
 
 	data, err := l.svcCtx.UserRpcClient.CheckUser(l.ctx, &pb.CheckUserReq{
@@ -69,12 +70,17 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	ip := l.ctx.Value("ip")
 	ipString, ok := ip.(string)
 	message := gloabalType.LoginSuccessMessage{}
+	fmt.Println("sdasdasda")
 	if ok {
+		fmt.Println("sdasdasdad")
 		message.IP = ipString
 		message.Logintime = time.Now()
 		message.UserId = data.UserId
-		messageString := fmt.Sprintf("%v", message)
-		if err := l.svcCtx.LoginLogKqPusherClient.Push(messageString); err != nil {
+		messageBytes, err := json.Marshal(message)
+		if err != nil {
+			l.Logger.Error("无法序列化 message 结构体为 JSON：", err)
+		}
+		if err := l.svcCtx.LoginLogKqPusherClient.Push(string(messageBytes)); err != nil {
 			l.Logger.Error("login方法kafka日志处理失败")
 		}
 	} else {
