@@ -28,7 +28,8 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 	}
 }
 
-func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *types.MessageActionReqResp, err error) {
+func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) *types.MessageActionReqResp {
+	var resp *types.MessageActionReqResp
 	// get params
 	token := req.Token
 	toUserID := req.ToUserId
@@ -39,7 +40,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 	switch actionType {
 	case 1:
 		// send message
-		if err = l.SendMessage(token, content, toUserID); err != nil {
+		if err := l.SendMessage(token, content, toUserID); err != nil {
 			if err = l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_SendMessage_false"); err != nil {
 				log.Fatal(err)
 			}
@@ -47,7 +48,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 				StatusCode: 1,
 				StatusMsg:  "fail to send message",
 			}
-			return resp, nil
+			return resp
 		}
 	default:
 		// unknown operation type
@@ -55,7 +56,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 			StatusCode: 1,
 			StatusMsg:  "fail to send message",
 		}
-		return resp, nil
+		return resp
 	}
 
 	// send successfully
@@ -63,11 +64,11 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 		StatusCode: 0,
 		StatusMsg:  "send message successfully",
 	}
-	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_success"); err != nil {
+	if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_success"); err != nil {
 		log.Fatal(err)
 	}
 
-	return resp, nil
+	return resp
 }
 
 func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) error {
