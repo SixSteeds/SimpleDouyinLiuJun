@@ -12,7 +12,7 @@ services:
       ALLOW_NONE_AUTHENTICATION: "yes"
     #      ETCD_ADVERTISE_CLIENT_URLS: http://etcd-server:8090
     ports:
-      - 8090:2379
+      - "8090:2379"
     restart: always
     networks:
       - liujun_net
@@ -44,10 +44,12 @@ services:
 
   #redis容器 - Redis container
   redis:
-    image: redis:7.2-rc
+    image: redis:7.2
     container_name: redis
     ports:
       - "8094:6379"
+    volumes:
+      - "./data/redisData:/data"
     command: "redis-server --requirepass liujun  --appendonly yes"
     privileged: true
     restart: always

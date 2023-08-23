@@ -12,7 +12,7 @@ package pb;
 message Follows {
   int64 FollowerCount = 1;
   int64 FollowCount = 7;
-  int64 Id = 2; //鍏虫敞鐨勪汉
+  int64 Id = 2;
   string UserName = 3;
   string Avator = 4;
   string BackgroundImage = 5;
@@ -182,7 +182,6 @@ service user{
   rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
   rpc SaveUser(SaveUserReq) returns (SaveUserResp);
   rpc CheckUser(CheckUserReq) returns (CheckUserResp);
-
 
 
   rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);

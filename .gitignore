@@ -6,4 +6,5 @@ out
 gen
 .log
 *.log
-script/conf/nginx_conf/log/*.log
+script/data/redisData
+script/data/kafka
