@@ -25,7 +25,8 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 	}
 }
 
-func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.MessageChatReqResp, err error) {
+func (l *MessageListLogic) MessageList(req *types.MessageChatReq) *types.MessageChatReqResp {
+	var resp *types.MessageChatReqResp
 	// parse token
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
@@ -37,7 +38,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 			StatusMsg:   "fail to parse token",
 			MessageList: nil,
 		}
-		return resp, nil
+		return resp
 	}
 
 	// get params
@@ -66,7 +67,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 			StatusMsg:   "fail to get chat message",
 			MessageList: nil,
 		}
-		return resp, nil
+		return resp
 	}
 
 	var messages []types.Message
@@ -89,5 +90,5 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (resp *types.M
 	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
 		log.Fatal(err)
 	}
-	return resp, nil
+	return resp
 }
