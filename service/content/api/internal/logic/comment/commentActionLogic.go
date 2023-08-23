@@ -64,7 +64,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-			}, err1
+			}, nil
 		}
 		// 2.1 redis 中 video 被评论计数自增
 		_, err2 := redisClient.IncrCtx(l.ctx, videoCommentedCntKey)

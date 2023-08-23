@@ -36,7 +36,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 		return &types.FollowResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
-		}, err
+		}, nil
 	}
 	if l.bucket.TakeAvailable(1) == 0 {
 		// 令牌不足，限流处理
@@ -87,7 +87,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 			return &types.FollowResp{
 				StatusCode: common.OK,
 				StatusMsg:  common.MapErrMsg(common.OK),
-			}, err
+			}, nil
 		}
 	} else {
 		//判断是关注还是取消关注
@@ -100,7 +100,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-				}, err
+				}, nil
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,
@@ -115,12 +115,12 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-				}, err
+				}, nil
 			}
 			return &types.FollowResp{
 				StatusCode: common.OK,
 				StatusMsg:  common.MapErrMsg(common.OK),
-			}, err
+			}, nil
 		}
 	}
 }

@@ -38,7 +38,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			StatusCode:  common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			CommentList: []types.Comment{},
-		}, e
+		}, nil
 	}
 	follows, e := l.svcCtx.ContentRpcClient.GetCommentById(l.ctx, &pb.GetCommentByIdReq{
 		Id: req.VideoId,
@@ -52,7 +52,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			StatusCode:  common.DB_ERROR,
 			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
 			CommentList: []types.Comment{},
-		}, e
+		}, nil
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
 	//IntUserId := 223
@@ -69,7 +69,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			StatusCode:  common.DB_ERROR,
 			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
 			CommentList: []types.Comment{},
-		}, e
+		}, nil
 	}
 	users := info.Users
 	for index, item := range follows.Comment {

@@ -155,7 +155,7 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 			return &types.FavoriteListResp{
 				StatusCode: common.REDIS_ERROR,
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			}, err3
+			}, nil
 		}
 		var videoLikedCnt int64 = 0
 		if len(videoLikedCntRecord) != 0 {

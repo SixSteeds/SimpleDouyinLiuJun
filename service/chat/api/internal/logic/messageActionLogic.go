@@ -47,7 +47,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 				StatusCode: 1,
 				StatusMsg:  "fail to send message",
 			}
-			return resp, fmt.Errorf("fail to send message, error = %s", err)
+			return resp, nil
 		}
 	default:
 		// unknown operation type
@@ -55,7 +55,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 			StatusCode: 1,
 			StatusMsg:  "fail to send message",
 		}
-		return resp, fmt.Errorf("unknown operation type")
+		return resp, nil
 	}
 
 	// send successfully
