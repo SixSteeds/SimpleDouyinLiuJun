@@ -28,7 +28,7 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 	}
 }
 
-func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) *types.MessageActionReqResp {
+func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.MessageActionReqResp, error) {
 	var resp *types.MessageActionReqResp
 	// get params
 	token := req.Token
@@ -48,7 +48,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) *types.M
 				StatusCode: 1,
 				StatusMsg:  "fail to send message",
 			}
-			return resp
+			return resp, fmt.Errorf("fail to send message, error = %s", err)
 		}
 	default:
 		// unknown operation type
@@ -56,7 +56,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) *types.M
 			StatusCode: 1,
 			StatusMsg:  "fail to send message",
 		}
-		return resp
+		return resp, fmt.Errorf("fail to send message, error = unknown operation type")
 	}
 
 	// send successfully
@@ -68,7 +68,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) *types.M
 		log.Fatal(err)
 	}
 
-	return resp
+	return resp, nil
 }
 
 func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) error {

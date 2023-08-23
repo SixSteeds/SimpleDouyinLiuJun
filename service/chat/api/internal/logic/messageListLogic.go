@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/service/chat/api/internal/svc"
 	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
+	"fmt"
 	"log"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -25,7 +26,7 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 	}
 }
 
-func (l *MessageListLogic) MessageList(req *types.MessageChatReq) *types.MessageChatReqResp {
+func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
 	var resp *types.MessageChatReqResp
 	// parse token
 	res, err := util.ParseToken(req.Token)
@@ -38,7 +39,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) *types.Message
 			StatusMsg:   "fail to parse token",
 			MessageList: nil,
 		}
-		return resp
+		return resp, fmt.Errorf("fail to parse token, error = %s", err)
 	}
 
 	// get params
@@ -67,7 +68,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) *types.Message
 			StatusMsg:   "fail to get chat message",
 			MessageList: nil,
 		}
-		return resp
+		return resp, fmt.Errorf("fail to get chat message, error = %s", err)
 	}
 
 	var messages []types.Message
@@ -90,5 +91,5 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) *types.Message
 	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
 		log.Fatal(err)
 	}
-	return resp
+	return resp, nil
 }
