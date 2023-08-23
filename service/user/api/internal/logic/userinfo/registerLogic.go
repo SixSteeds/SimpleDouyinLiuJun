@@ -3,10 +3,14 @@ package userinfo
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/gloabalType"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"encoding/json"
+	"fmt"
+	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -50,6 +54,25 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 			StatusCode: common.TOKEN_GENERATE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_GENERATE_ERROR),
 		}, err
+	}
+
+	ip := l.ctx.Value("ip")
+	ipString, ok := ip.(string)
+	message := gloabalType.LoginSuccessMessage{}
+	if ok {
+		fmt.Println("sdasdasdad")
+		message.IP = ipString
+		message.Logintime = time.Now()
+		message.UserId = data.Id
+		messageBytes, err := json.Marshal(message)
+		if err != nil {
+			l.Logger.Error("无法序列化 message 结构体为 JSON：", err)
+		}
+		if err := l.svcCtx.LoginLogKqPusherClient.Push(string(messageBytes)); err != nil {
+			l.Logger.Error("login方法kafka日志处理失败")
+		}
+	} else {
+		l.Logger.Error("nginx出问题啦")
 	}
 	return &types.RegisterResp{
 		StatusCode: common.OK,
