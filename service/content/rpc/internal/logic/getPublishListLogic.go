@@ -2,8 +2,9 @@ package logic
 
 import (
 	"context"
-	userPb "doushen_by_liujun/service/user/rpc/pb"
+	"doushen_by_liujun/internal/common"
 	"fmt"
+	"strconv"
 
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
@@ -41,44 +42,28 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 	// 将feedlist中的userId全部拿出来转换为一个数组
 	var userIds []int64
 	for _, feed := range *feedList {
+		IsFavorite, _ := l.svcCtx.RedisClient.HgetCtx(l.ctx, common.LikeCacheVideoLikedPrefix+strconv.FormatInt(feed.Id, 10), strconv.FormatInt(feed.UserId, 10))
+		if len(IsFavorite) != 0 {
+			if IsFavorite == "0" {
+				feed.IsFavorite = true
+			}
+		}
 		userIds = append(userIds, feed.UserId)
 	}
 
-	// 通过userIds获取到所有的user信息
-	usersByIds, err := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &userPb.GetUsersByIdsReq{
-		Ids:    userIds,
-		UserID: in.UserId,
-	})
-
-	//fmt.Println("完成feed流rpc逻辑11111111111")
 	var FeedVideos []*pb.FeedVideo
-	var feedUserList []pb.FeedUser
-	for _, user := range usersByIds.Users {
-		feedUserList = append(feedUserList, pb.FeedUser{
-			Id:              user.Id,
-			Name:            user.Name,
-			FollowCount:     &user.FollowCount,
-			FollowerCount:   &user.FollowerCount,
-			IsFollow:        user.IsFollow,
-			Avatar:          &user.Avatar,
-			BackgroundImage: &user.BackgroundImage,
-			Signature:       &user.Signature,
-			TotalFavorited:  &user.TotalFavorited,
-			WorkCount:       &user.WorkCount,
-			FavoriteCount:   &user.FavoriteCount,
-		})
-	}
-	for count, feed := range *feedList {
+
+	for _, feed := range *feedList {
 		FeedVideos = append(FeedVideos, &pb.FeedVideo{
 			Id:            feed.Id,
-			Author:        &feedUserList[count],
+			Author:        nil,
 			PlayUrl:       feed.PlayUrl,
 			CoverUrl:      feed.CoverUrl,
 			Title:         feed.Title,
 			FavoriteCount: feed.FavoriteCount,
 			CommentCount:  feed.CommentCount,
 			IsFavorite:    feed.IsFavorite,
-			NextTime:      feed.UpdateTime.Unix(),
+			NextTime:      feed.CreateTime.Unix(),
 		})
 	}
 	if err != nil {
@@ -89,5 +74,6 @@ func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.Publish
 	fmt.Println("退出GetPublishList rpc逻辑")
 	return &pb.PublishListResp{
 		VideoList: FeedVideos,
+		UserIds:   userIds,
 	}, nil
 }

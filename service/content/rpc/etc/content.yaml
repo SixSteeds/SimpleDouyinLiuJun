@@ -8,14 +8,6 @@ Etcd:
 DB:
   DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_content?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
-UserRpcConf:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:8090
-    Key: userRpc
-#    Pass: liujun
-#    User: root
-
 
 ContentKqPusherConf:
   Brokers:
@@ -30,3 +22,7 @@ Cache:
     Pass: liujun
 
 Mode: dev
+
+RedisConf:
+  Host: 0.0.0.0:8094
+  Pass: "liujun"
