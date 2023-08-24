@@ -16,20 +16,15 @@ type (
 	AddChatMessageReq      = pb.AddChatMessageReq
 	AddChatMessageResp     = pb.AddChatMessageResp
 	ChatMessage            = pb.ChatMessage
-	DelChatMessageReq      = pb.DelChatMessageReq
-	DelChatMessageResp     = pb.DelChatMessageResp
 	GetChatMessageByIdReq  = pb.GetChatMessageByIdReq
 	GetChatMessageByIdResp = pb.GetChatMessageByIdResp
+	Message                = pb.Message
 	SearchChatMessageReq   = pb.SearchChatMessageReq
 	SearchChatMessageResp  = pb.SearchChatMessageResp
-	UpdateChatMessageReq   = pb.UpdateChatMessageReq
-	UpdateChatMessageResp  = pb.UpdateChatMessageResp
 
 	Chat interface {
 		// -----------------------鑱婂ぉ淇℃伅-----------------------
 		AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error)
-		UpdateChatMessage(ctx context.Context, in *UpdateChatMessageReq, opts ...grpc.CallOption) (*UpdateChatMessageResp, error)
-		DelChatMessage(ctx context.Context, in *DelChatMessageReq, opts ...grpc.CallOption) (*DelChatMessageResp, error)
 		GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error)
 		SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error)
 	}
@@ -45,20 +40,10 @@ func NewChat(cli zrpc.Client) Chat {
 	}
 }
 
-
+// -----------------------鑱婂ぉ淇℃伅-----------------------
 func (m *defaultChat) AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error) {
 	client := pb.NewChatClient(m.cli.Conn())
 	return client.AddChatMessage(ctx, in, opts...)
-}
-
-func (m *defaultChat) UpdateChatMessage(ctx context.Context, in *UpdateChatMessageReq, opts ...grpc.CallOption) (*UpdateChatMessageResp, error) {
-	client := pb.NewChatClient(m.cli.Conn())
-	return client.UpdateChatMessage(ctx, in, opts...)
-}
-
-func (m *defaultChat) DelChatMessage(ctx context.Context, in *DelChatMessageReq, opts ...grpc.CallOption) (*DelChatMessageResp, error) {
-	client := pb.NewChatClient(m.cli.Conn())
-	return client.DelChatMessage(ctx, in, opts...)
 }
 
 func (m *defaultChat) GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error) {

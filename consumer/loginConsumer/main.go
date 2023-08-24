@@ -1,6 +1,7 @@
 package main
 
 import (
+	"doushen_by_liujun/consumer/loginConsumer/logic"
 	"flag"
 	"fmt"
 	"github.com/zeromicro/go-queue/kq"
@@ -8,7 +9,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 )
 
-var configFile = flag.String("f", "consumer/loginConsumer/etc/user.yaml", "the config file")
+var configFile = flag.String("f", "consumer/loginConsumer/etc/loginConsumer.yaml", "the config file")
 
 type KqConf struct {
 	service.ServiceConf
@@ -30,10 +31,8 @@ func main() {
 	var c KqConf
 	conf.MustLoad(*configFile, &c)
 
-	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(func(k, v string) error {
-		fmt.Printf("=> %s\n", v)
-		return nil
-	}))
+	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(logic.LoginLogHandle))
+
 	defer q.Stop()
 	fmt.Println("Starting consumer...")
 	q.Start()

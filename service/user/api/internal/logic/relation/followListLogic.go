@@ -32,7 +32,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FollowList: nil,
-		}, e
+		}, nil
 	}
 	follows, e := l.svcCtx.UserRpcClient.GetFollowsById(l.ctx, &pb.GetFollowsByIdReq{
 		Id: req.UserId,
@@ -42,7 +42,7 @@ func (l *FollowListLogic) FollowList(req *types.FollowListReq) (resp *types.Foll
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			FollowList: nil,
-		}, e
+		}, nil
 	}
 	var users []types.User
 	redisClient := l.svcCtx.RedisClient

@@ -22,31 +22,6 @@ func NewMediaServer(svcCtx *svc.ServiceContext) *MediaServer {
 	}
 }
 
-func (s *MediaServer) AddVideo(ctx context.Context, in *pb.AddVideoReq) (*pb.AddVideoResp, error) {
-	l := logic.NewAddVideoLogic(ctx, s.svcCtx)
-	return l.AddVideo(in)
-}
-
-func (s *MediaServer) UpdateVideo(ctx context.Context, in *pb.UpdateVideoReq) (*pb.UpdateVideoResp, error) {
-	l := logic.NewUpdateVideoLogic(ctx, s.svcCtx)
-	return l.UpdateVideo(in)
-}
-
-func (s *MediaServer) DelVideo(ctx context.Context, in *pb.DelVideoReq) (*pb.DelVideoResp, error) {
-	l := logic.NewDelVideoLogic(ctx, s.svcCtx)
-	return l.DelVideo(in)
-}
-
-func (s *MediaServer) GetVideoById(ctx context.Context, in *pb.GetVideoByIdReq) (*pb.GetVideoByIdResp, error) {
-	l := logic.NewGetVideoByIdLogic(ctx, s.svcCtx)
-	return l.GetVideoById(in)
-}
-
-func (s *MediaServer) SearchVideo(ctx context.Context, in *pb.SearchVideoReq) (*pb.SearchVideoResp, error) {
-	l := logic.NewSearchVideoLogic(ctx, s.svcCtx)
-	return l.SearchVideo(in)
-}
-
 func (s *MediaServer) SaveVideo(ctx context.Context, in *pb.SaveVideoReq) (*pb.SaveVideoResp, error) {
 	l := logic.NewSaveVideoLogic(ctx, s.svcCtx)
 	return l.SaveVideo(in)

@@ -154,6 +154,8 @@ func (m *defaultVideoModel) GetWorkCountByUserId(ctx context.Context, user_id in
 
 func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error) {
 	formatTime := time.Unix(*latest_time, 0)
+	fmt.Println("陶子勋来看看formatTime",formatTime)
+	fmt.Println(user_id,size)
 	var resp []*FeedVideo
 	query := fmt.Sprintf("SELECT   "+
 		"v.id,"+
@@ -170,6 +172,9 @@ func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, late
 		"ORDER BY v.create_time DESC "+
 		"LIMIT ?", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, formatTime, size)
+	fmt.Println("在model里的错误和数据")
+	fmt.Println(err)
+	fmt.Println(resp)
 	if err != nil {
 		return nil, err
 	}

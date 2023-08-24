@@ -2,8 +2,6 @@ Name: user
 Host: 127.0.0.1
 Port: 8081
 
-
-
 UserRpcConf:
   Etcd:
     Hosts:
@@ -12,24 +10,15 @@ UserRpcConf:
 #    Pass: liujun
 #    User: root
 
-ContentRpcConf:
-  Etcd:
-    Hosts:
-      - 127.0.0.1:8090
-    Key: contentRpc
-#    Pass: liujun
-#    User: root
 
-UserKqPusherConf:
+
+LoginLogKqPusherConf:
   Brokers:
-    - 127.0.0.1:9092
-    - 127.0.0.1:9093
-    - 127.0.0.1:9094
-    - 127.0.0.1:9095
-  Topic: user
+    - 127.0.0.1:8093
+  Topic: loginLog
 
 
 RedisConf:
-  Host: 0.0.0.0:8094
+  Host: 127.0.0.1:8094
   Pass: "liujun"
 

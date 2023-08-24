@@ -8,7 +8,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"strconv"
 )
 
@@ -29,14 +28,11 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_ParseToken_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.UserinfoResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			User:       types.User{},
-		}, err
+		}, nil
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
 	//IntUserId := 203
@@ -47,14 +43,11 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 	})
 	var user types.User
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_GetUserinfoById_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.UserinfoResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			User:       user,
-		}, err
+		}, nil
 	}
 	user = types.User{
 		UserId:          info.Userinfo.Id,
@@ -68,9 +61,6 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		WorkCount:       info.Userinfo.WorkCount,
 		FavoriteCount:   info.Userinfo.FavoriteCount,
 		TotalFavorited:  info.Userinfo.TotalFavorited, //查表
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_api_userinfo_userinfoLogic_Userinfo_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &types.UserinfoResp{
 		StatusCode: common.OK,

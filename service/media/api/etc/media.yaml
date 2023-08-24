@@ -2,6 +2,7 @@ Name: media
 Host: 0.0.0.0
 Port: 8083
 MaxBytes: 1048576000
+Timeout: 30000
 
 
 

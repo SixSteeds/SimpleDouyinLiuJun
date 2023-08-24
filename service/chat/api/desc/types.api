@@ -10,7 +10,7 @@ type (
     MessageChatReq {
         Token string `form:"token"`           // 用户鉴权token
         ToUserId int64 `form:"to_user_id"`    // 对方用户id
-        preMsgTime int64 `form:"pre_msg_time"`//上次最新消息的时间（新增字段-apk更新中）
+        PreMsgTime int64 `form:"pre_msg_time"`//上次最新消息的时间（新增字段-apk更新中）
     }
     MessageChatReqResp {
         StatusCode int32 `json:"status_code"`          // 状态码，0-成功，其他值-失败
@@ -21,10 +21,10 @@ type (
 
 type (
     MessageActionReq {
-        Token string `json:"token"`           // 用户鉴权token
-        ToUserId int64 `json:"to_user_id"`    // 对方用户id
-        Action_type int32 `json:"action_type"`// 1-发送消息
-        Content string `json:"content"`       // 消息内容
+        Token string `form:"token"`           // 用户鉴权token
+        ToUserId int64 `form:"to_user_id"`    // 对方用户id
+        Action_type int32 `form:"action_type"`// 1-发送消息
+        Content string `form:"content"`       // 消息内容
     }
 
     MessageActionReqResp {

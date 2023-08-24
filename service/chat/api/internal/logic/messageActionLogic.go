@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/rpc/pb"
+	"doushen_by_liujun/service/user/rpc/user"
 	"fmt"
 	"log"
 
@@ -27,7 +28,8 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 	}
 }
 
-func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *types.MessageActionReqResp, err error) {
+func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.MessageActionReqResp, error) {
+	var resp *types.MessageActionReqResp
 	// get params
 	token := req.Token
 	toUserID := req.ToUserId
@@ -38,8 +40,8 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 	switch actionType {
 	case 1:
 		// send message
-		if err = l.SendMessage(token, content, toUserID); err != nil {
-			if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_SendMessage_false"); err != nil {
+		if err := l.SendMessage(token, content, toUserID); err != nil {
+			if err = l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_MessageAction_SendMessage_false"); err != nil {
 				log.Fatal(err)
 			}
 			resp = &types.MessageActionReqResp{
@@ -54,7 +56,7 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 			StatusCode: 1,
 			StatusMsg:  "fail to send message",
 		}
-		return resp, fmt.Errorf("unknown operation type")
+		return resp, fmt.Errorf("fail to send message, error = unknown operation type")
 	}
 
 	// send successfully
@@ -70,10 +72,10 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (resp *t
 }
 
 func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) error {
-	// TODO：get permission
+	// get permission
 	res, err := util.ParseToken(token)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_ParseToken_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_ParseToken_false"); err != nil {
 			log.Fatal(err)
 		}
 		return fmt.Errorf("fail to parse token, error = %s", err)
@@ -82,7 +84,18 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 	// get userId
 	userId := res.UserID
 
-	// TODO：checkUserExists
+	// checkUserExists
+	userReq := user.GetUserinfoByIdReq{
+		Id:     toUserId,
+		UserID: userId,
+	}
+	response, userInfoErr := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &userReq)
+	if userInfoErr != nil {
+		return fmt.Errorf("fail to getUserInfo by id, error = %s", userInfoErr)
+	}
+	if response == nil {
+		return fmt.Errorf("No user with id %s", toUserId)
+	}
 
 	// add message
 	request := &pb.AddChatMessageReq{
@@ -93,10 +106,9 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 	}
 	_, err = l.svcCtx.ChatRpcClient.AddChatMessage(l.ctx, request)
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_AddChatMessage_false"); err != nil {
+		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageActionLogic_SendMessage_AddChatMessage_false"); err != nil {
 			log.Fatal(err)
 		}
-
 		logx.Error(err)
 		return fmt.Errorf("fail to send message, error = %s", err)
 	}

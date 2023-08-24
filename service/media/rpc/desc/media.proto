@@ -8,78 +8,13 @@ package pb;
 // Messages
 // ------------------------------------
 
-//--------------------------------瑙嗛淇℃伅--------------------------------
-message Video {
-  int64 id = 1; //涓婚敭
-  int64 userId = 2; //瑙嗛浣滆€卛d
-  string playUrl = 3; //瑙嗛鎾斁鍦板潃
-  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
-  string title = 5; //瑙嗛鏍囬
-  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
-}
-
-message AddVideoReq {
-  int64 userId = 1; //瑙嗛浣滆€卛d
-  string playUrl = 2; //瑙嗛鎾斁鍦板潃
-  string coverUrl = 3; //瑙嗛灏侀潰鍦板潃
-  string title = 4; //瑙嗛鏍囬
-  int64 isDelete = 5; //閫昏緫鍒犻櫎
-}
-
-message AddVideoResp {
-}
-
-message UpdateVideoReq {
-  int64 id = 1; //涓婚敭
-  int64 userId = 2; //瑙嗛浣滆€卛d
-  string playUrl = 3; //瑙嗛鎾斁鍦板潃
-  string coverUrl = 4; //瑙嗛灏侀潰鍦板潃
-  string title = 5; //瑙嗛鏍囬
-  int64 isDelete = 6; //閫昏緫鍒犻櫎
-}
-
-message UpdateVideoResp {
-}
-
-message DelVideoReq {
-  int64 id = 1; //id
-}
-
-message DelVideoResp {
-}
-
-message GetVideoByIdReq {
-  int64 id = 1; //id
-}
-
-message GetVideoByIdResp {
-  Video video = 1; //video
-}
-
-message SearchVideoReq {
-  int64 page = 1; //page
-  int64 limit = 2; //limit
-  int64 id = 3; //涓婚敭
-  int64 userId = 4; //瑙嗛浣滆€卛d
-  string playUrl = 5; //瑙嗛鎾斁鍦板潃
-  string coverUrl = 6; //瑙嗛灏侀潰鍦板潃
-  string title = 7; //瑙嗛鏍囬
-  int64 createTime = 8; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 9; //璇ユ潯鏈€鍚庝竴娆℃洿鏂版椂闂?  int64 isDelete = 10; //閫昏緫鍒犻櫎
-}
-
-message SearchVideoResp {
-  repeated Video video = 1; //video
-}
-
 
 message SaveVideoReq {
-  int64 userId = 1; //瑙嗛浣滆€卛d
-  string playUrl = 2; //瑙嗛鎾斁鍦板潃
-  string coverUrl = 3; //瑙嗛灏侀潰鍦板潃
-  string title = 4; //瑙嗛鏍囬
-  int64 id = 6; //瑙嗛浣滆€卛d
+  int64 userId = 1;
+  string playUrl = 2;
+  string coverUrl = 3;
+  string title = 4;
+  int64 id = 6;
 }
 
 message SaveVideoResp {
@@ -91,13 +26,6 @@ message SaveVideoResp {
 // ------------------------------------ 
 
 service media{
-
-  rpc AddVideo(AddVideoReq) returns (AddVideoResp);
-
-  rpc UpdateVideo(UpdateVideoReq) returns (UpdateVideoResp);
-  rpc DelVideo(DelVideoReq) returns (DelVideoResp);
-  rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp);
-  rpc SearchVideo(SearchVideoReq) returns (SearchVideoResp);
 
   rpc SaveVideo(SaveVideoReq) returns (SaveVideoResp);
 

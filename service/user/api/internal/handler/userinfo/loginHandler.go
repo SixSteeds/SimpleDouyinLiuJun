@@ -1,6 +1,7 @@
 package userinfo
 
 import (
+	"context"
 	"net/http"
 
 	"doushen_by_liujun/service/user/api/internal/logic/userinfo"
@@ -17,7 +18,8 @@ func LoginHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			return
 		}
 
-		l := userinfo.NewLoginLogic(r.Context(), svcCtx)
+		ctx := context.WithValue(r.Context(), "ip", r.Header.Get("X-Real-IP"))
+		l := userinfo.NewLoginLogic(ctx, svcCtx)
 		resp, err := l.Login(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

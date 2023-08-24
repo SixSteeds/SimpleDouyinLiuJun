@@ -3,16 +3,16 @@ syntax = "proto3";
 option go_package = "./pb";
 
 package pb;
-//    goctl rpc protoc user.proto --go_out=../ --go-grpc_out=../ --zrpc_out=../
+
 // ------------------------------------ 
 // Messages
 // ------------------------------------ 
 
-//--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
+
 message Follows {
   int64 FollowerCount = 1;
   int64 FollowCount = 7;
-  int64 Id = 2; //鍏虫敞鐨勪汉
+  int64 Id = 2;
   string UserName = 3;
   string Avator = 4;
   string BackgroundImage = 5;
@@ -21,21 +21,13 @@ message Follows {
 }
 
 message AddFollowsReq {
-  string userId = 1; //鍏虫敞鐨勪汉
-  string followId = 2; //琚叧娉ㄧ殑浜?  int64 isDelete = 3; //閫昏緫鍒犻櫎
+  string userId = 1;
+  string followId = 2;
 }
 
 message AddFollowsResp {
 }
 
-message UpdateFollowsReq {
-  int64 id = 1; //涓婚敭
-  string userId = 2; //鍏虫敞鐨勪汉
-  string followId = 3; //琚叧娉ㄧ殑浜?  int64 isDelete = 4; //閫昏緫鍒犻櫎
-}
-
-message UpdateFollowsResp {
-}
 
 message DelFollowsReq {
   string userId = 1;
@@ -60,13 +52,7 @@ message GetFollowersByIdResp {
   repeated Follows follows = 1; //follows
 }
 
-message GetFollowsCountByIdReq{
-  int64 id = 1; //id
-}
 
-message GetFollowsCountByIdResp {
-  int64 count = 1; //follows
-}
 message GetFollowersCountByIdReq{
   int64 id = 1; //id
 }
@@ -82,79 +68,40 @@ message GetFriendsByIdResp {
   repeated Follows follows = 1; //follows
 }
 
-message SearchFollowsReq {
-  int64 page = 1; //page
-  int64 limit = 2; //limit
-  int64 id = 3; //涓婚敭
-  string userId = 4; //鍏虫敞鐨勪汉
-  string followId = 5; //琚叧娉ㄧ殑浜?  int64 createTime = 6; //璇ユ潯璁板綍鍒涘缓鏃堕棿
-  int64 updateTime = 7; //璇ユ潯鏈€鍚庝竴娆′俊鎭慨鏀规椂闂?  int64 isDelete = 8; //閫昏緫鍒犻櫎
-}
 
-message SearchFollowsResp {
-  repeated Follows follows = 1; //follows
-}
 
-//--------------------------------鐢ㄦ埛鍩烘湰淇℃伅--------------------------------
 message Userinfo {
-  int64 id = 1; //涓婚敭
-  int64 follow_count  = 11;
-  int64 follower_count  = 12;
+  int64 id = 1;
+  int64 follow_count = 11;
+  int64 follower_count = 12;
   bool is_follow = 13;
-  string username = 2; //璐﹀彿
-  string avatar = 4; //澶村儚
-  string backgroundImage = 5; //澶村儚
-  string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64   WorkCount=7;
-  int64   FavoriteCount=8;
-  int64   TotalFavorited=9;
+  string username = 2;
+  string avatar = 4;
+  string backgroundImage = 5;
+  string signature = 6;
+  int64   WorkCount = 7;
+  int64   FavoriteCount = 8;
+  int64   TotalFavorited = 9;
 }
 message Usersinfo {
   int64 id = 1; //涓婚敭
-  int64 follow_count  = 11;
-  int64 follower_count  = 12;
+  int64 follow_count = 11;
+  int64 follower_count = 12;
   bool is_follow = 13;
-  string username = 2; //璐﹀彿
-  string avatar = 4; //澶村儚
-  string backgroundImage = 5; //澶村儚
-  string signature = 6; //涓汉绠€浠?  int64 createTime = 7; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64   WorkCount=7;
-  int64   FavoriteCount=8;
-  int64   TotalFavorited=9;
-  string name = 3; //璐﹀彿
+  string username = 2;
+  string avatar = 4;
+  string backgroundImage = 5;
+  string signature = 6;
+  int64   WorkCount = 7;
+  int64   FavoriteCount = 8;
+  int64   TotalFavorited = 9;
+  string name = 3;
 }
 
-message AddUserinfoReq {
-  string username = 1; //璐﹀彿
-  string password = 2; //瀵嗙爜
-  string avatar = 3; //澶村儚
-  string backgroundImage = 4; //澶村儚
-  string signature = 5; //涓汉绠€浠?  int64 isDelete = 6; //閫昏緫鍒犻櫎
-  string name = 7; //鐢ㄦ埛鏄电О
-}
 
-message AddUserinfoResp {
-}
 
-message UpdateUserinfoReq {
-  int64 id = 1; //涓婚敭
-  string username = 2; //璐﹀彿
-  string password = 3; //瀵嗙爜
-  string avatar = 4; //澶村儚
-  string backgroundImage = 5; //澶村儚
-  string signature = 6; //涓汉绠€浠?  int64 isDelete = 7; //閫昏緫鍒犻櫎
-  string name = 8; //鐢ㄦ埛鏄电О
-}
 
-message UpdateUserinfoResp {
-}
 
-message DelUserinfoReq {
-  int64 id = 1; //id
-}
-
-message DelUserinfoResp {
-}
 message CheckIsFollowReq{
   string userid = 1; //id
   string followid = 2;
@@ -174,41 +121,13 @@ message GetUserinfoByIdResp {
 
 message GetUsersByIdsReq {
   repeated int64 ids = 1; //id
-  int64 userID=2;//当前用户
+  int64 userID = 2;//当前用户
 }
 
 message GetUsersByIdsResp {
   repeated Usersinfo users = 1; //userinfo
 }
-message SearchUserinfoReq {
-  int64 page = 1; //page
-  int64 limit = 2; //limit
-  int64 id = 3; //涓婚敭
-  string username = 4; //璐﹀彿
-  string password = 5; //瀵嗙爜
-  string avatar = 6; //澶村儚
-  string backgroundImage = 7; //澶村儚
-  string signature = 8; //涓汉绠€浠?  int64 createTime = 9; //鐢ㄦ埛鍒涘缓鏃堕棿
-  int64 updateTime = 10; //鏈€鍚庝竴娆′俊鎭慨鏀规椂闂?  int64 isDelete = 11; //閫昏緫鍒犻櫎
-  string name = 12; //鐢ㄦ埛鏄电О
-}
 
-message SearchUserinfoResp {
-  repeated Userinfo userinfo = 1; //userinfo
-}
-
-//message User {
-//  int64 id = 1;
-//  string username = 2;
-//  string password = 3;
-//  string avatar = 4;
-//  string backgroundImage = 5;
-//  string signature = 6;
-//  int64 createTime = 7;
-//  int64 updateTime = 8;
-//  int64 isDelete = 9;
-//  string name = 10;
-//}
 
 message SaveUserReq{
   int64 id = 1;
@@ -235,7 +154,7 @@ message CheckUserResp{
 }
 
 message GetUserByIdReq {
-  int64 userID=1; //用户id
+  int64 userID = 1; //用户id
 }
 
 message GetUserByIdResp {
@@ -258,27 +177,19 @@ message GetUserListByIdListResp{
 
 service user{
 
-  //-----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
   rpc AddFollows(AddFollowsReq) returns (AddFollowsResp);
-  rpc UpdateFollows(UpdateFollowsReq) returns (UpdateFollowsResp);
   rpc DelFollows(DelFollowsReq) returns (DelFollowsResp);
   rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
-  rpc SearchFollows(SearchFollowsReq) returns (SearchFollowsResp);
   rpc SaveUser(SaveUserReq) returns (SaveUserResp);
   rpc CheckUser(CheckUserReq) returns (CheckUserResp);
-  //-----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
-  rpc AddUserinfo(AddUserinfoReq) returns (AddUserinfoResp);
-  rpc UpdateUserinfo(UpdateUserinfoReq) returns (UpdateUserinfoResp);
-  rpc DelUserinfo(DelUserinfoReq) returns (DelUserinfoResp);
+
+
   rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);
   rpc GetUsersByIds(GetUsersByIdsReq) returns (GetUsersByIdsResp);
-  rpc SearchUserinfo(SearchUserinfoReq) returns (SearchUserinfoResp);
   rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
-  rpc GetFollowsCountById(GetFollowsCountByIdReq) returns (GetFollowsCountByIdResp);
   rpc GetFollowersCountById(GetFollowersCountByIdReq) returns (GetFollowersCountByIdResp);
   rpc CheckIsFollow(CheckIsFollowReq) returns (CheckIsFollowResp);
   rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
-
   rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp);
   rpc GetUserListByIdList(GetUserListByIdListReq) returns (GetUserListByIdListResp);
 }

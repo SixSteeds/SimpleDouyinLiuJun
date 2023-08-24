@@ -1,9 +1,48 @@
 
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Folders
+_obj
+_test
+
+# Architecture specific extensions/prefixes
+*.[568vq]
+[568vq].out
+
+# Dependency directories
+/vendor/
+/go.sum
+
+# Testing
+/test
+
+# Output files
+*.exe
+*.test
+*.prof
+
+# IDEs
+.idea/
+.vscode/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+
 # IntelliJ project files
 .idea
 *.iml
 out
 gen
+
+
+
+# personna files
 .log
 *.log
-script/conf/nginx_conf/log/*.log
+script/data/redisData
+script/data/kafka

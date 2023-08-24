@@ -4,9 +4,16 @@ const DefaultPass = "liujun"
 
 // jwt相关
 const JwtSecret = "bGl1anVu"
-
 const JwtExpire = 7200
 const OrganizationName = " SixSteeds"
+
+// MinIO相关
+const HTTP = "http://"
+const MinIOEndPoint = "8.137.50.160:9000"
+const MinIOAccessKey = "taozixun"
+const MinIOSecretKey = "taozixun"
+const MinIOVideoBucketName = "dousheng-video"
+const MinIOCoverBucketName = "dousheng-cover"
 
 // 七牛云相关
 const DefaultBackImage = " https://staraway.love/02c05856-e60c-44a0-9e85-6c2ba7ae9e0942d98a82be40d551ce6e123abbd0718292f80a71_raw.jpg"
@@ -33,7 +40,9 @@ redis缓存前缀
 
 // 计数服务缓存
 const CntCacheUserLikePrefix = "CntCache:user_like_cnt:"
+
 const CntCacheVideoLikedPrefix = "CntCache:video_liked_cnt:"
+
 const CntCacheVideoCommentedPrefix = "CntCache:video_commented_cnt:"
 
 // 点赞记录缓存

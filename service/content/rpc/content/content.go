@@ -17,15 +17,11 @@ type (
 	AddCommentResp                    = pb.AddCommentResp
 	AddFavoriteReq                    = pb.AddFavoriteReq
 	AddFavoriteResp                   = pb.AddFavoriteResp
-	AddVideoReq                       = pb.AddVideoReq
-	AddVideoResp                      = pb.AddVideoResp
 	Comment                           = pb.Comment
 	DelCommentReq                     = pb.DelCommentReq
 	DelCommentResp                    = pb.DelCommentResp
 	DelFavoriteReq                    = pb.DelFavoriteReq
 	DelFavoriteResp                   = pb.DelFavoriteResp
-	DelVideoReq                       = pb.DelVideoReq
-	DelVideoResp                      = pb.DelVideoResp
 	Favorite                          = pb.Favorite
 	FeedListReq                       = pb.FeedListReq
 	FeedListResp                      = pb.FeedListResp
@@ -33,8 +29,6 @@ type (
 	FeedVideo                         = pb.FeedVideo
 	GetCommentByIdReq                 = pb.GetCommentByIdReq
 	GetCommentByIdResp                = pb.GetCommentByIdResp
-	GetFavoriteByIdReq                = pb.GetFavoriteByIdReq
-	GetFavoriteByIdResp               = pb.GetFavoriteByIdResp
 	GetUserFavoritedCntByIdReq        = pb.GetUserFavoritedCntByIdReq
 	GetUserFavoritedCntByIdResp       = pb.GetUserFavoritedCntByIdResp
 	GetUserPublishAndLikedCntByIdReq  = pb.GetUserPublishAndLikedCntByIdReq
@@ -47,39 +41,21 @@ type (
 	GetWorkCountByUserIdResp          = pb.GetWorkCountByUserIdResp
 	PublishListReq                    = pb.PublishListReq
 	PublishListResp                   = pb.PublishListResp
-	SearchCommentReq                  = pb.SearchCommentReq
-	SearchCommentResp                 = pb.SearchCommentResp
 	SearchFavoriteReq                 = pb.SearchFavoriteReq
 	SearchFavoriteResp                = pb.SearchFavoriteResp
-	SearchVideoReq                    = pb.SearchVideoReq
-	SearchVideoResp                   = pb.SearchVideoResp
-	UpdateCommentReq                  = pb.UpdateCommentReq
-	UpdateCommentResp                 = pb.UpdateCommentResp
 	UpdateFavoriteReq                 = pb.UpdateFavoriteReq
 	UpdateFavoriteResp                = pb.UpdateFavoriteResp
-	UpdateVideoReq                    = pb.UpdateVideoReq
-	UpdateVideoResp                   = pb.UpdateVideoResp
 	Video                             = pb.Video
 
 	Content interface {
-		// -----------------------璇勮淇℃伅-----------------------
 		AddComment(ctx context.Context, in *AddCommentReq, opts ...grpc.CallOption) (*AddCommentResp, error)
-		UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 		DelComment(ctx context.Context, in *DelCommentReq, opts ...grpc.CallOption) (*DelCommentResp, error)
 		GetCommentById(ctx context.Context, in *GetCommentByIdReq, opts ...grpc.CallOption) (*GetCommentByIdResp, error)
-		SearchComment(ctx context.Context, in *SearchCommentReq, opts ...grpc.CallOption) (*SearchCommentResp, error)
-		// -----------------------鐐硅禐淇℃伅-----------------------
 		AddFavorite(ctx context.Context, in *AddFavoriteReq, opts ...grpc.CallOption) (*AddFavoriteResp, error)
 		UpdateFavorite(ctx context.Context, in *UpdateFavoriteReq, opts ...grpc.CallOption) (*UpdateFavoriteResp, error)
 		DelFavorite(ctx context.Context, in *DelFavoriteReq, opts ...grpc.CallOption) (*DelFavoriteResp, error)
-		GetFavoriteById(ctx context.Context, in *GetFavoriteByIdReq, opts ...grpc.CallOption) (*GetFavoriteByIdResp, error)
 		SearchFavorite(ctx context.Context, in *SearchFavoriteReq, opts ...grpc.CallOption) (*SearchFavoriteResp, error)
-		// -----------------------瑙嗛淇℃伅-----------------------
-		AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error)
-		UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
-		DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 		GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
-		SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 		GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
 		GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 		GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
@@ -99,15 +75,9 @@ func NewContent(cli zrpc.Client) Content {
 	}
 }
 
-// -----------------------璇勮淇℃伅-----------------------
 func (m *defaultContent) AddComment(ctx context.Context, in *AddCommentReq, opts ...grpc.CallOption) (*AddCommentResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.AddComment(ctx, in, opts...)
-}
-
-func (m *defaultContent) UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.UpdateComment(ctx, in, opts...)
 }
 
 func (m *defaultContent) DelComment(ctx context.Context, in *DelCommentReq, opts ...grpc.CallOption) (*DelCommentResp, error) {
@@ -120,12 +90,6 @@ func (m *defaultContent) GetCommentById(ctx context.Context, in *GetCommentByIdR
 	return client.GetCommentById(ctx, in, opts...)
 }
 
-func (m *defaultContent) SearchComment(ctx context.Context, in *SearchCommentReq, opts ...grpc.CallOption) (*SearchCommentResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.SearchComment(ctx, in, opts...)
-}
-
-// -----------------------鐐硅禐淇℃伅-----------------------
 func (m *defaultContent) AddFavorite(ctx context.Context, in *AddFavoriteReq, opts ...grpc.CallOption) (*AddFavoriteResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.AddFavorite(ctx, in, opts...)
@@ -141,40 +105,14 @@ func (m *defaultContent) DelFavorite(ctx context.Context, in *DelFavoriteReq, op
 	return client.DelFavorite(ctx, in, opts...)
 }
 
-func (m *defaultContent) GetFavoriteById(ctx context.Context, in *GetFavoriteByIdReq, opts ...grpc.CallOption) (*GetFavoriteByIdResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.GetFavoriteById(ctx, in, opts...)
-}
-
 func (m *defaultContent) SearchFavorite(ctx context.Context, in *SearchFavoriteReq, opts ...grpc.CallOption) (*SearchFavoriteResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.SearchFavorite(ctx, in, opts...)
 }
 
-// -----------------------瑙嗛淇℃伅-----------------------
-func (m *defaultContent) AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.AddVideo(ctx, in, opts...)
-}
-
-func (m *defaultContent) UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.UpdateVideo(ctx, in, opts...)
-}
-
-func (m *defaultContent) DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.DelVideo(ctx, in, opts...)
-}
-
 func (m *defaultContent) GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.GetVideoById(ctx, in, opts...)
-}
-
-func (m *defaultContent) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
-	client := pb.NewContentClient(m.cli.Conn())
-	return client.SearchVideo(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error) {

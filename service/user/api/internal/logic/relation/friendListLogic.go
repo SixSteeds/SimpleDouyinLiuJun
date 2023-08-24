@@ -7,7 +7,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/svc"
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"log"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,20 +33,17 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			FriendUser: nil,
-		}, e
+		}, nil
 	}
 	friends, err := l.svcCtx.UserRpcClient.GetFriendsById(l.ctx, &pb.GetFriendsByIdReq{
 		Id: req.UserId,
 	})
 	if err != nil {
-		if err := l.svcCtx.KqPusherClient.Push("user_api_relation_friendListLogic_FriendList_GetFriendsById_false"); err != nil {
-			log.Fatal(err)
-		}
 		return &types.FriendListResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			FriendUser: nil,
-		}, err
+		}, nil
 	}
 	var users []types.FriendUser
 	redisClient := l.svcCtx.RedisClient
@@ -84,9 +80,6 @@ func (l *FriendListLogic) FriendList(req *types.FriendListReq) (resp *types.Frie
 			TotalFavorited:  int64(totalFavorited),
 		}
 		users = append(users, user)
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_api_relation_friendListLogic_FriendList_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &types.FriendListResp{
 		StatusCode: common.OK,

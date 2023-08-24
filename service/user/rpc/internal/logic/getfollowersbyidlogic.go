@@ -6,7 +6,6 @@ import (
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
-	"log"
 	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -31,9 +30,6 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 	follows, err := l.svcCtx.FollowsModel.FindByFollowId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowersByIdLogic_GetFollowersById_FindByFollowId_false"); err != nil {
-		log.Fatal(err)
 	}
 	var resp []*pb.Follows
 	redisClient := l.svcCtx.RedisClient
@@ -82,9 +78,6 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 			Signature:       item.Signature.String,
 			IsFollow:        item.IsFollow,
 		})
-	}
-	if err := l.svcCtx.KqPusherClient.Push("user_rpc_getFollowersByIdLogic_GetFollowersById_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.GetFollowersByIdResp{
 		Follows: resp,
