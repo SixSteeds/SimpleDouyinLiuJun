@@ -99,9 +99,6 @@ message Usersinfo {
 }
 
 
-
-
-
 message CheckIsFollowReq{
   string userid = 1; //id
   string followid = 2;

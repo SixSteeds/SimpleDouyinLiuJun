@@ -5,6 +5,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
+	userPb "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
@@ -29,7 +30,7 @@ func NewPublishListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Publi
 
 func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.PublishListResp, err error) {
 	// todo: add your logic here and delete this line
-	fmt.Println("进入feed流api逻辑")
+	fmt.Println("进入publisher api逻辑")
 	var userId int64
 	token, err := util.ParseToken(req.Token)
 	if err != nil {
@@ -38,32 +39,59 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 	} else {
 		userId = token.UserID
 	}
-	list, err := l.svcCtx.ContentRpcClient.GetPublishList(l.ctx, &pb.PublishListReq{
+	data, err := l.svcCtx.ContentRpcClient.GetPublishList(l.ctx, &pb.PublishListReq{
 		CheckUserId: req.UserId,
 		UserId:      userId,
 	})
-
 	if err != nil {
 		return &types.PublishListResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 		}, nil
 	}
-	if list == nil {
+	if data == nil {
 		return &types.PublishListResp{
 			StatusCode: common.OK,
 			StatusMsg:  common.MapErrMsg(common.OK),
 		}, nil
 	}
 
-	videoList := list.VideoList
+	// 通过userIds获取到所有的user信息
+	usersByIds, err := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &userPb.GetUsersByIdsReq{
+		Ids:    data.UserIds,
+		UserID: userId,
+	})
+	if err != nil {
+		return &types.PublishListResp{
+			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+		}, nil
+	}
+	var feedUserList []*pb.FeedUser
+	for _, user := range usersByIds.Users {
+		feedUserList = append(feedUserList, &pb.FeedUser{
+			Id:              user.Id,
+			Name:            user.Name,
+			FollowCount:     &user.FollowCount,
+			FollowerCount:   &user.FollowerCount,
+			IsFollow:        user.IsFollow,
+			Avatar:          &user.Avatar,
+			BackgroundImage: &user.BackgroundImage,
+			Signature:       &user.Signature,
+			TotalFavorited:  &user.TotalFavorited,
+			WorkCount:       &user.WorkCount,
+			FavoriteCount:   &user.FavoriteCount,
+		})
+	}
 
-	fmt.Println("完成feed流rpc逻辑")
+	videoList := data.VideoList
+
+	fmt.Println("完成publisher 流rpc逻辑")
 	var FeedVideos []types.Video
 
-	for _, video := range videoList {
+	for index, video := range videoList {
 		fmt.Println("到这了44444")
-		user := video.Author
+		user := feedUserList[index]
 		//在这打印一下author吧，
 		fmt.Println("到这了11111111111")
 		fmt.Println(user)

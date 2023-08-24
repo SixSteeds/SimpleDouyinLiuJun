@@ -2,6 +2,7 @@ package config
 
 import (
 	"github.com/zeromicro/go-zero/core/stores/cache"
+	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/zrpc"
 )
 
@@ -10,7 +11,7 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
-	UserRpcConf         zrpc.RpcClientConf
+	RedisConf           redis.RedisConf
 	ContentKqPusherConf struct {
 		Brokers []string
 		Topic   string

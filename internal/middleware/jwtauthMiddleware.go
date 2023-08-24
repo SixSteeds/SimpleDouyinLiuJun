@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"doushen_by_liujun/internal/util"
+	"github.com/zeromicro/go-zero/rest/httpx"
 	"net/http"
 )
 
@@ -13,13 +15,11 @@ func NewJwtAuthMiddleware() *JwtAuthMiddleware {
 
 func (m *JwtAuthMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// TODO generate middleware implement function, delete after code implementation
-		//token := r.URL.Query().Get("token")
-		//mc, err := util.ParseToken(token)
-		//if err != nil {
-		//	httpx.ErrorCtx(r.Context(), w, err)
-		//}
-		//logx.Error(mc.Username)
+		token := r.URL.Query().Get("token")
+		_, err := util.ParseToken(token)
+		if err != nil {
+			httpx.ErrorCtx(r.Context(), w, err)
+		}
 		//Pass through to next handler
 		next(w, r)
 	}

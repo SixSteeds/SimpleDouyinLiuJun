@@ -82,7 +82,10 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 		Id:       snowId,
 	})
 	if err != nil {
-		return nil, err
+		return &types.UploadResp{
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DB_ERROR,
+		}, nil
 	}
 	_, err = l.svcCtx.RedisClient.Incr(common.CntCacheUserWorkPrefix + strconv.FormatInt(token.UserID, 10))
 	if err != nil {
