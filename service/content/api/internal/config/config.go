@@ -15,4 +15,8 @@ type Config struct {
 		Brokers []string
 		Topic   string
 	}
+	UploadPersistentKqPusherConf struct {
+		Brokers []string
+		Topic   string
+	}
 }

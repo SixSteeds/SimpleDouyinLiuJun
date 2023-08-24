@@ -45,9 +45,7 @@ redis缓存前缀
 
 // 计数服务缓存
 const CntCacheUserLikePrefix = "CntCache:user_like_cnt:"
-
 const CntCacheVideoLikedPrefix = "CntCache:video_liked_cnt:"
-
 const CntCacheVideoCommentedPrefix = "CntCache:video_commented_cnt:"
 
 // 点赞记录缓存
@@ -67,3 +65,10 @@ const FollowNum = "followNum_"
 
 // 用户粉丝数量
 const FollowerNum = "followerNum_"
+
+/*
+日志文件名
+*/
+
+const USER_SECURITY = "userSecurity"
+const UPLOAD_SECURITY = "uploadSecurity"
