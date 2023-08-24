@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"fmt"
+	"context"
 	"net/http"
 
 	"doushen_by_liujun/service/media/api/internal/logic"
@@ -33,8 +33,8 @@ func uploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			req.Data = append(req.Data, buf[:n]...)
 		}
 		//fmt.Println(req)
-		fmt.Println("uploadHandler err5555")
-		l := logic.NewUploadLogic(r.Context(), svcCtx)
+		ctx := context.WithValue(r.Context(), "ip", r.Header.Get("X-Real-IP"))
+		l := logic.NewUploadLogic(ctx, svcCtx)
 		resp, err := l.Upload(&req)
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)

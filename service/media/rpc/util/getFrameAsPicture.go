@@ -138,7 +138,7 @@ func GetFrameByDocker(inFileName string) error {
 	return err
 }
 
-func PutPictureByDocker(inFileName string) {
+func PutPictureByDocker(inFileName string) error {
 	initMinio()
 	dir, err := os.Getwd()
 	if err != nil {
@@ -150,7 +150,7 @@ func PutPictureByDocker(inFileName string) {
 	pictureBytes, err := os.ReadFile(inFileName + ".jpg")
 	if err != nil {
 		fmt.Println("无法读取视频文件:", err)
-		return
+		return err
 	}
 	// 打印视频字节切片的长度
 	fmt.Println("图片字节切片长度:", len(pictureBytes))
@@ -166,21 +166,23 @@ func PutPictureByDocker(inFileName string) {
 		})
 	if err != nil {
 		log.Fatalln("图片上传失败", err)
-		return
+		return err
 	}
 	fmt.Println("图片上传成功")
 	//获取对象预签名url
 	URL, err := client.PresignedGetObject(context.Background(), common.MinIOCoverBucketName, saveName, time.Second*24*60*60, nil)
 	if err != nil {
 		log.Fatalln("获取url失败", err)
-		return
+		return err
 	}
 	fmt.Println("URL获取成功,URL为：", URL)
 	//删除本地图片
 	err = os.Remove(inFileName + ".jpg")
 	if err != nil {
 		fmt.Println(err)
+		return err
 	} else {
 		fmt.Println("临时图片文件删除成功")
 	}
+	return nil
 }
