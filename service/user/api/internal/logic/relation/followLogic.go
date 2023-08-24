@@ -38,6 +38,38 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 		}, nil
 	}
+	//修正redis中数据，判断是关注还是取消关注
+	redisClient := l.svcCtx.RedisClient
+	followKey := common.FollowNum + strconv.Itoa(int(logger.UserID))
+	followerKey := common.FollowerNum + strconv.Itoa(int(req.ToUserId))
+	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
+	followerRecord, _ := redisClient.GetCtx(l.ctx, followerKey)
+	rand.Seed(time.Now().UnixNano())
+	expiration := 3000 + rand.Intn(600)
+	if req.ActionType == 1 {
+		if len(followRecord) != 0 { //有记录更新一下计数，没有就算了,还是等查用户信息时再查表
+			followNum, _ := strconv.Atoi(followRecord)
+			followNum += 1
+			_ = redisClient.SetexCtx(l.ctx, followKey, strconv.Itoa(followNum), expiration)
+		}
+		if len(followerRecord) != 0 {
+			followerNum, _ := strconv.Atoi(followerRecord)
+			followerNum += 1
+			_ = redisClient.SetexCtx(l.ctx, followerKey, strconv.Itoa(followerNum), expiration)
+		}
+	} else {
+		if len(followRecord) != 0 { //有记录更新一下计数，没有就算了,还是等查用户信息时再查表
+			followNum, _ := strconv.Atoi(followRecord)
+			followNum -= 1
+			_ = redisClient.SetexCtx(l.ctx, followKey, strconv.Itoa(followNum), expiration)
+		}
+		if len(followerRecord) != 0 {
+			followerNum, _ := strconv.Atoi(followerRecord)
+			followerNum -= 1
+			_ = redisClient.SetexCtx(l.ctx, followerKey, strconv.Itoa(followerNum), expiration)
+		}
+	}
+	//写入数据库
 	if l.bucket.TakeAvailable(1) == 0 {
 		// 令牌不足，限流处理
 		//判断是关注还是取消关注
