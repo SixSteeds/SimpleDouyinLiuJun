@@ -20,20 +20,13 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	Content_AddComment_FullMethodName                    = "/pb.content/AddComment"
-	Content_UpdateComment_FullMethodName                 = "/pb.content/UpdateComment"
 	Content_DelComment_FullMethodName                    = "/pb.content/DelComment"
 	Content_GetCommentById_FullMethodName                = "/pb.content/GetCommentById"
-	Content_SearchComment_FullMethodName                 = "/pb.content/SearchComment"
 	Content_AddFavorite_FullMethodName                   = "/pb.content/AddFavorite"
 	Content_UpdateFavorite_FullMethodName                = "/pb.content/UpdateFavorite"
 	Content_DelFavorite_FullMethodName                   = "/pb.content/DelFavorite"
-	Content_GetFavoriteById_FullMethodName               = "/pb.content/GetFavoriteById"
 	Content_SearchFavorite_FullMethodName                = "/pb.content/SearchFavorite"
-	Content_AddVideo_FullMethodName                      = "/pb.content/AddVideo"
-	Content_UpdateVideo_FullMethodName                   = "/pb.content/UpdateVideo"
-	Content_DelVideo_FullMethodName                      = "/pb.content/DelVideo"
 	Content_GetVideoById_FullMethodName                  = "/pb.content/GetVideoById"
-	Content_SearchVideo_FullMethodName                   = "/pb.content/SearchVideo"
 	Content_GetFeedList_FullMethodName                   = "/pb.content/GetFeedList"
 	Content_GetPublishList_FullMethodName                = "/pb.content/GetPublishList"
 	Content_GetWorkCountByUserId_FullMethodName          = "/pb.content/GetWorkCountByUserId"
@@ -46,24 +39,14 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentClient interface {
-	// -----------------------璇勮淇℃伅-----------------------
 	AddComment(ctx context.Context, in *AddCommentReq, opts ...grpc.CallOption) (*AddCommentResp, error)
-	UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error)
 	DelComment(ctx context.Context, in *DelCommentReq, opts ...grpc.CallOption) (*DelCommentResp, error)
 	GetCommentById(ctx context.Context, in *GetCommentByIdReq, opts ...grpc.CallOption) (*GetCommentByIdResp, error)
-	SearchComment(ctx context.Context, in *SearchCommentReq, opts ...grpc.CallOption) (*SearchCommentResp, error)
-	// -----------------------鐐硅禐淇℃伅-----------------------
 	AddFavorite(ctx context.Context, in *AddFavoriteReq, opts ...grpc.CallOption) (*AddFavoriteResp, error)
 	UpdateFavorite(ctx context.Context, in *UpdateFavoriteReq, opts ...grpc.CallOption) (*UpdateFavoriteResp, error)
 	DelFavorite(ctx context.Context, in *DelFavoriteReq, opts ...grpc.CallOption) (*DelFavoriteResp, error)
-	GetFavoriteById(ctx context.Context, in *GetFavoriteByIdReq, opts ...grpc.CallOption) (*GetFavoriteByIdResp, error)
 	SearchFavorite(ctx context.Context, in *SearchFavoriteReq, opts ...grpc.CallOption) (*SearchFavoriteResp, error)
-	// -----------------------瑙嗛淇℃伅-----------------------
-	AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error)
-	UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error)
-	DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error)
 	GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error)
-	SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error)
 	GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
 	GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 	GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
@@ -89,15 +72,6 @@ func (c *contentClient) AddComment(ctx context.Context, in *AddCommentReq, opts 
 	return out, nil
 }
 
-func (c *contentClient) UpdateComment(ctx context.Context, in *UpdateCommentReq, opts ...grpc.CallOption) (*UpdateCommentResp, error) {
-	out := new(UpdateCommentResp)
-	err := c.cc.Invoke(ctx, Content_UpdateComment_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *contentClient) DelComment(ctx context.Context, in *DelCommentReq, opts ...grpc.CallOption) (*DelCommentResp, error) {
 	out := new(DelCommentResp)
 	err := c.cc.Invoke(ctx, Content_DelComment_FullMethodName, in, out, opts...)
@@ -110,15 +84,6 @@ func (c *contentClient) DelComment(ctx context.Context, in *DelCommentReq, opts 
 func (c *contentClient) GetCommentById(ctx context.Context, in *GetCommentByIdReq, opts ...grpc.CallOption) (*GetCommentByIdResp, error) {
 	out := new(GetCommentByIdResp)
 	err := c.cc.Invoke(ctx, Content_GetCommentById_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) SearchComment(ctx context.Context, in *SearchCommentReq, opts ...grpc.CallOption) (*SearchCommentResp, error) {
-	out := new(SearchCommentResp)
-	err := c.cc.Invoke(ctx, Content_SearchComment_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -152,15 +117,6 @@ func (c *contentClient) DelFavorite(ctx context.Context, in *DelFavoriteReq, opt
 	return out, nil
 }
 
-func (c *contentClient) GetFavoriteById(ctx context.Context, in *GetFavoriteByIdReq, opts ...grpc.CallOption) (*GetFavoriteByIdResp, error) {
-	out := new(GetFavoriteByIdResp)
-	err := c.cc.Invoke(ctx, Content_GetFavoriteById_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *contentClient) SearchFavorite(ctx context.Context, in *SearchFavoriteReq, opts ...grpc.CallOption) (*SearchFavoriteResp, error) {
 	out := new(SearchFavoriteResp)
 	err := c.cc.Invoke(ctx, Content_SearchFavorite_FullMethodName, in, out, opts...)
@@ -170,45 +126,9 @@ func (c *contentClient) SearchFavorite(ctx context.Context, in *SearchFavoriteRe
 	return out, nil
 }
 
-func (c *contentClient) AddVideo(ctx context.Context, in *AddVideoReq, opts ...grpc.CallOption) (*AddVideoResp, error) {
-	out := new(AddVideoResp)
-	err := c.cc.Invoke(ctx, Content_AddVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) UpdateVideo(ctx context.Context, in *UpdateVideoReq, opts ...grpc.CallOption) (*UpdateVideoResp, error) {
-	out := new(UpdateVideoResp)
-	err := c.cc.Invoke(ctx, Content_UpdateVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) DelVideo(ctx context.Context, in *DelVideoReq, opts ...grpc.CallOption) (*DelVideoResp, error) {
-	out := new(DelVideoResp)
-	err := c.cc.Invoke(ctx, Content_DelVideo_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 func (c *contentClient) GetVideoById(ctx context.Context, in *GetVideoByIdReq, opts ...grpc.CallOption) (*GetVideoByIdResp, error) {
 	out := new(GetVideoByIdResp)
 	err := c.cc.Invoke(ctx, Content_GetVideoById_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentClient) SearchVideo(ctx context.Context, in *SearchVideoReq, opts ...grpc.CallOption) (*SearchVideoResp, error) {
-	out := new(SearchVideoResp)
-	err := c.cc.Invoke(ctx, Content_SearchVideo_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -273,24 +193,14 @@ func (c *contentClient) GetVideoListByIdList(ctx context.Context, in *GetVideoLi
 // All implementations must embed UnimplementedContentServer
 // for forward compatibility
 type ContentServer interface {
-	// -----------------------璇勮淇℃伅-----------------------
 	AddComment(context.Context, *AddCommentReq) (*AddCommentResp, error)
-	UpdateComment(context.Context, *UpdateCommentReq) (*UpdateCommentResp, error)
 	DelComment(context.Context, *DelCommentReq) (*DelCommentResp, error)
 	GetCommentById(context.Context, *GetCommentByIdReq) (*GetCommentByIdResp, error)
-	SearchComment(context.Context, *SearchCommentReq) (*SearchCommentResp, error)
-	// -----------------------鐐硅禐淇℃伅-----------------------
 	AddFavorite(context.Context, *AddFavoriteReq) (*AddFavoriteResp, error)
 	UpdateFavorite(context.Context, *UpdateFavoriteReq) (*UpdateFavoriteResp, error)
 	DelFavorite(context.Context, *DelFavoriteReq) (*DelFavoriteResp, error)
-	GetFavoriteById(context.Context, *GetFavoriteByIdReq) (*GetFavoriteByIdResp, error)
 	SearchFavorite(context.Context, *SearchFavoriteReq) (*SearchFavoriteResp, error)
-	// -----------------------瑙嗛淇℃伅-----------------------
-	AddVideo(context.Context, *AddVideoReq) (*AddVideoResp, error)
-	UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error)
-	DelVideo(context.Context, *DelVideoReq) (*DelVideoResp, error)
 	GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error)
-	SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error)
 	GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error)
 	GetPublishList(context.Context, *PublishListReq) (*PublishListResp, error)
 	GetWorkCountByUserId(context.Context, *GetWorkCountByUserIdReq) (*GetWorkCountByUserIdResp, error)
@@ -307,17 +217,11 @@ type UnimplementedContentServer struct {
 func (UnimplementedContentServer) AddComment(context.Context, *AddCommentReq) (*AddCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddComment not implemented")
 }
-func (UnimplementedContentServer) UpdateComment(context.Context, *UpdateCommentReq) (*UpdateCommentResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateComment not implemented")
-}
 func (UnimplementedContentServer) DelComment(context.Context, *DelCommentReq) (*DelCommentResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelComment not implemented")
 }
 func (UnimplementedContentServer) GetCommentById(context.Context, *GetCommentByIdReq) (*GetCommentByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCommentById not implemented")
-}
-func (UnimplementedContentServer) SearchComment(context.Context, *SearchCommentReq) (*SearchCommentResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchComment not implemented")
 }
 func (UnimplementedContentServer) AddFavorite(context.Context, *AddFavoriteReq) (*AddFavoriteResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddFavorite not implemented")
@@ -328,26 +232,11 @@ func (UnimplementedContentServer) UpdateFavorite(context.Context, *UpdateFavorit
 func (UnimplementedContentServer) DelFavorite(context.Context, *DelFavoriteReq) (*DelFavoriteResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DelFavorite not implemented")
 }
-func (UnimplementedContentServer) GetFavoriteById(context.Context, *GetFavoriteByIdReq) (*GetFavoriteByIdResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetFavoriteById not implemented")
-}
 func (UnimplementedContentServer) SearchFavorite(context.Context, *SearchFavoriteReq) (*SearchFavoriteResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchFavorite not implemented")
 }
-func (UnimplementedContentServer) AddVideo(context.Context, *AddVideoReq) (*AddVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method AddVideo not implemented")
-}
-func (UnimplementedContentServer) UpdateVideo(context.Context, *UpdateVideoReq) (*UpdateVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateVideo not implemented")
-}
-func (UnimplementedContentServer) DelVideo(context.Context, *DelVideoReq) (*DelVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DelVideo not implemented")
-}
 func (UnimplementedContentServer) GetVideoById(context.Context, *GetVideoByIdReq) (*GetVideoByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVideoById not implemented")
-}
-func (UnimplementedContentServer) SearchVideo(context.Context, *SearchVideoReq) (*SearchVideoResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchVideo not implemented")
 }
 func (UnimplementedContentServer) GetFeedList(context.Context, *FeedListReq) (*FeedListResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetFeedList not implemented")
@@ -398,24 +287,6 @@ func _Content_AddComment_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_UpdateComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCommentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).UpdateComment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_UpdateComment_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).UpdateComment(ctx, req.(*UpdateCommentReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Content_DelComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DelCommentReq)
 	if err := dec(in); err != nil {
@@ -448,24 +319,6 @@ func _Content_GetCommentById_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ContentServer).GetCommentById(ctx, req.(*GetCommentByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_SearchComment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchCommentReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).SearchComment(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_SearchComment_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).SearchComment(ctx, req.(*SearchCommentReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -524,24 +377,6 @@ func _Content_DelFavorite_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_GetFavoriteById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetFavoriteByIdReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).GetFavoriteById(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_GetFavoriteById_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).GetFavoriteById(ctx, req.(*GetFavoriteByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Content_SearchFavorite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(SearchFavoriteReq)
 	if err := dec(in); err != nil {
@@ -560,60 +395,6 @@ func _Content_SearchFavorite_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Content_AddVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(AddVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).AddVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_AddVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).AddVideo(ctx, req.(*AddVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_UpdateVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).UpdateVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_UpdateVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).UpdateVideo(ctx, req.(*UpdateVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_DelVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DelVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).DelVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_DelVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).DelVideo(ctx, req.(*DelVideoReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _Content_GetVideoById_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetVideoByIdReq)
 	if err := dec(in); err != nil {
@@ -628,24 +409,6 @@ func _Content_GetVideoById_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ContentServer).GetVideoById(ctx, req.(*GetVideoByIdReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Content_SearchVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchVideoReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServer).SearchVideo(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Content_SearchVideo_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServer).SearchVideo(ctx, req.(*SearchVideoReq))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -770,20 +533,12 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Content_AddComment_Handler,
 		},
 		{
-			MethodName: "UpdateComment",
-			Handler:    _Content_UpdateComment_Handler,
-		},
-		{
 			MethodName: "DelComment",
 			Handler:    _Content_DelComment_Handler,
 		},
 		{
 			MethodName: "GetCommentById",
 			Handler:    _Content_GetCommentById_Handler,
-		},
-		{
-			MethodName: "SearchComment",
-			Handler:    _Content_SearchComment_Handler,
 		},
 		{
 			MethodName: "AddFavorite",
@@ -798,32 +553,12 @@ var Content_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _Content_DelFavorite_Handler,
 		},
 		{
-			MethodName: "GetFavoriteById",
-			Handler:    _Content_GetFavoriteById_Handler,
-		},
-		{
 			MethodName: "SearchFavorite",
 			Handler:    _Content_SearchFavorite_Handler,
 		},
 		{
-			MethodName: "AddVideo",
-			Handler:    _Content_AddVideo_Handler,
-		},
-		{
-			MethodName: "UpdateVideo",
-			Handler:    _Content_UpdateVideo_Handler,
-		},
-		{
-			MethodName: "DelVideo",
-			Handler:    _Content_DelVideo_Handler,
-		},
-		{
 			MethodName: "GetVideoById",
 			Handler:    _Content_GetVideoById_Handler,
-		},
-		{
-			MethodName: "SearchVideo",
-			Handler:    _Content_SearchVideo_Handler,
 		},
 		{
 			MethodName: "GetFeedList",
