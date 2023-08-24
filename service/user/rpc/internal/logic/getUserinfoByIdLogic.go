@@ -6,7 +6,9 @@ import (
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
+	"math/rand"
 	"strconv"
+	"time"
 )
 
 type GetUserinfoByIdLogic struct {
@@ -34,10 +36,10 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 	redisClient := l.svcCtx.RedisClient
 	followKey := common.FollowNum + strconv.Itoa(int(in.Id))
 	followerKey := common.FollowerNum + strconv.Itoa(int(in.Id))
-	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 	followNum := 0
 	followerNum := 0
-	expiration := 3600 //秒
+	rand.Seed(time.Now().UnixNano())
+	expiration := 3000 + rand.Intn(600)
 	workCount := 0
 	favoriteCount := 0
 	totalFavorited := 0
@@ -56,6 +58,7 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 		//有记录
 		totalFavorited, _ = strconv.Atoi(totalFavoritedRecord)
 	}
+	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 	if len(followRecord) == 0 {
 		//没有记录，去查表
 		num, err := l.svcCtx.FollowsModel.FindFollowsCount(l.ctx, in.Id)
