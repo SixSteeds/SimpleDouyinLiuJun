@@ -16,5 +16,6 @@ type Config struct {
 		Brokers []string
 		Topic   string
 	}
-	RedisConf redis.RedisConf
+	RedisConf      redis.RedisConf
+	ContentRpcConf zrpc.RpcClientConf
 }

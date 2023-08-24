@@ -51,14 +51,8 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 		ToUserId:   toUserId,
 		PreMsgTime: req.PreMsgTime,
 	}
-
-	fmt.Println("come here")
-	fmt.Println(userId)
-	fmt.Println(toUserId)
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
-
-	fmt.Println(message)
 	if err != nil {
 		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
 			log.Fatal(err)
@@ -72,12 +66,12 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	}
 
 	var messages []types.Message
-	for _, item := range message.ChatMessage {
+	for _, item := range message.MessageList {
 		msg := types.Message{
 			Id:         item.Id,
 			ToUserId:   item.ToUserId,
-			FromUserId: item.UserId,
-			Content:    item.Message,
+			FromUserId: item.FromUserId,
+			Content:    item.Content,
 			CreateTime: item.CreateTime,
 		}
 		messages = append(messages, msg)

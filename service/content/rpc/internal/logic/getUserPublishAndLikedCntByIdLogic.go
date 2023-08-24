@@ -41,6 +41,12 @@ func (l *GetUserPublishAndLikedCntByIdLogic) GetUserPublishAndLikedCntById(in *p
 	}
 	fmt.Println(videoIdList)
 	fmt.Println("查到所有videoId")
+	if len(videoIdList) == 0 {
+		return &pb.GetUserPublishAndLikedCntByIdResp{
+			PublishCnt: publishCnt,
+			LikedCnt:   0,
+		}, nil
+	}
 	//2. 根据 videoIdList 查找 favorite 表，count 得到这些所有作品的总获赞数
 	var likedCnt int64 = 0
 	likedCntResp, err2 := l.svcCtx.FavoriteModel.FindFavoritedCntByVideoIdList(l.ctx, &videoIdList)

@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -37,6 +38,7 @@ type (
 		FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error)
 		FindFavoriteListByVideoId(ctx context.Context, videoid int64) (*[]*Favorite, error)
 		FindFavoritedCntByVideoIdList(ctx context.Context, videoIdList *[]int64) (int64, error)
+		GetFavoriteCountByUserId(ctx context.Context, user_id int64) (*Count, error)
 	}
 
 	defaultFavoriteModel struct {
@@ -187,4 +189,24 @@ func (m *defaultFavoriteModel) queryPrimary(ctx context.Context, conn sqlx.SqlCo
 
 func (m *defaultFavoriteModel) tableName() string {
 	return m.table
+}
+
+func (m *defaultFavoriteModel) GetFavoriteCountByUserId(ctx context.Context, user_id int64) (*Count, error) {
+
+	var resp Count
+	err := m.QueryRowCtx(ctx, &resp, "GetWorkCountByUserId"+strconv.Itoa(int(user_id)), func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select COUNT(*) as count from favorite where `user_id` = ?")
+		return conn.QueryRowCtx(ctx, v, query, user_id)
+	})
+	fmt.Println("数据库返回值")
+	fmt.Println(resp.Count)
+	fmt.Println(err)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
 }
