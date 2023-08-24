@@ -48,3 +48,4 @@ script/data/redisData
 script/data/kafka
 script/conf/nginx_conf/log/*.log
 *.json
+consumer/loginConsumer/*.json
