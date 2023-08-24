@@ -12,21 +12,23 @@ import (
 )
 
 type ServiceContext struct {
-	Config            config.Config
-	RedisClient       *redis.Redis
-	JwtAuthMiddleware rest.Middleware
-	ContentRpcClient  content.Content
-	UserRpcClient     user.User
-	KqPusherClient    *kq.Pusher
+	Config                       config.Config
+	RedisClient                  *redis.Redis
+	JwtAuthMiddleware            rest.Middleware
+	ContentRpcClient             content.Content
+	UserRpcClient                user.User
+	KqPusherClient               *kq.Pusher
+	UploadPersistentKqPusherConf *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:            c,
-		RedisClient:       redis.MustNewRedis(c.RedisConf),
-		JwtAuthMiddleware: gloabmiddleware.NewJwtAuthMiddleware().Handle,
-		ContentRpcClient:  content.NewContent(zrpc.MustNewClient(c.ContentRpcConf)),
-		UserRpcClient:     user.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
-		KqPusherClient:    kq.NewPusher(c.ContentKqPusherConf.Brokers, c.ContentKqPusherConf.Topic),
+		Config:                       c,
+		RedisClient:                  redis.MustNewRedis(c.RedisConf),
+		JwtAuthMiddleware:            gloabmiddleware.NewJwtAuthMiddleware().Handle,
+		ContentRpcClient:             content.NewContent(zrpc.MustNewClient(c.ContentRpcConf)),
+		UserRpcClient:                user.NewUser(zrpc.MustNewClient(c.UserRpcConf)),
+		KqPusherClient:               kq.NewPusher(c.ContentKqPusherConf.Brokers, c.ContentKqPusherConf.Topic),
+		UploadPersistentKqPusherConf: kq.NewPusher(c.ContentKqPusherConf.Brokers, c.ContentKqPusherConf.Topic),
 	}
 }

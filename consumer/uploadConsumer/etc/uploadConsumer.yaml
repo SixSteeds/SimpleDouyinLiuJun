@@ -1,0 +1,10 @@
+Name: loginConsumer
+
+Brokers:
+  - 127.0.0.1:9092
+Group: uploadPersistent
+Topic: uploadPersistent
+Offset: first
+Consumers: 1
+
+

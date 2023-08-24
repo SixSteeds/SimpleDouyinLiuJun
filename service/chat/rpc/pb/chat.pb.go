@@ -30,8 +30,8 @@ type ChatMessage struct {
 	UserId     int64  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
 	ToUserId   int64  `protobuf:"varint,3,opt,name=toUserId,proto3" json:"toUserId,omitempty"`
 	Message    string `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
-	CreateTime int64  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime int64  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	CreateTime string  `protobuf:"bytes,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime string `protobuf:"bytes,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
 }
 
 func (x *ChatMessage) Reset() {
@@ -94,18 +94,18 @@ func (x *ChatMessage) GetMessage() string {
 	return ""
 }
 
-func (x *ChatMessage) GetCreateTime() int64 {
+func (x *ChatMessage) GetCreateTime() string {
 	if x != nil {
 		return x.CreateTime
 	}
-	return 0
+	return ""
 }
 
-func (x *ChatMessage) GetUpdateTime() int64 {
+func (x *ChatMessage) GetUpdateTime() string {
 	if x != nil {
 		return x.UpdateTime
 	}
-	return 0
+	return ""
 }
 
 type AddChatMessageReq struct {
@@ -289,7 +289,7 @@ type Message struct {
 	ToUserId   int64   `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`          // 该消息接收者的id
 	FromUserId int64   `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`    // 该消息发送者的id
 	Content    string  `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                               // 消息内容
-	CreateTime *string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 消息创建时间
+	CreateTime string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 消息创建时间
 }
 
 func (x *Message) Reset() {
@@ -353,8 +353,8 @@ func (x *Message) GetContent() string {
 }
 
 func (x *Message) GetCreateTime() string {
-	if x != nil && x.CreateTime != nil {
-		return *x.CreateTime
+	if x != nil {
+		return x.CreateTime
 	}
 	return ""
 }
