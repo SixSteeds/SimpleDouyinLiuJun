@@ -48,7 +48,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	var userIds []int64
 	for _, feed := range *feedList {
 		IsFavorite, _ := l.svcCtx.RedisClient.HgetCtx(l.ctx, common.LikeCacheVideoLikedPrefix+strconv.FormatInt(feed.Id, 10), strconv.FormatInt(feed.UserId, 10))
-
+		fmt.Println("666666666666666666666666666666")
 		if len(IsFavorite) != 0 {
 			if IsFavorite == "0" {
 				feed.IsFavorite = true
