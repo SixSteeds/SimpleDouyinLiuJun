@@ -171,6 +171,10 @@ message FeedVideo{
   int64 next_time = 9; // 视频创建时间
 }
 
+
+
+
+
 message FeedListReq {
   int64 latest_time = 1;  //最后一条视频的创建时间
   int64 user_id = 2; //用户id
@@ -179,6 +183,7 @@ message FeedListReq {
 
 message FeedListResp {
   repeated FeedVideo video_list = 1; //videoList
+  repeated int64 user_ids = 2;
 }
 
 
@@ -200,6 +205,7 @@ message PublishListReq {
 
 message PublishListResp {
   repeated FeedVideo video_list = 1; //videoList
+  repeated int64 user_ids = 2;
 }
 
 
@@ -225,10 +231,7 @@ service content{
 
   rpc SearchFavorite(SearchFavoriteReq) returns (SearchFavoriteResp);
 
-
-
   rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp);
-
 
 
   rpc GetFeedList(FeedListReq) returns (FeedListResp);

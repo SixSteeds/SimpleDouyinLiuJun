@@ -5,7 +5,9 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
+	userPb "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
+	"time"
 
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
@@ -31,6 +33,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	// todo: add your logic here and delete this line
 	fmt.Println("进入feed流api逻辑")
 	fmt.Println(req.LatestTime)
+	fmt.Println(time.Now().Unix())
+	fmt.Println("=================================================")
 	fmt.Println(req.Token)
 	var userId int64
 	token, err := util.ParseToken(req.Token)
@@ -47,14 +51,13 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		lastTime = req.LatestTime
 	}
 	fmt.Println("我要去rpc了")
-	list, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{
+	data, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{
 		UserId:     userId,
 		LatestTime: lastTime,
 		Size:       5,
 	})
 	fmt.Println("我回到api了，我来看看list是什么")
-	fmt.Println(list)
-	fmt.Println(err)
+	fmt.Println(data)
 
 	if err != nil {
 		fmt.Println("陶子勋陶子勋陶子勋，listerr", err)
@@ -63,7 +66,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 		}, nil
 	}
-	if list == nil {
+	if data == nil {
 		fmt.Println("陶子勋陶子勋陶子勋，listnil")
 		return &types.FeedResp{
 			StatusCode: common.DATA_USE_UP,
@@ -72,16 +75,17 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	}
 
 	var videoList []*pb.FeedVideo
+	var userIds []int64
 	var listLen int
-	if list == nil {
+	if data == nil {
 		listLen = 0
 	} else {
-		videoList = list.VideoList
-		listLen = len(list.VideoList)
+		videoList = data.VideoList
+		listLen = len(data.VideoList)
+		userIds = data.UserIds
 	}
-
 	if listLen < 5 { //tzx新增，使发布后的视频循环播放，不会出现数据库繁忙的报错
-		list2, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{ //从头查没查完的
+		data2, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{ //从头查没查完的
 			UserId:     userId,
 			LatestTime: int64(9999999999),
 			Size:       int64(5 - listLen),
@@ -94,7 +98,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
 			}, nil
 		}
-		if list2 == nil {
+		if data2 == nil {
 			fmt.Println("陶子勋陶子勋陶子勋，list2nil")
 			return &types.FeedResp{
 				StatusCode: common.DATA_USE_UP,
@@ -102,25 +106,50 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			}, nil
 		}
 		if listLen == 0 {
-			videoList = list2.VideoList
+			videoList = data.VideoList
+			userIds = data2.UserIds
 		} else {
-			videoList = append(videoList, list2.VideoList...)
+			videoList = append(videoList, data2.VideoList...)
+			userIds = append(userIds, data2.UserIds...)
 		}
 	}
+	// 通过userIds获取到所有的user信息
+	usersByIds, err := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &userPb.GetUsersByIdsReq{
+		Ids:    userIds,
+		UserID: userId,
+	})
+	if err != nil {
+		return &types.FeedResp{
+			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+		}, nil
+	}
+
+	var feedUserList []*pb.FeedUser
+	for _, user := range usersByIds.Users {
+		feedUserList = append(feedUserList, &pb.FeedUser{
+			Id:              user.Id,
+			Name:            user.Name,
+			FollowCount:     &user.FollowCount,
+			FollowerCount:   &user.FollowerCount,
+			IsFollow:        user.IsFollow,
+			Avatar:          &user.Avatar,
+			BackgroundImage: &user.BackgroundImage,
+			Signature:       &user.Signature,
+			TotalFavorited:  &user.TotalFavorited,
+			WorkCount:       &user.WorkCount,
+			FavoriteCount:   &user.FavoriteCount,
+		})
+	}
+
 	fmt.Println("陶子勋陶子勋陶子勋，视频流长度", len(videoList))
 	fmt.Println("完成feed流rpc逻辑")
 	var FeedVideos []types.Video
 	fmt.Println("到这了222222")
 	var nextTime int64
-	//fmt.Println("到这了33333")
-	fmt.Println(list)
 
-	for _, video := range videoList {
-		//fmt.Println("到这了44444")
-		user := video.Author
-		//在这打印一下author吧，
-		//fmt.Println("到这了11111111111")
-		//fmt.Println(user)
+	for count, video := range videoList {
+		user := feedUserList[count]
 		var author = &types.User{
 			Id:              user.Id,
 			Name:            user.Name,

@@ -66,7 +66,7 @@ type (
 		FavoriteCount int64     `db:"favorite_count"` // 视频被收藏次数
 		CommentCount  int64     `db:"comment_count"`  // 视频被评论次数
 		IsFavorite    bool      `db:"is_favorite"`    // 是否被当前用户点赞
-		UpdateTime    time.Time `db:"update_time"`    // 该条最后一次更新时间
+		CreateTime    time.Time `db:"create_time"`    // 该条最后一次更新时间
 	}
 )
 
@@ -163,12 +163,12 @@ func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, late
 		"v.play_url,"+
 		"v.cover_url,"+
 		"v.title,"+
-		"v.update_time,"+
+		"v.create_time,"+
 		"(SELECT COUNT(*) FROM favorite WHERE video_id = v.id) AS favorite_count,"+
 		"(SELECT COUNT(*) FROM comment WHERE video_id = v.id) AS comment_count,"+
 		"IF(EXISTS (SELECT 1 FROM favorite WHERE video_id = v.id AND user_id = ?), true, false) AS is_favorite "+
 		"FROM %s v "+
-		"WHERE v.is_delete = 0 and update_time "+`<`+" ? "+
+		"WHERE v.is_delete = 0 and create_time "+`<`+" ? "+
 		"ORDER BY v.create_time DESC "+
 		"LIMIT ?", m.table)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id, formatTime, size)
