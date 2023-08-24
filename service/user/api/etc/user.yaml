@@ -21,7 +21,7 @@ ContentRpcConf:
 
 LoginLogKqPusherConf:
   Brokers:
-    - 127.0.0.1:8093
+    - 127.0.0.1:9092
   Topic: loginLog
 
 
