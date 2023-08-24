@@ -14,7 +14,6 @@ services:
     container_name: etcd
     environment:
       ALLOW_NONE_AUTHENTICATION: "yes"
-    #      ETCD_ADVERTISE_CLIENT_URLS: http://etcd-server:8090
     ports:
       - "8090:2379"
     restart: always

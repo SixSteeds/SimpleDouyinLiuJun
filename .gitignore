@@ -41,7 +41,7 @@ gen
 
 
 
-# personna files
+# personal files
 .log
 *.log
 script/data/redisData
