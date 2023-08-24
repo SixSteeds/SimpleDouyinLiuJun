@@ -8,6 +8,7 @@ import (
 	"doushen_by_liujun/service/content/api/internal/types"
 	"doushen_by_liujun/service/content/rpc/pb"
 	userPB "doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"log"
 	"strconv"
@@ -40,10 +41,19 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 			CommentList: []types.Comment{},
 		}, nil
 	}
-	follows, e := l.svcCtx.ContentRpcClient.GetCommentById(l.ctx, &pb.GetCommentByIdReq{
+	comment, e := l.svcCtx.ContentRpcClient.GetCommentById(l.ctx, &pb.GetCommentByIdReq{
 		Id: req.VideoId,
 	})
+	fmt.Println("我来看看获取到的评论列表")
+	fmt.Println(comment.Comment)
 	var comments []types.Comment
+	if len(comment.Comment) == 0 {
+		return &types.CommentListResp{
+			StatusCode:  common.OK,
+			StatusMsg:   common.MapErrMsg(common.OK),
+			CommentList: comments,
+		}, nil
+	}
 	if e != nil {
 		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_GetCommentById_false"); err != nil {
 			log.Fatal(err)
@@ -57,7 +67,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	IntUserId, _ := strconv.Atoi(logger.ID)
 	//IntUserId := 223
 	var ids []int64
-	for _, item := range follows.Comment {
+	for _, item := range comment.Comment {
 		ids = append(ids, item.UserId)
 	}
 	info, e := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &userPB.GetUsersByIdsReq{
@@ -72,7 +82,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		}, nil
 	}
 	users := info.Users
-	for index, item := range follows.Comment {
+	for index, item := range comment.Comment {
 		var user types.User
 		user = types.User{
 			Id:              users[index].Id,

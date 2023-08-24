@@ -6,6 +6,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -37,7 +38,7 @@ type (
 		FindVideoListByIdList(ctx context.Context, videoIdList *[]int64) (*[]*Video, error)
 
 		GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error)
-		GetWorkCountByUserId(ctx context.Context, user_id int64) (*int64, error)
+		GetWorkCountByUserId(ctx context.Context, user_id int64) (*Count, error)
 		GetPublishList(ctx context.Context, user_id int64, checkUserId int64) (*[]*FeedVideo, error)
 	}
 
@@ -67,6 +68,9 @@ type (
 		CommentCount  int64     `db:"comment_count"`  // 视频被评论次数
 		IsFavorite    bool      `db:"is_favorite"`    // 是否被当前用户点赞
 		CreateTime    time.Time `db:"create_time"`    // 该条最后一次更新时间
+	}
+	Count struct {
+		Count int64 `db:"count"`
 	}
 )
 
@@ -141,15 +145,23 @@ func (m *defaultVideoModel) FindOne(ctx context.Context, id int64) (*Video, erro
 	}
 }
 
-func (m *defaultVideoModel) GetWorkCountByUserId(ctx context.Context, user_id int64) (*int64, error) {
-
-	var resp int64
-	query := fmt.Sprintf("select COUNT(*) from %s where `id` = ?", m.table)
-	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id)
-	if err != nil {
+func (m *defaultVideoModel) GetWorkCountByUserId(ctx context.Context, user_id int64) (*Count, error) {
+	var resp Count
+	err := m.QueryRowCtx(ctx, &resp, "GetWorkCountByUserId"+strconv.Itoa(int(user_id)), func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+		query := fmt.Sprintf("select COUNT(*) as count from video where `id` = ?")
+		return conn.QueryRowCtx(ctx, v, query, user_id)
+	})
+	fmt.Println("数据库返回值")
+	fmt.Println(resp.Count)
+	fmt.Println(err)
+	switch err {
+	case nil:
+		return &resp, nil
+	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
 		return nil, err
 	}
-	return &resp, nil
 }
 
 func (m *defaultVideoModel) GetFeedList(ctx context.Context, user_id int64, latest_time *int64, size int64) (*[]*FeedVideo, error) {

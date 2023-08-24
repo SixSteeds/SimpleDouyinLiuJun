@@ -29,6 +29,6 @@ func (l *GetFavoriteCountByUserIdLogic) GetFavoriteCountByUserId(in *pb.GetFavor
 		return nil, err
 	}
 	return &pb.GetFavoriteCountByUserIdResp{
-		FavoriteCount: *count,
+		FavoriteCount: count.Count,
 	}, nil
 }
