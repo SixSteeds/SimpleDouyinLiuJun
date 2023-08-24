@@ -58,7 +58,6 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	})
 	fmt.Println("我回到api了，我来看看list是什么")
 	fmt.Println(data)
-	fmt.Println(err)
 
 	if err != nil {
 		fmt.Println("陶子勋陶子勋陶子勋，listerr", err)
@@ -85,7 +84,6 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		listLen = len(data.VideoList)
 		userIds = data.UserIds
 	}
-
 	if listLen < 5 { //tzx新增，使发布后的视频循环播放，不会出现数据库繁忙的报错
 		data2, err := l.svcCtx.ContentRpcClient.GetFeedList(l.ctx, &pb.FeedListReq{ //从头查没查完的
 			UserId:     userId,
@@ -115,7 +113,6 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			userIds = append(userIds, data2.UserIds...)
 		}
 	}
-
 	// 通过userIds获取到所有的user信息
 	usersByIds, err := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &userPb.GetUsersByIdsReq{
 		Ids:    userIds,

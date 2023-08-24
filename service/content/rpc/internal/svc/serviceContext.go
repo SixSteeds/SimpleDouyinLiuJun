@@ -25,5 +25,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		FavoriteModel:  model.NewFavoriteModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		VideoModel:     model.NewVideoModel(sqlx.NewMysql(c.DB.DataSource), c.Cache),
 		KqPusherClient: kq.NewPusher(c.ContentKqPusherConf.Brokers, c.ContentKqPusherConf.Topic),
+		RedisClient:    redis.MustNewRedis(c.RedisConf),
 	}
 }
