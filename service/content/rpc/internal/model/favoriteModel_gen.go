@@ -37,6 +37,7 @@ type (
 		FindFavoriteListByUserId(ctx context.Context, userid int64) (*[]*Favorite, error)
 		FindFavoriteListByVideoId(ctx context.Context, videoid int64) (*[]*Favorite, error)
 		FindFavoritedCntByVideoIdList(ctx context.Context, videoIdList *[]int64) (int64, error)
+		GetFavoriteCountByUserId(ctx context.Context, user_id int64) (*int64, error)
 	}
 
 	defaultFavoriteModel struct {
@@ -187,4 +188,14 @@ func (m *defaultFavoriteModel) queryPrimary(ctx context.Context, conn sqlx.SqlCo
 
 func (m *defaultFavoriteModel) tableName() string {
 	return m.table
+}
+
+func (m *defaultFavoriteModel) GetFavoriteCountByUserId(ctx context.Context, user_id int64) (*int64, error) {
+	var resp int64
+	query := fmt.Sprintf("select COUNT(*) from %s where `user_id` = ?", m.table)
+	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, user_id)
+	if err != nil {
+		return nil, err
+	}
+	return &resp, nil
 }

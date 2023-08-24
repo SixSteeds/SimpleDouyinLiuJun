@@ -196,6 +196,15 @@ message GetWorkCountByUserIdResp{
   int64 workCount = 1;
 }
 
+message GetFavoriteCountByUserIdReq{
+  int64 user_id = 1;
+}
+
+message GetFavoriteCountByUserIdResp{
+  int64 favoriteCount = 1;
+}
+
+
 
 
 message PublishListReq {
@@ -238,6 +247,7 @@ service content{
   rpc GetPublishList(PublishListReq) returns (PublishListResp);
 
   rpc GetWorkCountByUserId(GetWorkCountByUserIdReq) returns (GetWorkCountByUserIdResp);
+  rpc GetFavoriteCountByUserId(GetFavoriteCountByUserIdReq) returns (GetFavoriteCountByUserIdResp);
 
   rpc GetUserFavoritedCnt(GetUserFavoritedCntByIdReq) returns (GetUserFavoritedCntByIdResp);
   rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);

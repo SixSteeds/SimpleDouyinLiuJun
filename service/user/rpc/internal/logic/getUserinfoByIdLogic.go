@@ -3,6 +3,7 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
+	contentPB "doushen_by_liujun/service/content/rpc/pb"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -44,19 +45,46 @@ func (l *GetUserinfoByIdLogic) GetUserinfoById(in *pb.GetUserinfoByIdReq) (*pb.G
 	favoriteCount := 0
 	totalFavorited := 0
 	workCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(in.Id)))
-	if len(workCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+	if len(workCountRecord) != 0 { //等于0 代表没有记录，查表并存储到redis
 		//有记录
 		workCount, _ = strconv.Atoi(workCountRecord)
+	} else {
+		ans, err := l.svcCtx.ContentRpcClient.GetWorkCountByUserId(l.ctx, &contentPB.GetWorkCountByUserIdReq{
+			UserId: in.Id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		workCount = int(ans.WorkCount)
+		redisClient.SetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(in.Id)), strconv.Itoa(workCount))
 	}
 	favoriteCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(in.Id)))
-	if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，直接赋值0
+	if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，查表并存储到redis
 		//有记录
 		favoriteCount, _ = strconv.Atoi(favoriteCountRecord)
+	} else {
+		ans, err := l.svcCtx.ContentRpcClient.GetFavoriteCountByUserId(l.ctx, &contentPB.GetFavoriteCountByUserIdReq{
+			UserId: in.Id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		favoriteCount = int(ans.FavoriteCount)
+		redisClient.SetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(in.Id)), strconv.Itoa(favoriteCount))
 	}
 	totalFavoritedRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(in.Id)))
-	if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，直接赋值0
+	if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，查表并存储到redis
 		//有记录
 		totalFavorited, _ = strconv.Atoi(totalFavoritedRecord)
+	} else {
+		ans, err := l.svcCtx.ContentRpcClient.GetUserPublishAndLikedCntById(l.ctx, &contentPB.GetUserPublishAndLikedCntByIdReq{
+			UserId: in.Id,
+		})
+		if err != nil {
+			return nil, err
+		}
+		totalFavorited = int(ans.LikedCnt)
+		redisClient.SetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(in.Id)), strconv.Itoa(totalFavorited))
 	}
 	followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 	if len(followRecord) == 0 {

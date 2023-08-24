@@ -30,3 +30,11 @@ UserKqPusherConf:
 RedisConf:
   Host: 127.0.0.1:8094
   Pass: "liujun"
+
+ContentRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:8090
+    Key: contentRpc
+#    Pass: liujun
+#    User: root

@@ -77,6 +77,11 @@ func (s *ContentServer) GetWorkCountByUserId(ctx context.Context, in *pb.GetWork
 	return l.GetWorkCountByUserId(in)
 }
 
+func (s *ContentServer) GetFavoriteCountByUserId(ctx context.Context, in *pb.GetFavoriteCountByUserIdReq) (*pb.GetFavoriteCountByUserIdResp, error) {
+	l := logic.NewGetFavoriteCountByUserIdLogic(ctx, s.svcCtx)
+	return l.GetFavoriteCountByUserId(in)
+}
+
 func (s *ContentServer) GetUserFavoritedCnt(ctx context.Context, in *pb.GetUserFavoritedCntByIdReq) (*pb.GetUserFavoritedCntByIdResp, error) {
 	l := logic.NewGetUserFavoritedCntLogic(ctx, s.svcCtx)
 	return l.GetUserFavoritedCnt(in)

@@ -29,6 +29,8 @@ type (
 	FeedVideo                         = pb.FeedVideo
 	GetCommentByIdReq                 = pb.GetCommentByIdReq
 	GetCommentByIdResp                = pb.GetCommentByIdResp
+	GetFavoriteCountByUserIdReq       = pb.GetFavoriteCountByUserIdReq
+	GetFavoriteCountByUserIdResp      = pb.GetFavoriteCountByUserIdResp
 	GetUserFavoritedCntByIdReq        = pb.GetUserFavoritedCntByIdReq
 	GetUserFavoritedCntByIdResp       = pb.GetUserFavoritedCntByIdResp
 	GetUserPublishAndLikedCntByIdReq  = pb.GetUserPublishAndLikedCntByIdReq
@@ -59,6 +61,7 @@ type (
 		GetFeedList(ctx context.Context, in *FeedListReq, opts ...grpc.CallOption) (*FeedListResp, error)
 		GetPublishList(ctx context.Context, in *PublishListReq, opts ...grpc.CallOption) (*PublishListResp, error)
 		GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error)
+		GetFavoriteCountByUserId(ctx context.Context, in *GetFavoriteCountByUserIdReq, opts ...grpc.CallOption) (*GetFavoriteCountByUserIdResp, error)
 		GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error)
 		GetUserPublishAndLikedCntById(ctx context.Context, in *GetUserPublishAndLikedCntByIdReq, opts ...grpc.CallOption) (*GetUserPublishAndLikedCntByIdResp, error)
 		GetVideoListByIdList(ctx context.Context, in *GetVideoListByIdListReq, opts ...grpc.CallOption) (*GetVideoListByIdListResp, error)
@@ -128,6 +131,11 @@ func (m *defaultContent) GetPublishList(ctx context.Context, in *PublishListReq,
 func (m *defaultContent) GetWorkCountByUserId(ctx context.Context, in *GetWorkCountByUserIdReq, opts ...grpc.CallOption) (*GetWorkCountByUserIdResp, error) {
 	client := pb.NewContentClient(m.cli.Conn())
 	return client.GetWorkCountByUserId(ctx, in, opts...)
+}
+
+func (m *defaultContent) GetFavoriteCountByUserId(ctx context.Context, in *GetFavoriteCountByUserIdReq, opts ...grpc.CallOption) (*GetFavoriteCountByUserIdResp, error) {
+	client := pb.NewContentClient(m.cli.Conn())
+	return client.GetFavoriteCountByUserId(ctx, in, opts...)
 }
 
 func (m *defaultContent) GetUserFavoritedCnt(ctx context.Context, in *GetUserFavoritedCntByIdReq, opts ...grpc.CallOption) (*GetUserFavoritedCntByIdResp, error) {

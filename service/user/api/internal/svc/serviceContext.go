@@ -2,6 +2,7 @@ package svc
 
 import (
 	gloabmiddleware "doushen_by_liujun/internal/middleware"
+	"doushen_by_liujun/service/content/rpc/content"
 	"doushen_by_liujun/service/user/api/internal/config"
 	"doushen_by_liujun/service/user/api/internal/middleware"
 	"doushen_by_liujun/service/user/rpc/user"
@@ -18,6 +19,7 @@ type ServiceContext struct {
 	JwtAuthMiddleware      rest.Middleware
 	RedisClient            *redis.Redis
 	LoginLogKqPusherClient *kq.Pusher
+	ContentRpcClient       content.Content
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -28,5 +30,6 @@ func NewServiceContext(c config.Config) *ServiceContext {
 		RedisClient:            redis.MustNewRedis(c.RedisConf),
 		JwtAuthMiddleware:      gloabmiddleware.NewJwtAuthMiddleware().Handle,
 		LoginLogKqPusherClient: kq.NewPusher(c.LoginLogKqPusherConf.Brokers, c.LoginLogKqPusherConf.Topic),
+		ContentRpcClient:       content.NewContent(zrpc.MustNewClient(c.ContentRpcConf)),
 	}
 }

@@ -11,6 +11,13 @@ UserRpcConf:
 #    User: root
 
 
+ContentRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:8090
+    Key: contentRpc
+#    Pass: liujun
+#    User: root
 
 LoginLogKqPusherConf:
   Brokers:
