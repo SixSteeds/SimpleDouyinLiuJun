@@ -5,7 +5,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
-	userPb "doushen_by_liujun/service/user111/rpc/pb"
+	userPb "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 
 	"doushen_by_liujun/service/content/api/internal/svc"

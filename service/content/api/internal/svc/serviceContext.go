@@ -4,7 +4,7 @@ import (
 	gloabmiddleware "doushen_by_liujun/internal/middleware"
 	"doushen_by_liujun/service/content/api/internal/config"
 	"doushen_by_liujun/service/content/rpc/content"
-	"doushen_by_liujun/service/user111/rpc/user"
+	"doushen_by_liujun/service/user/rpc/user"
 	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 	"github.com/zeromicro/go-zero/rest"

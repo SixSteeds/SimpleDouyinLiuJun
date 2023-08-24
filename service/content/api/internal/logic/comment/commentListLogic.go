@@ -7,7 +7,7 @@ import (
 	"doushen_by_liujun/service/content/api/internal/svc"
 	"doushen_by_liujun/service/content/api/internal/types"
 	"doushen_by_liujun/service/content/rpc/pb"
-	userPB "doushen_by_liujun/service/user111/rpc/pb"
+	userPB "doushen_by_liujun/service/user/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"log"
