@@ -1,0 +1,81 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+//--------------------------------鑱婂ぉ淇℃伅--------------------------------
+message ChatMessage {
+  int64 id = 1;
+  int64 userId = 2;
+  int64 toUserId = 3;
+  string message = 4;
+  int64 createTime = 5;
+  int64 updateTime = 6;
+}
+
+message AddChatMessageReq {
+  int64 userId = 1;
+  int64 toUserId = 2;
+  string message = 3;
+  int64 isDelete = 4;
+}
+
+message AddChatMessageResp {
+}
+
+
+
+
+
+message GetChatMessageByIdReq {
+  int64 userId = 1; //id
+  int64 toUserId = 2 ;
+  int64 preMsgTime = 3;
+}
+
+message Message {
+  int64 id = 1; // 消息id
+  int64 to_user_id = 2; // 该消息接收者的id
+  int64 from_user_id = 3; // 该消息发送者的id
+  string content = 4; // 消息内容
+  optional string create_time = 5; // 消息创建时间
+}
+
+message GetChatMessageByIdResp {
+  repeated Message messageList = 1;
+}
+
+message SearchChatMessageReq {
+  int64 page = 1;
+  int64 limit = 2;
+  int64 id = 3;
+  int64 userId = 4;
+  int64 toUserId = 5;
+  string message = 6;
+  int64 createTime = 7;
+  int64 updateTime = 8;
+}
+
+message SearchChatMessageResp {
+  repeated ChatMessage chatMessage = 1; //chatMessage
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service chat{
+
+  //-----------------------鑱婂ぉ淇℃伅-----------------------
+  rpc AddChatMessage(AddChatMessageReq) returns (AddChatMessageResp);
+  rpc GetChatMessageById(GetChatMessageByIdReq) returns (GetChatMessageByIdResp);
+  rpc SearchChatMessage(SearchChatMessageReq) returns (SearchChatMessageResp);
+
+}

@@ -1,0 +1,58 @@
+syntax = "v1"
+
+info(
+	title: "content-api"
+	desc: "content-api服务"
+	author: "liujun_team"
+	version: "v1"
+)
+
+import (
+	"types.api"
+)
+
+@server(
+	prefix: douyin
+	group : video
+)
+service content {
+	@handler feed
+	get /feed (FeedReq) returns (FeedReq)
+
+}
+
+@server(
+	prefix: douyin
+	group : video
+	middleware: JwtAuthMiddleware
+)
+service content {
+	@handler publishList
+	get /publish/list (PublishListReq) returns (PublishListResp)
+}
+
+@server(
+	middleware: JwtAuthMiddleware
+	prefix: douyin/favorite
+	group : favorite
+)
+service content {
+	@handler favoriteAction
+	post /action (FavoriteActionReq) returns (FavoriteActionResp)
+
+	@handler favoriteList
+	get /list (FavoriteListReq) returns (FavoriteListResp)
+}
+
+@server(
+	middleware: JwtAuthMiddleware
+	prefix: douyin/comment
+	group : comment
+)
+service content {
+	@handler commentAction
+	post /action (CommentActionReq) returns (CommentActionResp)
+
+	@handler commentList
+	get /list (CommentListReq) returns (CommentListResp)
+}

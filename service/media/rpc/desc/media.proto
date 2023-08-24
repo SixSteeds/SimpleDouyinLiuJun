@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------
+
+
+message SaveVideoReq {
+  int64 userId = 1;
+  string playUrl = 2;
+  string coverUrl = 3;
+  string title = 4;
+  int64 id = 6;
+}
+
+message SaveVideoResp {
+}
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service media{
+
+  rpc SaveVideo(SaveVideoReq) returns (SaveVideoResp);
+
+}

@@ -1,0 +1,27 @@
+Name: media
+Host: 0.0.0.0
+Port: 8083
+MaxBytes: 1048576000
+Timeout: 30000
+
+
+
+MediaRpcConf:
+  Etcd:
+    Hosts:
+      - 127.0.0.1:8090
+    Key: mediaRpc
+#    Pass: liujun
+#    User: root
+
+
+UploadPersistentKqPusherConf:
+  Brokers:
+    - 127.0.0.1:9092
+  Topic: uploadPersistent
+
+
+RedisConf:
+  Host: 0.0.0.0:8094
+  Pass: "liujun"
+

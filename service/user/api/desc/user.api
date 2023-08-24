@@ -1,0 +1,60 @@
+syntax = "v1"
+
+info(
+	title: "user-api"
+	desc: "user-api服务"
+	author: "liujun_team"
+	version: "v1"
+)
+
+import (
+	"types.api"
+)
+
+@server(
+	prefix:douyin/user
+	group : userinfo
+)
+// 定义 HTTP 服务
+// 微服务名称为 user，生成的代码目录和配置文件将和 user 值相关
+service user {
+	// 定义 http.HandleFunc 转换的 go 文件名称及方法
+	@handler register
+	// 定义接口
+	// 请求方法为 post
+	// 路由为 /user/login
+	// 请求体为 LoginReq
+	// 响应体为 LoginResp，响应体必须有 returns 关键字修饰
+	post /register (RegisterReq) returns (RegisterResp)
+	@handler login
+	post /login (LoginReq) returns (LoginResp)
+}
+
+@server(
+	prefix:douyin/user
+	group : userinfo
+	middleware: JwtAuthMiddleware
+)
+service user {
+	@handler userinfo
+	get / (UserinfoReq) returns (UserinfoResp)
+}
+
+@server(
+	prefix:douyin/relation
+	group : relation
+	middleware: JwtAuthMiddleware
+)
+service user {
+	@handler followList
+	get /follow/list (FollowListReq) returns (FollowListResp)
+
+	@handler followerList
+	get /follower/list (FollowerListReq) returns (FollowerListResp)
+
+	@handler follow
+	post /action (FollowReq) returns (FollowResp)
+
+	@handler FriendList
+	get /friend/list (FriendListReq) returns (FriendListResp)
+}

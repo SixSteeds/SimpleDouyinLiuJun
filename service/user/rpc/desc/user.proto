@@ -1,0 +1,192 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+package pb;
+
+// ------------------------------------ 
+// Messages
+// ------------------------------------ 
+
+
+message Follows {
+  int64 FollowerCount = 1;
+  int64 FollowCount = 7;
+  int64 Id = 2;
+  string UserName = 3;
+  string Avator = 4;
+  string BackgroundImage = 5;
+  string Signature = 6;
+  bool IsFollow = 8;
+}
+
+message AddFollowsReq {
+  string userId = 1;
+  string followId = 2;
+}
+
+message AddFollowsResp {
+}
+
+
+message DelFollowsReq {
+  string userId = 1;
+  string followId = 2;
+}
+
+message DelFollowsResp {
+}
+
+message GetFollowsByIdReq {
+  int64 id = 1; //id
+}
+
+message GetFollowsByIdResp {
+  repeated Follows follows = 1; //follows
+}
+message GetFollowersByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFollowersByIdResp {
+  repeated Follows follows = 1; //follows
+}
+
+
+message GetFollowersCountByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFollowersCountByIdResp {
+  int64 count = 1; //follows
+}
+message GetFriendsByIdReq{
+  int64 id = 1; //id
+}
+
+message GetFriendsByIdResp {
+  repeated Follows follows = 1; //follows
+}
+
+
+
+message Userinfo {
+  int64 id = 1;
+  int64 follow_count = 11;
+  int64 follower_count = 12;
+  bool is_follow = 13;
+  string username = 2;
+  string avatar = 4;
+  string backgroundImage = 5;
+  string signature = 6;
+  int64   WorkCount = 7;
+  int64   FavoriteCount = 8;
+  int64   TotalFavorited = 9;
+}
+message Usersinfo {
+  int64 id = 1; //涓婚敭
+  int64 follow_count = 11;
+  int64 follower_count = 12;
+  bool is_follow = 13;
+  string username = 2;
+  string avatar = 4;
+  string backgroundImage = 5;
+  string signature = 6;
+  int64   WorkCount = 7;
+  int64   FavoriteCount = 8;
+  int64   TotalFavorited = 9;
+  string name = 3;
+}
+
+
+message CheckIsFollowReq{
+  string userid = 1; //id
+  string followid = 2;
+}
+message CheckIsFollowResp{
+  bool isFollowed = 1;
+
+}
+message GetUserinfoByIdReq {
+  int64 id = 1; //id
+  int64 userID = 2;//当前用户
+}
+
+message GetUserinfoByIdResp {
+  Userinfo userinfo = 1; //userinfo
+}
+
+message GetUsersByIdsReq {
+  repeated int64 ids = 1; //id
+  int64 userID = 2;//当前用户
+}
+
+message GetUsersByIdsResp {
+  repeated Usersinfo users = 1; //userinfo
+}
+
+
+message SaveUserReq{
+  int64 id = 1;
+  string username = 2;
+  string password = 3;
+  optional string avatar = 4;
+  optional string backgroundImage = 5;
+  optional string signature = 6;
+  optional string name = 7;
+}
+
+message SaveUserResp{
+  bool success = 1;
+  int64 id = 2;
+}
+
+message CheckUserReq{
+  string username = 1;
+  string password = 2;
+}
+
+message CheckUserResp{
+  int64 userId = 1;
+}
+
+message GetUserByIdReq {
+  int64 userID = 1; //用户id
+}
+
+message GetUserByIdResp {
+  Userinfo userinfo = 1; //用户信息
+}
+
+message GetUserListByIdListReq{
+  repeated int64 userIdList = 1;//用户id数组
+}
+
+message GetUserListByIdListResp{
+  repeated Userinfo userList = 1; //user数组
+}
+
+
+
+// ------------------------------------ 
+// Rpc Func
+// ------------------------------------ 
+
+service user{
+
+  rpc AddFollows(AddFollowsReq) returns (AddFollowsResp);
+  rpc DelFollows(DelFollowsReq) returns (DelFollowsResp);
+  rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
+  rpc SaveUser(SaveUserReq) returns (SaveUserResp);
+  rpc CheckUser(CheckUserReq) returns (CheckUserResp);
+
+
+  rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);
+  rpc GetUsersByIds(GetUsersByIdsReq) returns (GetUsersByIdsResp);
+  rpc GetFollowersById(GetFollowersByIdReq) returns (GetFollowersByIdResp);
+  rpc GetFollowersCountById(GetFollowersCountByIdReq) returns (GetFollowersCountByIdResp);
+  rpc CheckIsFollow(CheckIsFollowReq) returns (CheckIsFollowResp);
+  rpc GetFriendsById(GetFriendsByIdReq) returns (GetFriendsByIdResp);
+  rpc GetUserById(GetUserByIdReq) returns (GetUserByIdResp);
+  rpc GetUserListByIdList(GetUserListByIdListReq) returns (GetUserListByIdListResp);
+}

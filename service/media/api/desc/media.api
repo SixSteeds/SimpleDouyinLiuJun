@@ -1,0 +1,29 @@
+syntax = "v1"
+
+info(
+	title: "media-api"
+	desc: "media-api服务"
+	author: "liujun_team"
+	version: "v1"
+)
+
+type (
+	UploadReq {
+		Token string `form:"token"`  // 用户鉴权token
+		Title string `form:"title"`  // 视频标题
+		Data  []byte `form:"data"` // 视频数据
+	}
+	UploadResp {
+		StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
+		StatusMsg  string `json:"status_msg"`  // 返回状态描述
+	}
+)
+
+@server(
+	prefix:douyin/publish
+	middleware: JwtAuthMiddleware
+)
+service media {
+	@handler upload
+	post /action (UploadReq) returns (UploadResp)
+}

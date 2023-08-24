@@ -1,0 +1,70 @@
+package userinfo
+
+import (
+	"context"
+	"doushen_by_liujun/internal/common"
+	"doushen_by_liujun/internal/util"
+	"doushen_by_liujun/service/user/api/internal/svc"
+	"doushen_by_liujun/service/user/api/internal/types"
+	"doushen_by_liujun/service/user/rpc/pb"
+	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
+)
+
+type UserinfoLogic struct {
+	logx.Logger
+	ctx    context.Context
+	svcCtx *svc.ServiceContext
+}
+
+func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UserinfoLogic {
+	return &UserinfoLogic{
+		Logger: logx.WithContext(ctx),
+		ctx:    ctx,
+		svcCtx: svcCtx,
+	}
+}
+
+func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
+	logger, e := util.ParseToken(req.Token)
+	if e != nil {
+		return &types.UserinfoResp{
+			StatusCode: common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			User:       types.User{},
+		}, nil
+	}
+	IntUserId, _ := strconv.Atoi(logger.ID)
+	//IntUserId := 203
+
+	info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &pb.GetUserinfoByIdReq{
+		Id:     req.UserId,
+		UserID: int64(IntUserId),
+	})
+	var user types.User
+	if e != nil {
+		return &types.UserinfoResp{
+			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			User:       user,
+		}, nil
+	}
+	user = types.User{
+		UserId:          info.Userinfo.Id,
+		Name:            info.Userinfo.Username,
+		FollowCount:     info.Userinfo.FollowCount,
+		FollowerCount:   info.Userinfo.FollowerCount,
+		IsFollow:        info.Userinfo.IsFollow, //我对这个的理解就是当前用户对这条数据的用户是否关注
+		Avatar:          info.Userinfo.Avatar,
+		BackgroundImage: info.Userinfo.BackgroundImage,
+		Signature:       info.Userinfo.Signature,
+		WorkCount:       info.Userinfo.WorkCount,
+		FavoriteCount:   info.Userinfo.FavoriteCount,
+		TotalFavorited:  info.Userinfo.TotalFavorited, //查表
+	}
+	return &types.UserinfoResp{
+		StatusCode: common.OK,
+		StatusMsg:  common.MapErrMsg(common.OK),
+		User:       user,
+	}, nil
+}
