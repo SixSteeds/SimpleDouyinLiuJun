@@ -9,7 +9,7 @@ import (
 	"github.com/zeromicro/go-zero/core/service"
 )
 
-var configFile = flag.String("f", "consumer/loginConsumer/etc/uploadConsumer.yaml", "the config file")
+var configFile = flag.String("f", "consumer/uploadConsumer/etc/uploadConsumer.yaml", "the config file")
 
 type KqConf struct {
 	service.ServiceConf

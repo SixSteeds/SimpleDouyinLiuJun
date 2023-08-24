@@ -15,17 +15,18 @@ type ServiceContext struct {
 	RedisClient       *redis.Redis
 	JwtAuthMiddleware rest.Middleware
 
-	MediaRpcClient media.Media
-
-	KqPusherClient *kq.Pusher
+	MediaRpcClient               media.Media
+	UploadPersistentKqPusherConf *kq.Pusher
+	KqPusherClient               *kq.Pusher
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config:            c,
-		RedisClient:       redis.MustNewRedis(c.RedisConf),
-		MediaRpcClient:    media.NewMedia(zrpc.MustNewClient(c.MediaRpcConf)),
-		JwtAuthMiddleware: gloabmiddleware.NewJwtAuthMiddleware().Handle,
-		KqPusherClient:    kq.NewPusher(c.MediaKqPusherConf.Brokers, c.MediaKqPusherConf.Topic),
+		Config:                       c,
+		RedisClient:                  redis.MustNewRedis(c.RedisConf),
+		MediaRpcClient:               media.NewMedia(zrpc.MustNewClient(c.MediaRpcConf)),
+		JwtAuthMiddleware:            gloabmiddleware.NewJwtAuthMiddleware().Handle,
+		KqPusherClient:               kq.NewPusher(c.MediaKqPusherConf.Brokers, c.MediaKqPusherConf.Topic),
+		UploadPersistentKqPusherConf: kq.NewPusher(c.UploadPersistentKqPusherConf.Brokers, c.UploadPersistentKqPusherConf.Topic),
 	}
 }

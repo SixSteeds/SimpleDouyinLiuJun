@@ -22,4 +22,9 @@ kafka-topics.sh --bootstrap-server localhost:9092 --create --topic loginLog
 kafka-topics.sh --bootstrap-server localhost:9092 --list
 
 
+# 生成model
+goctl model mysql datasource -url="${username}:${passwd}@tcp(${host}:${port})/${dbname}" -table="${tables}"  -dir="${modeldir}" -cache=true --style=goZero
+goctl model mysql datasource -url="root:liujun@tcp(8.137.50.160:3306)/liujun_chat" -table="chat_message" -dir="./model" -cache=true --style=goZero
+
+
 
