@@ -18,6 +18,14 @@ UserRpcConf:
 #    Pass: liujun
 #    User: root
 
+Log:
+  ServiceName: chat
+  Mode: file
+  Path: logs/ordinary-log/chat
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 ChatKqPusherConf:
   Brokers:
     - 127.0.0.1:9092

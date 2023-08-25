@@ -11,6 +11,14 @@ UserRpcConf:
 #    User: root
 
 
+Log:
+  ServiceName: content
+  Mode: file
+  Path: logs/ordinary-log/content
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 ContentKqPusherConf:
   Brokers:
     - 127.0.0.1:9092

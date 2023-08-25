@@ -14,6 +14,13 @@ MediaRpcConf:
 #    Pass: liujun
 #    User: root
 
+Log:
+  ServiceName: media
+  Mode: file
+  Path: logs/ordinary-log/media
+  Level: error
+  Encoding: plain
+  KeepDays: 7
 
 UploadPersistentKqPusherConf:
   Brokers:
