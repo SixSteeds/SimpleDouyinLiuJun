@@ -10,6 +10,14 @@ UserRpcConf:
 #    Pass: liujun
 #    User: root
 
+Log:
+  ServiceName: user
+  Mode: file
+  Path: logs/ordinary-log/user
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 
 ContentRpcConf:
   Etcd:

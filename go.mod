@@ -9,6 +9,7 @@ require (
 	github.com/juju/ratelimit v1.0.2
 	github.com/minio/minio-go/v7 v7.0.62
 	github.com/robfig/cron/v3 v3.0.1
+	github.com/u2takey/ffmpeg-go v0.5.0
 	github.com/zeromicro/go-queue v1.1.8
 	github.com/zeromicro/go-zero v1.5.4
 	google.golang.org/grpc v1.57.0
@@ -65,7 +66,6 @@ require (
 	github.com/segmentio/kafka-go v0.4.38 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
-	github.com/u2takey/ffmpeg-go v0.5.0 // indirect
 	github.com/u2takey/go-utils v0.3.1 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.9 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.9 // indirect
