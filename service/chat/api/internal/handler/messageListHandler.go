@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 
 	"doushen_by_liujun/service/chat/api/internal/logic"
@@ -22,6 +23,7 @@ func messageListHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 		if err != nil {
 			httpx.ErrorCtx(r.Context(), w, err)
 		} else {
+			fmt.Println("in ok")
 			httpx.OkJsonCtx(r.Context(), w, resp)
 		}
 	}

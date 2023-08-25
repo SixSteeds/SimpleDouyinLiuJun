@@ -7,9 +7,8 @@ import (
 	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
-	"log"
-
 	"github.com/zeromicro/go-zero/core/logx"
+	"log"
 )
 
 type MessageListLogic struct {
@@ -27,8 +26,16 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 }
 
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
+
 	var resp *types.MessageChatReqResp
+	var lastTime int64
+	if req.PreMsgTime > 169268692200 {
+		lastTime = req.PreMsgTime / 1000
+	} else {
+		lastTime = req.PreMsgTime
+	}
 	// parse token
+	fmt.Println(lastTime)
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
 		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_ParseToken_false"); err != nil {
@@ -49,7 +56,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	request := pb.GetChatMessageByIdReq{
 		UserId:     userId,
 		ToUserId:   toUserId,
-		PreMsgTime: req.PreMsgTime,
+		PreMsgTime: lastTime,
 	}
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
@@ -67,12 +74,14 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 
 	var messages []types.Message
 	for _, item := range message.MessageList {
+		//createTime, _ := time.Parse("2006-01-02 15:04:05", item.CreateTime)
+
 		msg := types.Message{
 			Id:         item.Id,
 			ToUserId:   item.ToUserId,
 			FromUserId: item.FromUserId,
 			Content:    item.Content,
-			CreateTime: item.CreateTime,
+			CreateTime: item.CreateTime, //strconv.Itoa(int(createTime.Unix() )),
 		}
 		messages = append(messages, msg)
 	}
@@ -85,5 +94,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Println(resp, resp.StatusCode)
 	return resp, nil
 }

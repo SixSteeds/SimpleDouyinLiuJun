@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"strconv"
 
 	"doushen_by_liujun/service/chat/rpc/internal/svc"
 	"doushen_by_liujun/service/chat/rpc/pb"
@@ -40,7 +41,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 			ToUserId:   item.ToUserId,
 			FromUserId: item.UserId,
 			Content:    item.Message,
-			CreateTime: item.CreateTime.String(),
+			CreateTime: strconv.Itoa(int(item.CreateTime.Unix())),
 		})
 	}
 	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
