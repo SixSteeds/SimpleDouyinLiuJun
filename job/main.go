@@ -36,6 +36,7 @@ func main() {
 
 	// 标准构建
 	c.AddFunc("@every 5s", logic.NewAddLikeInfoLogic(ctx, conn, rds).AddLikeInfo)
+	c.AddFunc("@every 24h", logic.NewCheckLogLogic(ctx).CheckLog)
 
 	//定时任务启动
 	c.Start()
