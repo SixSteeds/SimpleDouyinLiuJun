@@ -27,4 +27,8 @@ goctl model mysql datasource -url="${username}:${passwd}@tcp(${host}:${port})/${
 goctl model mysql datasource -url="root:liujun@tcp(8.137.50.160:3306)/liujun_chat" -table="chat_message" -dir="./model" -cache=true --style=goZero
 
 
+# 例如 goctl docker --go user.go --exe userapi --version 1.19
+goctl docker --go <service_name>.go --exe <docker_name> --version 1.19
 
+# 例如 docker build -t userapi:v1 .
+docker build -t <docker_name>:v1 .
