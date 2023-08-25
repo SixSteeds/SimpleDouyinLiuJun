@@ -31,7 +31,7 @@ type (
 		FindOne(ctx context.Context, id int64) (*ChatMessage, error)
 		Update(ctx context.Context, data *ChatMessage) error
 		Delete(ctx context.Context, id int64) error
-		GetChatMsgByIds(ctx context.Context, userId, toUserId int64)(*[]*ChatMessage, error)
+		GetChatMsgByIds(ctx context.Context, userId, toUserId, preMsgTime int64) (*[]*ChatMessage, error)
 	}
 
 	defaultChatMessageModel struct {
@@ -64,13 +64,16 @@ func (m *defaultChatMessageModel) withSession(session sqlx.Session) *defaultChat
 	}
 }
 
-func (m *defaultChatMessageModel) GetChatMsgByIds(ctx context.Context, userId, toUserId int64) (*[]*ChatMessage, error) {
+func (m *defaultChatMessageModel) GetChatMsgByIds(ctx context.Context, userId, toUserId, preMsgTime int64) (*[]*ChatMessage, error) {
 	var result []*ChatMessage
-	querySql := fmt.Sprintf("SELECT * FROM %s WHERE `user_id` = ? AND `to_user_id` = ? AND `is_delete` = 0 ORDER BY `create_time` DESC", m.table)
-	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId); err != nil {
+	timestamp := preMsgTime / 1000 // 将毫秒转换为秒
+	t := time.Unix(timestamp, 0)
+	formattedTime := t.Format("2006-01-02 15:04:05")
+	fmt.Println(formattedTime)
+	querySql := fmt.Sprintf("SELECT * FROM %s WHERE ((`user_id` = ? AND `to_user_id` = ?) OR (`user_id` = ? AND `to_user_id` = ?)) AND `is_delete` = 0 ORDER BY `create_time` DESC", m.table)
+	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId, toUserId, userId); err != nil {
 		return nil, fmt.Errorf("fail to getChatMessage by ids, error = %s", err)
 	}
-	fmt.Println(result)
 	return &result, nil
 }
 

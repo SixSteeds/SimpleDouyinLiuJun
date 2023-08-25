@@ -27,7 +27,7 @@ func NewGetChatMessageByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 
 func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdReq) (*pb.GetChatMessageByIdResp, error) {
 	var results []*pb.Message
-	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId)
+	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId, in.PreMsgTime)
 	if err != nil {
 		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
 			log.Fatal(err)
