@@ -13,7 +13,7 @@ UserRpcConf:
 Log:
   ServiceName: user
   Mode: file
-  Path: logs/ordinary-log/user
+  Path: logs/ordinary-log/user/api
   Level: error
   Encoding: plain
   KeepDays: 7

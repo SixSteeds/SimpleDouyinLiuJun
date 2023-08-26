@@ -21,7 +21,7 @@ UserRpcConf:
 Log:
   ServiceName: chat
   Mode: file
-  Path: logs/ordinary-log/chat
+  Path: logs/ordinary-log/chat/api
   Level: error
   Encoding: plain
   KeepDays: 7

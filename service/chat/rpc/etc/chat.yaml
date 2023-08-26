@@ -16,6 +16,14 @@ ChatKqPusherConf:
     - 127.0.0.1:9095
   Topic: chat
 
+Log:
+  ServiceName: chat.rpc
+  Mode: file
+  Path: logs/ordinary-log/chat/rpc
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun
