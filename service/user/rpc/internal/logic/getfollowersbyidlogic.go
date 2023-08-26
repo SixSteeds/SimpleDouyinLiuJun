@@ -5,7 +5,6 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -28,7 +27,7 @@ func NewGetFollowersByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *
 }
 
 func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*pb.GetFollowersByIdResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info(in)
 	follows, err := l.svcCtx.FollowsModel.FindByFollowId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
@@ -70,7 +69,6 @@ func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*p
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
-		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
 			Id:              item.Id,
 			FollowerCount:   int64(followerNum),

@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -29,6 +28,7 @@ func NewGetFriendsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
+	l.Logger.Info(in)
 	follows, err := l.svcCtx.FollowsModel.FindFriendsByUserId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
@@ -70,7 +70,6 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
-		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
 			Id:              item.Id,
 			FollowerCount:   int64(followerNum),

@@ -24,7 +24,7 @@ func NewGetFollowersCountByIdLogic(ctx context.Context, svcCtx *svc.ServiceConte
 }
 
 func (l *GetFollowersCountByIdLogic) GetFollowersCountById(in *pb.GetFollowersCountByIdReq) (*pb.GetFollowersCountByIdResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info(in)
 	count, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, in.Id)
 	return &pb.GetFollowersCountByIdResp{
 		Count: int64(count),
