@@ -19,6 +19,14 @@ MediaKqPusherConf:
     - 127.0.0.1:9095
   Topic: media
 
+Log:
+  ServiceName: media.rpc
+  Mode: file
+  Path: logs/ordinary-log/media/rpc
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun

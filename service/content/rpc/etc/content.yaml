@@ -23,6 +23,14 @@ Cache:
 
 Mode: dev
 
+Log:
+  ServiceName: content.rpc
+  Mode: file
+  Path: logs/ordinary-log/content/rpc
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+
 RedisConf:
   Host: 0.0.0.0:8094
   Pass: "liujun"
