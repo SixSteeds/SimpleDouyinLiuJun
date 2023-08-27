@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
@@ -31,7 +32,7 @@ func NewAddCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddCom
 func (l *AddCommentLogic) AddComment(in *pb.AddCommentReq) (*pb.AddCommentResp, error) {
 
 	//1. 雪花算法生成 id
-	snowflake, err1 := util.NewSnowflake(3)
+	snowflake, err1 := util.NewSnowflake(common.ContentRpcMachineId)
 	if err1 != nil {
 		return nil, errors.New("rpc-AddComment-新增评论，snowflake生成id失败")
 	}

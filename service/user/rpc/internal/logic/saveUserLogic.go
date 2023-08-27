@@ -57,7 +57,7 @@ func (l *SaveUserLogic) SaveUser(in *pb.SaveUserReq) (*pb.SaveUserResp, error) {
 	}
 	// tzx在创建用户时向数据库中写入自己关注自己，保证刷到自己的视频时不会出现红加号
 	// 在取消关注时加以限制，不允许取消关注自己
-	data, err := util.NewSnowflake(47)
+	data, err := util.NewSnowflake(common.UserRpcMachineId)
 	if err != nil {
 		l.Logger.Info("雪花算法报错", err)
 		return &pb.SaveUserResp{

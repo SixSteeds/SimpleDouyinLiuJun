@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	constants "doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/internal/model"
 	"errors"
@@ -53,7 +54,7 @@ func (l *AddFavoriteLogic) AddFavorite(in *pb.AddFavoriteReq) (*pb.AddFavoriteRe
 		//3.favorite记录不存在，则新增点赞信息到 favorite 表项
 		fmt.Println("没查到")
 		//雪花算法生成id
-		snowflake, err1 := util.NewSnowflake(3)
+		snowflake, err1 := util.NewSnowflake(constants.ContentRpcMachineId)
 		if err1 != nil {
 			return nil, errors.New("rpc-AddFavorite-新增评论，snowflake生成id失败")
 		}

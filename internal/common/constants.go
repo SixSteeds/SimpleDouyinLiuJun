@@ -38,6 +38,7 @@ const ContentApiMachineId = 5
 const ContentRpcMachineId = 6
 const ChatApiMachineId = 7
 const ChatRpcMachineId = 8
+const OtherMachineId = 9
 
 /*
 redis缓存前缀

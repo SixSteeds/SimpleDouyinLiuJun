@@ -5,6 +5,6 @@ Brokers:
 Group: loginLog
 Topic: loginLog
 Offset: first
-Consumers: 1
+
 
 

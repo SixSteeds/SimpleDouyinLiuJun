@@ -127,7 +127,7 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 			}
 		} else {
 			// 3.3 如果记录不存在，则拼接字符串 insertBatch 等到后续批量插入
-			snowflake, err1 := util.NewSnowflake(3)
+			snowflake, err1 := util.NewSnowflake(constants.OtherMachineId)
 			if err1 != nil && err != sql.ErrNoRows {
 				fmt.Println("【Redis同步数据, Mysql更新失败时snowflake生成id失败】")
 			}
