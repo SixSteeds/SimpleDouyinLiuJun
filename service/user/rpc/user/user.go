@@ -30,6 +30,8 @@ type (
 	GetFollowsByIdResp        = pb.GetFollowsByIdResp
 	GetFriendsByIdReq         = pb.GetFriendsByIdReq
 	GetFriendsByIdResp        = pb.GetFriendsByIdResp
+	GetPasswordByUsernameReq  = pb.GetPasswordByUsernameReq
+	GetPasswordByUsernameResp = pb.GetPasswordByUsernameResp
 	GetUserByIdReq            = pb.GetUserByIdReq
 	GetUserByIdResp           = pb.GetUserByIdResp
 	GetUserListByIdListReq    = pb.GetUserListByIdListReq
@@ -49,6 +51,7 @@ type (
 		GetFollowsById(ctx context.Context, in *GetFollowsByIdReq, opts ...grpc.CallOption) (*GetFollowsByIdResp, error)
 		SaveUser(ctx context.Context, in *SaveUserReq, opts ...grpc.CallOption) (*SaveUserResp, error)
 		CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error)
+		GetPasswordByUsername(ctx context.Context, in *GetPasswordByUsernameReq, opts ...grpc.CallOption) (*GetPasswordByUsernameResp, error)
 		GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error)
 		GetUsersByIds(ctx context.Context, in *GetUsersByIdsReq, opts ...grpc.CallOption) (*GetUsersByIdsResp, error)
 		GetFollowersById(ctx context.Context, in *GetFollowersByIdReq, opts ...grpc.CallOption) (*GetFollowersByIdResp, error)
@@ -93,6 +96,11 @@ func (m *defaultUser) SaveUser(ctx context.Context, in *SaveUserReq, opts ...grp
 func (m *defaultUser) CheckUser(ctx context.Context, in *CheckUserReq, opts ...grpc.CallOption) (*CheckUserResp, error) {
 	client := pb.NewUserClient(m.cli.Conn())
 	return client.CheckUser(ctx, in, opts...)
+}
+
+func (m *defaultUser) GetPasswordByUsername(ctx context.Context, in *GetPasswordByUsernameReq, opts ...grpc.CallOption) (*GetPasswordByUsernameResp, error) {
+	client := pb.NewUserClient(m.cli.Conn())
+	return client.GetPasswordByUsername(ctx, in, opts...)
 }
 
 func (m *defaultUser) GetUserinfoById(ctx context.Context, in *GetUserinfoByIdReq, opts ...grpc.CallOption) (*GetUserinfoByIdResp, error) {

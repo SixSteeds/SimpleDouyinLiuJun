@@ -9,7 +9,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"encoding/json"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 
@@ -42,19 +41,8 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 		}, nil
 	}
 
-	// Generate a bcrypt hash of the password
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
-	if err != nil {
-		l.Logger.Error(err)
-		return &types.LoginResp{
-			StatusCode: common.SERVER_COMMON_ERROR,
-			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
-		}, nil
-	}
-
-	data, err := l.svcCtx.UserRpcClient.CheckUser(l.ctx, &pb.CheckUserReq{
+	data, err := l.svcCtx.UserRpcClient.GetPasswordByUsername(l.ctx, &pb.GetPasswordByUsernameReq{
 		Username: req.Username,
-		Password: string(hashedPassword),
 	})
 
 	if err != nil {
@@ -64,8 +52,16 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
 		}, nil
 	}
+	err = bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
+	if err != nil {
+		l.Logger.Error(err)
+		return &types.LoginResp{
+			StatusCode: common.AUTHORIZATION_ERROR,
+			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
+		}, nil
+	}
 
-	token, err := util.GenToken(data.UserId, req.Username)
+	token, err := util.GenToken(data.Id, req.Username)
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.LoginResp{
@@ -77,10 +73,9 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	ipString, ok := ip.(string)
 	message := gloabalType.LoginSuccessMessage{}
 	if ok {
-		fmt.Println("sdasdasdad")
 		message.IP = ipString
 		message.Logintime = time.Now()
-		message.UserId = data.UserId
+		message.UserId = data.Id
 		messageBytes, err := json.Marshal(message)
 		if err != nil {
 			l.Logger.Error("无法序列化 message 结构体为 JSON：", err)
@@ -93,7 +88,7 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	}
 
 	return &types.LoginResp{
-		UserId:     data.UserId,
+		UserId:     data.Id,
 		StatusCode: common.OK,
 		StatusMsg:  common.MapErrMsg(common.OK),
 		Token:      token,

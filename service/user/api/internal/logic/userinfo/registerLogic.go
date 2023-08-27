@@ -9,7 +9,6 @@ import (
 	"doushen_by_liujun/service/user/api/internal/types"
 	"doushen_by_liujun/service/user/rpc/pb"
 	"encoding/json"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 
@@ -71,7 +70,6 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	ipString, ok := ip.(string)
 	message := gloabalType.LoginSuccessMessage{}
 	if ok {
-		fmt.Println("sdasdasdad")
 		message.IP = ipString
 		message.Logintime = time.Now()
 		message.UserId = data.Id

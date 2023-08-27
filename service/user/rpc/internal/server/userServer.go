@@ -47,6 +47,11 @@ func (s *UserServer) CheckUser(ctx context.Context, in *pb.CheckUserReq) (*pb.Ch
 	return l.CheckUser(in)
 }
 
+func (s *UserServer) GetPasswordByUsername(ctx context.Context, in *pb.GetPasswordByUsernameReq) (*pb.GetPasswordByUsernameResp, error) {
+	l := logic.NewGetPasswordByUsernameLogic(ctx, s.svcCtx)
+	return l.GetPasswordByUsername(in)
+}
+
 func (s *UserServer) GetUserinfoById(ctx context.Context, in *pb.GetUserinfoByIdReq) (*pb.GetUserinfoByIdResp, error) {
 	l := logic.NewGetUserinfoByIdLogic(ctx, s.svcCtx)
 	return l.GetUserinfoById(in)
