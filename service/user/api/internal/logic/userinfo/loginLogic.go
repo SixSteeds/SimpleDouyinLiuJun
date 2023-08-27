@@ -10,6 +10,7 @@ import (
 	"doushen_by_liujun/service/user/rpc/pb"
 	"encoding/json"
 	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -30,31 +31,47 @@ func NewLoginLogic(ctx context.Context, svcCtx *svc.ServiceContext) *LoginLogic 
 }
 
 func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err error) {
+	l.Logger.Info("login方法请求参数：", req)
+
 	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) > 32 {
+
+		l.Logger.Error("login方法参数错误")
 		return &types.LoginResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
 			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
 		}, nil
 	}
 
+	// Generate a bcrypt hash of the password
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
+	if err != nil {
+		l.Logger.Error(err)
+		return &types.LoginResp{
+			StatusCode: common.SERVER_COMMON_ERROR,
+			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
+		}, nil
+	}
+
 	data, err := l.svcCtx.UserRpcClient.CheckUser(l.ctx, &pb.CheckUserReq{
 		Username: req.Username,
-		Password: req.Password,
+		Password: string(hashedPassword),
 	})
 
 	if err != nil {
+		l.Logger.Error(err)
 		return &types.LoginResp{
 			StatusCode: common.AUTHORIZATION_ERROR,
 			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
-		}, err
+		}, nil
 	}
 
 	token, err := util.GenToken(data.UserId, req.Username)
 	if err != nil {
+		l.Logger.Error(err)
 		return &types.LoginResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
 			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
-		}, err
+		}, nil
 	}
 	ip := l.ctx.Value("ip")
 	ipString, ok := ip.(string)

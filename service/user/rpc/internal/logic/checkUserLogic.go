@@ -24,8 +24,8 @@ func NewCheckUserLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CheckUs
 
 func (l *CheckUserLogic) CheckUser(in *pb.CheckUserReq) (*pb.CheckUserResp, error) {
 	// todo: add your logic here and delete this line
+	l.Logger.Info("CheckUser方法请求参数：", in)
 	id, err := l.svcCtx.UserinfoModel.CheckOne(l.ctx, in.Username, in.Password)
-
 	if err != nil {
 		return nil, err
 	}

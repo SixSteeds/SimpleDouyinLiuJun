@@ -64,6 +64,8 @@ services:
     image: docker.io/bitnami/kafka:3.5
     container_name: kafka
     hostname: kafka
+    networks:
+      - liujun_net
     ports:
       - "9092:9092"
     volumes:
@@ -94,6 +96,20 @@ services:
     restart: always
     networks:
       - liujun_net
+
+
+  contentrpc:
+    image: contentrpc:v1
+    container_name: contentrpc
+    restart: always
+    volumes:
+      - ../service/content/rpc/etc/content.yaml:/app/service/content/rpc/etc/content.yaml
+    networks:
+      - liujun_net
+    depends_on:
+      - etcd
+      - redis
+      - kafka
 
 
   # 容器网络

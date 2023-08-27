@@ -27,9 +27,8 @@ func NewGetPublishListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetPublishListLogic) GetPublishList(in *pb.PublishListReq) (*pb.PublishListResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info("GetPublishList方法请求参数：", in)
 
-	fmt.Println("进入GetPublishList rpc逻辑")
 	feedList, err := l.svcCtx.VideoModel.GetPublishList(l.ctx, in.UserId, in.CheckUserId)
 	//fmt.Println(feedList)
 	if err != nil {
