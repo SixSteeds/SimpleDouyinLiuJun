@@ -5,6 +5,6 @@ Brokers:
 Group: uploadPersistent
 Topic: uploadPersistent
 Offset: first
-Consumers: 1
+
 
 

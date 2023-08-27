@@ -82,7 +82,7 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			LatestTime: int64(9999999999),
 			Size:       int64(5 - listLen),
 		})
-		//陶子勋收到的数据！！！！！！ 877806281992183808 1111111111 1
+		//陶子勋收到的数据！！！！！！
 		if err != nil {
 			l.Logger.Error(err)
 			return &types.FeedResp{

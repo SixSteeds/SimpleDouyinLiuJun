@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/user/rpc/internal/model"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
@@ -27,7 +28,7 @@ func NewAddFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddFol
 // -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, error) {
 	l.Logger.Info(in)
-	data, err := util.NewSnowflake(47)
+	data, err := util.NewSnowflake(common.UserRpcMachineId)
 	if err != nil {
 		l.Logger.Info("雪花算法报错", err)
 		return nil, errors.New("雪花算法报错")

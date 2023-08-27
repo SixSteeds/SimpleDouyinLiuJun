@@ -31,8 +31,12 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 	var userId int64
 	token, err := util.ParseToken(req.Token)
 	if err != nil {
-		// 用户未登录
-		userId = 0
+		// 用户未登录（此处避免抖声app在退出登录时乱发请求所做限流）
+		return &types.PublishListResp{
+			StatusCode: common.OK,
+			StatusMsg:  common.MapErrMsg(common.OK),
+			VideoList:  nil,
+		}, nil
 	} else {
 		userId = token.UserID
 	}

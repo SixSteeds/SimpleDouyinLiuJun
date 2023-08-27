@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/rpc/internal/model"
 	"fmt"
@@ -31,7 +32,7 @@ func NewAddChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ad
 func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
 	// generate id
 	rand.Seed(time.Now().UnixNano())
-	snowflake, err := util.NewSnowflake(int64(rand.Intn(1023)))
+	snowflake, err := util.NewSnowflake(common.ChatRpcMachineId)
 	if err != nil {
 
 		return nil, fmt.Errorf("fail to generate id, error = %s", err)
