@@ -98,20 +98,6 @@ services:
       - liujun_net
 
 
-  contentrpc:
-    image: contentrpc:v1
-    container_name: contentrpc
-    restart: always
-    volumes:
-      - ../service/content/rpc/etc/content.yaml:/app/service/content/rpc/etc/content.yaml
-    networks:
-      - liujun_net
-    depends_on:
-      - etcd
-      - redis
-      - kafka
-
-
   # 容器网络
 networks:
   liujun_net:

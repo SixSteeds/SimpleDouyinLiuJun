@@ -3,14 +3,12 @@ package svc
 import (
 	"doushen_by_liujun/service/media/rpc/internal/config"
 	"doushen_by_liujun/service/media/rpc/internal/model"
-	"github.com/zeromicro/go-queue/kq"
 	"github.com/zeromicro/go-zero/core/stores/sqlx"
 )
 
 type ServiceContext struct {
-	Config         config.Config
-	KqPusherClient *kq.Pusher
-	MediaModel     model.VideoModel
+	Config     config.Config
+	MediaModel model.VideoModel
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
@@ -19,7 +17,5 @@ func NewServiceContext(c config.Config) *ServiceContext {
 
 		Config:     c,
 		MediaModel: model.NewVideoModel(sqlConn, c.Cache),
-
-		KqPusherClient: kq.NewPusher(c.MediaKqPusherConf.Brokers, c.MediaKqPusherConf.Topic),
 	}
 }
