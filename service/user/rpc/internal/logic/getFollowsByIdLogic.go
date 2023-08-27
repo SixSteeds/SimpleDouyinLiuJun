@@ -5,7 +5,6 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
 	"math/rand"
 	"strconv"
@@ -27,7 +26,7 @@ func NewGetFollowsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetFollowsByIdResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info(in)
 	follows, err := l.svcCtx.FollowsModel.FindByUserId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
@@ -69,7 +68,6 @@ func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetF
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
-		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
 			Id:              item.Id,
 			FollowerCount:   int64(followerNum),

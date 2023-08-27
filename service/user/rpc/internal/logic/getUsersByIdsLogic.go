@@ -4,7 +4,6 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	contentPB "doushen_by_liujun/service/content/rpc/pb"
-	"fmt"
 	"math/rand"
 	"strconv"
 	"time"
@@ -30,9 +29,8 @@ func NewGetUsersByIdsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Get
 }
 
 func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUsersByIdsResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info(in)
 	//userId查id这个人
-
 	infos, err := l.svcCtx.UserinfoModel.FindByIds(l.ctx, in.Ids, in.UserID)
 	if err != nil || len(*infos) == 0 {
 		return nil, err
@@ -43,8 +41,8 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 		redisClient := l.svcCtx.RedisClient
 		followKey := common.FollowNum + strconv.Itoa(int(id))
 		followerKey := common.FollowerNum + strconv.Itoa(int(id))
-		//followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
-		followRecord, _ := redisClient.Get(followKey)
+		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
+		//followRecord, _ := redisClient.Get(followKey)
 		followNum := 0
 		followerNum := 0
 		rand.Seed(time.Now().UnixNano())
@@ -63,9 +61,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			followNum, _ = strconv.Atoi(followRecord)
 		}
 		followerRecord, _ := redisClient.GetCtx(l.ctx, followerKey)
-		fmt.Println("使用get")
 		_, _ = redisClient.Get(followerKey)
-		fmt.Println("使用get结束")
 		if len(followerRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, id)

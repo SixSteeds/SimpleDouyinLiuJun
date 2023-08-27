@@ -3,33 +3,32 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"fmt"
+	"doushen_by_liujun/service/user/rpc/internal/svc"
+	"doushen_by_liujun/service/user/rpc/pb"
 	"math/rand"
 	"strconv"
 	"time"
 
-	"doushen_by_liujun/service/user/rpc/internal/svc"
-	"doushen_by_liujun/service/user/rpc/pb"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-type GetFriendsByIdLogic struct {
+type GetFollowersByIdLogic struct {
 	ctx    context.Context
 	svcCtx *svc.ServiceContext
 	logx.Logger
 }
 
-func NewGetFriendsByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFriendsByIdLogic {
-	return &GetFriendsByIdLogic{
+func NewGetFollowersByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFollowersByIdLogic {
+	return &GetFollowersByIdLogic{
 		ctx:    ctx,
 		svcCtx: svcCtx,
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetFriendsByIdResp, error) {
-	follows, err := l.svcCtx.FollowsModel.FindFriendsByUserId(l.ctx, in.Id)
+func (l *GetFollowersByIdLogic) GetFollowersById(in *pb.GetFollowersByIdReq) (*pb.GetFollowersByIdResp, error) {
+	l.Logger.Info(in)
+	follows, err := l.svcCtx.FollowsModel.FindByFollowId(l.ctx, in.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -70,7 +69,6 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			//有记录
 			followerNum, _ = strconv.Atoi(followerRecord)
 		}
-		fmt.Println(item)
 		resp = append(resp, &pb.Follows{
 			Id:              item.Id,
 			FollowerCount:   int64(followerNum),
@@ -82,7 +80,7 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 			IsFollow:        item.IsFollow,
 		})
 	}
-	return &pb.GetFriendsByIdResp{
+	return &pb.GetFollowersByIdResp{
 		Follows: resp,
 	}, nil
 }

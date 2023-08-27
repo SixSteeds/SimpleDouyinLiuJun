@@ -27,8 +27,10 @@ func NewFollowerListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Foll
 }
 
 func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *types.FollowerListResp, err error) {
+	l.Logger.Info(req)
 	_, e := util.ParseToken(req.Token)
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.FollowerListResp{
 			StatusCode:   common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:    common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -39,6 +41,7 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 		Id: req.UserId,
 	})
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.FollowerListResp{
 			StatusCode:   common.DB_ERROR,
 			StatusMsg:    common.MapErrMsg(common.DB_ERROR),
@@ -60,7 +63,12 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 				UserId: item.Id,
 			})
 			if err != nil {
-				return nil, err
+				l.Logger.Error(err)
+				return &types.FollowerListResp{
+					StatusCode:   common.DB_ERROR,
+					StatusMsg:    common.MapErrMsg(common.DB_ERROR),
+					FollowerList: nil,
+				}, nil
 			}
 			workCount = int(ans.WorkCount)
 			redisClient.SetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(item.Id)), strconv.Itoa(workCount))
@@ -74,7 +82,12 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 				UserId: item.Id,
 			})
 			if err != nil {
-				return nil, err
+				l.Logger.Error(err)
+				return &types.FollowerListResp{
+					StatusCode:   common.DB_ERROR,
+					StatusMsg:    common.MapErrMsg(common.DB_ERROR),
+					FollowerList: nil,
+				}, nil
 			}
 			favoriteCount = int(ans.FavoriteCount)
 			redisClient.SetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(item.Id)), strconv.Itoa(favoriteCount))
@@ -89,7 +102,12 @@ func (l *FollowerListLogic) FollowerList(req *types.FollowerListReq) (resp *type
 				UserId: item.Id,
 			})
 			if err != nil {
-				return nil, err
+				l.Logger.Error(err)
+				return &types.FollowerListResp{
+					StatusCode:   common.DB_ERROR,
+					StatusMsg:    common.MapErrMsg(common.DB_ERROR),
+					FollowerList: nil,
+				}, nil
 			}
 			totalFavorited = int(ans.LikedCnt)
 			redisClient.SetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(item.Id)), strconv.Itoa(totalFavorited))

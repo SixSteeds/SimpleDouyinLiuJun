@@ -31,8 +31,10 @@ func NewFollowLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FollowLogi
 }
 
 func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err error) {
+	l.Logger.Info(req)
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.FollowResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -147,6 +149,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				FollowId: strconv.FormatInt(req.ToUserId, 10),
 			})
 			if err != nil {
+				l.Logger.Error(err)
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -162,6 +165,7 @@ func (l *FollowLogic) Follow(req *types.FollowReq) (resp *types.FollowResp, err 
 				FollowId: strconv.FormatInt(req.ToUserId, 10),
 			})
 			if err != nil {
+				l.Logger.Error(err)
 				return &types.FollowResp{
 					StatusCode: common.DB_ERROR,
 					StatusMsg:  common.MapErrMsg(common.DB_ERROR),

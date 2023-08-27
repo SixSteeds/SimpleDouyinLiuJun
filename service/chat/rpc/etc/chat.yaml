@@ -8,13 +8,15 @@ Etcd:
 DB:
   DataSource: root:liujun@tcp(8.137.50.160:3306)/liujun_chat?charset=utf8mb4&parseTime=true&loc=Asia%2FShanghai
 
-ChatKqPusherConf:
-  Brokers:
-    - 127.0.0.1:9092
-    - 127.0.0.1:9093
-    - 127.0.0.1:9094
-    - 127.0.0.1:9095
-  Topic: chat
+
+
+Log:
+  ServiceName: chat.rpc
+  Mode: file
+  Path: logs/ordinary-log/chat/rpc
+  Level: error
+  Encoding: plain
+  KeepDays: 7
 
 Cache:
   - Host: 0.0.0.0:8094

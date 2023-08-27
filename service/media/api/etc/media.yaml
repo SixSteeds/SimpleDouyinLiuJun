@@ -11,13 +11,12 @@ MediaRpcConf:
     Hosts:
       - 127.0.0.1:8090
     Key: mediaRpc
-#    Pass: liujun
-#    User: root
+
 
 Log:
   ServiceName: media
   Mode: file
-  Path: logs/ordinary-log/media
+  Path: logs/ordinary-log/media/api
   Level: error
   Encoding: plain
   KeepDays: 7

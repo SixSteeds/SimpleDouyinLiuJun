@@ -26,8 +26,10 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 }
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
+	l.Logger.Info(req)
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.UserinfoResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -35,7 +37,6 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 		}, nil
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
-	//IntUserId := 203
 
 	info, e := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &pb.GetUserinfoByIdReq{
 		Id:     req.UserId,
@@ -43,6 +44,7 @@ func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoRe
 	})
 	var user types.User
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.UserinfoResp{
 			StatusCode: common.DB_ERROR,
 			StatusMsg:  common.MapErrMsg(common.DB_ERROR),

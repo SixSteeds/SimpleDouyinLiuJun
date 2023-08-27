@@ -8,9 +8,7 @@ import (
 	"doushen_by_liujun/service/content/api/internal/types"
 	"doushen_by_liujun/service/content/rpc/pb"
 	userPB "doushen_by_liujun/service/user/rpc/pb"
-	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 	"strconv"
 	"time"
 )
@@ -30,11 +28,10 @@ func NewCommentListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Comme
 }
 
 func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.CommentListResp, err error) {
+	l.Logger.Info(req)
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_ParseToken_false"); err != nil {
-			log.Fatal(err)
-		}
+		l.Logger.Error(e)
 		return &types.CommentListResp{
 			StatusCode:  common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -44,24 +41,20 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	comment, e := l.svcCtx.ContentRpcClient.GetCommentById(l.ctx, &pb.GetCommentByIdReq{
 		Id: req.VideoId,
 	})
-	fmt.Println("我来看看获取到的评论列表")
-	fmt.Println(comment.Comment)
 	var comments []types.Comment
+	if e != nil {
+		l.Logger.Error(e)
+		return &types.CommentListResp{
+			StatusCode:  common.DB_ERROR,
+			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
+			CommentList: []types.Comment{},
+		}, nil
+	}
 	if len(comment.Comment) == 0 {
 		return &types.CommentListResp{
 			StatusCode:  common.OK,
 			StatusMsg:   common.MapErrMsg(common.OK),
 			CommentList: comments,
-		}, nil
-	}
-	if e != nil {
-		if err := l.svcCtx.KqPusherClient.Push("content_api_comment_CommentListLogic_CommentList_GetCommentById_false"); err != nil {
-			log.Fatal(err)
-		}
-		return &types.CommentListResp{
-			StatusCode:  common.DB_ERROR,
-			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
-			CommentList: []types.Comment{},
 		}, nil
 	}
 	IntUserId, _ := strconv.Atoi(logger.ID)
@@ -75,6 +68,7 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 		UserID: int64(IntUserId),
 	})
 	if e != nil {
+		l.Logger.Error(e)
 		return &types.CommentListResp{
 			StatusCode:  common.DB_ERROR,
 			StatusMsg:   common.MapErrMsg(common.DB_ERROR),

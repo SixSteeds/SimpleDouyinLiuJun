@@ -3,12 +3,10 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/service/content/rpc/internal/model"
-	"errors"
-	"fmt"
-	"log"
-
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
+	"errors"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -34,9 +32,6 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.New("数据查询失败")
 	}
-	if err := l.svcCtx.KqPusherClient.Push("content_rpc_searchFavoriteLogic_SearchFavorite_FindFavoriteListByUserId_false"); err != nil {
-		log.Fatal(err)
-	}
 	var resp []*pb.Favorite
 	for _, item := range *favoriteList {
 		if item.IsDelete == 0 { //逻辑删除的不返回给api
@@ -51,9 +46,6 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 	}
 	fmt.Println("【rpc-SearchFavorite-查询用户点赞列表成功】")
 	logx.Error("rpc-查询用户点赞列表成功")
-	if err := l.svcCtx.KqPusherClient.Push("content_rpc_searchFavoriteLogic_SearchFavorite_success"); err != nil {
-		log.Fatal(err)
-	}
 	return &pb.SearchFavoriteResp{
 		Favorite: resp,
 	}, nil

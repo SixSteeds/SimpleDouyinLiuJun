@@ -2,11 +2,9 @@ package logic
 
 import (
 	"context"
-	"fmt"
-	"log"
-
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -26,14 +24,10 @@ func NewGetCommentByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ge
 }
 
 func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetCommentByIdResp, error) {
+	l.Logger.Info(in)
 	comments, err := l.svcCtx.CommentModel.FindConmentsByVideoId(l.ctx, in.Id)
-	//a, err := l.svcCtx.CommentForUserModel.FindOne(l.ctx, 3)
-	//fmt.Println("dr数据库", a)
 	if err != nil {
 		return nil, err
-	}
-	if err := l.svcCtx.KqPusherClient.Push("content_rpc_getCommentByIdLogic_GetCommentById_FindCommentsByVideoId_false"); err != nil {
-		log.Fatal(err)
 	}
 	var resp []*pb.Comment
 	for _, item := range *comments {
@@ -46,9 +40,6 @@ func (l *GetCommentByIdLogic) GetCommentById(in *pb.GetCommentByIdReq) (*pb.GetC
 			CreateTime: item.CreateTime.Unix(),
 			UpdateTime: item.UpdateTime.Unix(),
 		})
-	}
-	if err := l.svcCtx.KqPusherClient.Push("content_rpc_getCommentByIdLogic_GetCommentById_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.GetCommentByIdResp{
 		Comment: resp,

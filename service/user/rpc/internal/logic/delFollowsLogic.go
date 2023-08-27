@@ -23,14 +23,14 @@ func NewDelFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelFol
 }
 
 func (l *DelFollowsLogic) DelFollows(in *pb.DelFollowsReq) (*pb.DelFollowsResp, error) {
-	// todo: add your logic here and delete this line
+	l.Logger.Info(in)
 	if in.UserId == in.FollowId {
 		//不能取消关注自己
 		return nil, errors.New("不能取消关注自己")
 	}
 	e := l.svcCtx.FollowsModel.DeleteByUserIdAndFollowId(l.ctx, in.UserId, in.FollowId)
 	if e != nil {
-		l.Logger.Info("删除关注失败", e)
+		l.Logger.Error("删除关注失败", e)
 		return nil, e
 	}
 	return &pb.DelFollowsResp{}, nil

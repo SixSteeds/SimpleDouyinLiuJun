@@ -66,12 +66,13 @@ func (m *defaultChatMessageModel) withSession(session sqlx.Session) *defaultChat
 
 func (m *defaultChatMessageModel) GetChatMsgByIds(ctx context.Context, userId, toUserId, preMsgTime int64) (*[]*ChatMessage, error) {
 	var result []*ChatMessage
-	timestamp := preMsgTime / 1000 // 将毫秒转换为秒
+	timestamp := preMsgTime // 将毫秒转换为秒
 	t := time.Unix(timestamp, 0)
-	formattedTime := t.Format("2006-01-02 15:04:05")
-	fmt.Println(formattedTime)
-	querySql := fmt.Sprintf("SELECT * FROM %s WHERE ((`user_id` = ? AND `to_user_id` = ?) OR (`user_id` = ? AND `to_user_id` = ?)) AND `is_delete` = 0 ORDER BY `create_time` DESC", m.table)
-	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId, toUserId, userId); err != nil {
+	//formattedTime,_ := time.Parse("2006-01-02 15:04:05",strconv.Itoa(int(timestamp)))//t.Format("2006-01-02 15:04:05")
+	//fmt.Println(formattedTime)
+	querySql := fmt.Sprintf("SELECT * FROM %s WHERE ((`user_id` = ? AND `to_user_id` = ?) OR (`user_id` = ? AND `to_user_id` = ?)) AND `is_delete` = 0 and `create_time` > ? ORDER BY  `create_time` ASC" , m.table)
+	fmt.Println(querySql)
+	if err := m.QueryRowsNoCacheCtx(ctx, &result, querySql, userId, toUserId, toUserId, userId,t); err != nil {
 		return nil, fmt.Errorf("fail to getChatMessage by ids, error = %s", err)
 	}
 	return &result, nil

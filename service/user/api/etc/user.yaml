@@ -7,13 +7,11 @@ UserRpcConf:
     Hosts:
       - 127.0.0.1:8090
     Key: userRpc
-#    Pass: liujun
-#    User: root
 
 Log:
   ServiceName: user
   Mode: file
-  Path: logs/ordinary-log/user
+  Path: logs/ordinary-log/user/api
   Level: error
   Encoding: plain
   KeepDays: 7
@@ -24,8 +22,6 @@ ContentRpcConf:
     Hosts:
       - 127.0.0.1:8090
     Key: contentRpc
-#    Pass: liujun
-#    User: root
 
 LoginLogKqPusherConf:
   Brokers:

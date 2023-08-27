@@ -64,6 +64,7 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 	if err != nil {
 		return nil, err
 	}
+
 	return &pb.FeedListResp{
 		VideoList: FeedVideos,
 		UserIds:   userIds,
