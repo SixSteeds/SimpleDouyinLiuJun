@@ -11,7 +11,9 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
-	Cache          cache.CacheConf
-	RedisConf      redis.RedisConf
-	ContentRpcConf zrpc.RpcClientConf
+	Cache                cache.CacheConf
+	RedisConf            redis.RedisConf
+	ContentRpcConf       zrpc.RpcClientConf
+	DefaultAvatar        []string
+	DefaultBackgroundImg []string
 }

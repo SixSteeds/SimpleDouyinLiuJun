@@ -10,7 +10,6 @@ import (
 	"doushen_by_liujun/service/media/rpc/pb"
 	"doushen_by_liujun/service/media/rpc/util"
 	"encoding/json"
-	"fmt"
 	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/core/threading"
@@ -56,24 +55,20 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	threading.GoSafe(func() {
 		err = util.Upload(l.ctx, req.Data, fileName)
 		if err != nil {
-			//l.Logger.Error("上传出问题：", err)
+			l.Logger.Error("上传出问题：", err)
 		}
 		// 抽取视频第 5 帧
-		//coverData, err := util2.GetFrame(fileName, 5)
 		err = util.GetFrameByDocker(fileName)
 		if err != nil {
-			//l.Logger.Error("抽帧封面出问题：", err)
+			l.Logger.Error("抽帧封面出问题：", err)
 
 		}
 		// 上传封面
-		//util2.PutPicture(coverData, fileName)
-		fmt.Println("上传封面")
 		util.PutPictureByDocker(fileName)
 		if err != nil {
-			//l.Logger.Error("上传封面出问题：", err)
+			l.Logger.Error("上传封面出问题：", err)
 
 		}
-		fmt.Println("上传封面")
 	})
 
 	//kafka 推送

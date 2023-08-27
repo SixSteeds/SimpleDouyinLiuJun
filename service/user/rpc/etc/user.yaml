@@ -27,6 +27,16 @@ Log:
   Encoding: plain
   KeepDays: 7
 
+DefaultAvatar:
+  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
+  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
+
+DefaultBackgroundImg:
+  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
+
+
+
+
 ContentRpcConf:
   Etcd:
     Hosts:
