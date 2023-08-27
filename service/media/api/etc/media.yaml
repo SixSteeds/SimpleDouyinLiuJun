@@ -11,8 +11,7 @@ MediaRpcConf:
     Hosts:
       - 127.0.0.1:8090
     Key: mediaRpc
-#    Pass: liujun
-#    User: root
+
 
 Log:
   ServiceName: media

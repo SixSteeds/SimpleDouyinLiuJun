@@ -7,16 +7,14 @@ ChatRpcConf:
     Hosts:
       - 127.0.0.1:8090
     Key: chatRpc
-#    Pass: liujun
-#    User: root
+
 
 UserRpcConf:
   Etcd:
     Hosts:
       - 127.0.0.1:8090
     Key: userRpc
-#    Pass: liujun
-#    User: root
+
 
 Log:
   ServiceName: chat
@@ -26,13 +24,7 @@ Log:
   Encoding: plain
   KeepDays: 7
 
-ChatKqPusherConf:
-  Brokers:
-    - 127.0.0.1:9092
-    - 127.0.0.1:9093
-    - 127.0.0.1:9094
-    - 127.0.0.1:9095
-  Topic: chat
+
 
 
 RedisConf:

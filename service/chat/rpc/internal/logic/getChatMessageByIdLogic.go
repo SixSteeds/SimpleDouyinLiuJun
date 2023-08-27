@@ -3,7 +3,6 @@ package logic
 import (
 	"context"
 	"fmt"
-	"log"
 	"strconv"
 
 	"doushen_by_liujun/service/chat/rpc/internal/svc"
@@ -30,9 +29,6 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 	var results []*pb.Message
 	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId, in.PreMsgTime)
 	if err != nil {
-		if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_GetChatMsgByIds_false"); err != nil {
-			log.Fatal(err)
-		}
 		return nil, fmt.Errorf("fail to getChatMsgByIds, error = %s", err)
 	}
 	for _, item := range *message {
@@ -43,9 +39,6 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 			Content:    item.Message,
 			CreateTime: strconv.Itoa(int(item.CreateTime.Unix())),
 		})
-	}
-	if err = l.svcCtx.KqPusherClient.Push("chat_rpc_getChatMessageByIdLogic_ GetChatMessageById_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &pb.GetChatMessageByIdResp{MessageList: results}, nil
 }

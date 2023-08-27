@@ -11,10 +11,6 @@ type Config struct {
 	DB struct {
 		DataSource string
 	}
-	RedisConf           redis.RedisConf
-	ContentKqPusherConf struct {
-		Brokers []string
-		Topic   string
-	}
-	Cache cache.CacheConf
+	RedisConf redis.RedisConf
+	Cache     cache.CacheConf
 }

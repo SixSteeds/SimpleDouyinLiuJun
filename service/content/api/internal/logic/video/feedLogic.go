@@ -26,7 +26,9 @@ func NewFeedLogic(ctx context.Context, svcCtx *svc.ServiceContext) *FeedLogic {
 }
 
 func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
-	l.Logger.Info(req)
+
+	l.Logger.Info("Feed方法请求参数：", req)
+
 	var userId int64
 	token, err := util.ParseToken(req.Token)
 	if err != nil {
@@ -55,6 +57,9 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		}, nil
 	}
 	if data == nil {
+
+		l.Logger.Error(err)
+
 		return &types.FeedResp{
 			StatusCode: common.DATA_USE_UP,
 			StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),
@@ -86,6 +91,9 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			}, nil
 		}
 		if data2 == nil {
+
+			l.Logger.Error(err)
+
 			return &types.FeedResp{
 				StatusCode: common.DATA_USE_UP,
 				StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),

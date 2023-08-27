@@ -23,6 +23,7 @@ func NewSaveVideoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *SaveVid
 }
 
 func (l *SaveVideoLogic) SaveVideo(in *pb.SaveVideoReq) (*pb.SaveVideoResp, error) {
+	l.Logger.Info(in)
 	// todo: add your logic here and delete this line
 	_, err := l.svcCtx.MediaModel.Save(l.ctx, &model.Video{
 		Id:       in.Id,

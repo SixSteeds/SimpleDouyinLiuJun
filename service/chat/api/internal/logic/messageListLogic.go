@@ -8,7 +8,6 @@ import (
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
 	"github.com/zeromicro/go-zero/core/logx"
-	"log"
 )
 
 type MessageListLogic struct {
@@ -38,9 +37,6 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	fmt.Println(lastTime)
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
-		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_ParseToken_false"); err != nil {
-			log.Fatal(err)
-		}
 		resp = &types.MessageChatReqResp{
 			StatusCode:  1,
 			StatusMsg:   "fail to parse token",
@@ -61,9 +57,6 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
 	if err != nil {
-		if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_GetChatMessageById_false"); err != nil {
-			log.Fatal(err)
-		}
 		resp = &types.MessageChatReqResp{
 			StatusCode:  1,
 			StatusMsg:   "fail to get chat message",
@@ -90,9 +83,6 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 		StatusCode:  0,
 		StatusMsg:   "get chat messages successfully",
 		MessageList: messages,
-	}
-	if err = l.svcCtx.KqPusherClient.Push("chat_api_messageListLogic_MessageList_success"); err != nil {
-		log.Fatal(err)
 	}
 
 	fmt.Println(resp, resp.StatusCode)

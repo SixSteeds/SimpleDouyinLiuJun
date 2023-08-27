@@ -9,7 +9,6 @@ import (
 
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
-	"log"
 	"strconv"
 
 	constants "doushen_by_liujun/internal/common"
@@ -58,9 +57,6 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			IsDelete: 0,
 		})
 		if err1 != nil && err1 != sql.ErrNoRows {
-			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_AddComment_false"); err != nil {
-				log.Fatal(err)
-			}
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -81,9 +77,6 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			Id: req.CommentId,
 		})
 		if err1 != nil {
-			if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_DelComment_false"); err != nil {
-				log.Fatal(err)
-			}
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -98,9 +91,6 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			}, nil
 		}
 		fmt.Println("【api-commentAction-用户删除评论成功】")
-	}
-	if err := l.svcCtx.KqPusherClient.Push("content_api_comment_commentActionLogic_CommentAction_success"); err != nil {
-		log.Fatal(err)
 	}
 	return &types.CommentActionResp{
 		StatusCode: common.OK,

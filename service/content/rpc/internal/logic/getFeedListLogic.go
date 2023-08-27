@@ -25,7 +25,7 @@ func NewGetFeedListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetFe
 }
 
 func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, error) {
-	l.Logger.Info(in)
+	l.Logger.Info("GetFeedList方法请求参数：", in)
 	feedList, err := l.svcCtx.VideoModel.GetFeedList(l.ctx, in.UserId, &in.LatestTime, in.Size)
 	if err != nil {
 		return nil, err
@@ -48,7 +48,6 @@ func (l *GetFeedListLogic) GetFeedList(in *pb.FeedListReq) (*pb.FeedListResp, er
 		}
 		userIds = append(userIds, feed.UserId)
 	}
-
 	for _, feed := range *feedList {
 		FeedVideos = append(FeedVideos, &pb.FeedVideo{
 			Id:            feed.Id,
