@@ -8,3 +8,11 @@ Offset: first
 
 
 
+Log:
+  ServiceName: uploadConsumer
+  Mode: file
+  Path: logs/ordinary-log/uploadConsumer
+  Level: error
+  Encoding: plain
+  KeepDays: 7
+

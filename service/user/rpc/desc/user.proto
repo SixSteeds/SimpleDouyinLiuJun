@@ -166,6 +166,17 @@ message GetUserListByIdListResp{
   repeated Userinfo userList = 1; //user数组
 }
 
+message GetPasswordByUsernameReq{
+  string  username = 1;
+}
+
+message GetPasswordByUsernameResp{
+  string password = 1;
+  int64 id=2;
+}
+
+
+
 
 
 // ------------------------------------ 
@@ -179,6 +190,7 @@ service user{
   rpc GetFollowsById(GetFollowsByIdReq) returns (GetFollowsByIdResp);
   rpc SaveUser(SaveUserReq) returns (SaveUserResp);
   rpc CheckUser(CheckUserReq) returns (CheckUserResp);
+  rpc GetPasswordByUsername(GetPasswordByUsernameReq) returns (GetPasswordByUsernameResp);
 
 
   rpc GetUserinfoById(GetUserinfoByIdReq) returns (GetUserinfoByIdResp);

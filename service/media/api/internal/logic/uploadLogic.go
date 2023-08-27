@@ -34,7 +34,6 @@ func NewUploadLogic(ctx context.Context, svcCtx *svc.ServiceContext) *UploadLogi
 
 func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err error) {
 
-	fmt.Println("进入上传api逻辑")
 	token, err := gloabalUtil.ParseToken(req.Token)
 	if err != nil {
 		return &types.UploadResp{
@@ -56,7 +55,6 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 
 	threading.GoSafe(func() {
 		err = util.Upload(l.ctx, req.Data, fileName)
-		fmt.Println("上传成功")
 		if err != nil {
 			//l.Logger.Error("上传出问题：", err)
 		}
@@ -83,7 +81,6 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	ipString, ok := ip.(string)
 	message := gloabalType.UploadSuccessMessage{}
 	if ok {
-		fmt.Println("sdasdasdad")
 		message.IP = ipString
 		message.Uploadtime = time.Now()
 		message.UserId = token.UserID

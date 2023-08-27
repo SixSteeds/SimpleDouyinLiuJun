@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strconv"
 	"strings"
@@ -36,6 +37,7 @@ type (
 		CheckOne(ctx context.Context, username string, password string) (*int64, error)
 		FindUserById(ctx context.Context, id int64) (*Userinfo, error)
 		FindUserListByIdList(ctx context.Context, userIdList *[]int64) (*[]*Userinfo, error)
+		GetPasswordByUsername(ctx context.Context, username string) (*PasswordAndId, error)
 	}
 
 	defaultUserinfoModel struct {
@@ -62,6 +64,11 @@ type (
 		Signature       sql.NullString `db:"signature"`        // 个人简介
 		IsFollow        bool           `db:"is_follow"`
 		Name            sql.NullString `db:"name"`
+	}
+
+	PasswordAndId struct {
+		Password string `db:"password"`
+		Id       int64  `db:"id"`
 	}
 )
 
@@ -139,6 +146,21 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int
 	case nil:
 		return &resp, nil
 	case sqlc.ErrNotFound:
+		return nil, ErrNotFound
+	default:
+		return nil, err
+	}
+}
+
+func (m *defaultUserinfoModel) GetPasswordByUsername(ctx context.Context, username string) (*PasswordAndId, error) {
+
+	var resp PasswordAndId
+	query := fmt.Sprintf("select `password`,`id` from %s where `username` = ? ", m.table)
+	err := m.QueryRowNoCacheCtx(ctx, &resp, query, username)
+	switch {
+	case err == nil:
+		return &resp, nil
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
