@@ -28,11 +28,40 @@ Log:
   KeepDays: 7
 
 DefaultAvatar:
-  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
-  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
+  - http://8.137.50.160:9000/avatar/202308271001.jpeg
+  - http://8.137.50.160:9000/avatar/202308271002.jpeg
+  - http://8.137.50.160:9000/avatar/202308271003.jpeg
+  - http://8.137.50.160:9000/avatar/202308271004.jpeg
+  - http://8.137.50.160:9000/avatar/202308271005.jpeg
+  - http://8.137.50.160:9000/avatar/202308271006.jpeg
+  - http://8.137.50.160:9000/avatar/202308271007.jpeg
+  - http://8.137.50.160:9000/avatar/202308271008.jpeg
+  - http://8.137.50.160:9000/avatar/202308271009.jpeg
+  - http://8.137.50.160:9000/avatar/202308271010.jpeg
+  - http://8.137.50.160:9000/avatar/202308271011.jpeg
+  - http://8.137.50.160:9000/avatar/202308271011.jpeg
+  - http://8.137.50.160:9000/avatar/202308271012.jpeg
+  - http://8.137.50.160:9000/avatar/202308271013.jpeg
+  - http://8.137.50.160:9000/avatar/202308271014.jpeg
+  - http://8.137.50.160:9000/avatar/202308271015.jpeg
 
 DefaultBackgroundImg:
-  - https://img2.baidu.com/it/u=2187253610,1007946300&fm=26&fmt=auto&gp=0.jpg
+  - http://8.137.50.160:9000/backgroundimg/202308271001.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271002.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271003.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271004.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271005.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271006.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271007.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271008.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271009.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271010.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271011.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271011.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271012.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271013.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271014.jpeg
+  - http://8.137.50.160:9000/backgroundimg/202308271015.jpeg
 
 
 
