@@ -12,9 +12,4 @@ type Config struct {
 		DataSource string
 	}
 	Cache cache.CacheConf
-
-	MediaKqPusherConf struct {
-		Brokers []string
-		Topic   string
-	}
 }
