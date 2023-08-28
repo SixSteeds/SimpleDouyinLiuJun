@@ -7,10 +7,11 @@
 package pb
 
 import (
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -20,7 +21,6 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-// --------------------------------鑱婂ぉ淇℃伅--------------------------------
 type ChatMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -30,7 +30,7 @@ type ChatMessage struct {
 	UserId     int64  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
 	ToUserId   int64  `protobuf:"varint,3,opt,name=toUserId,proto3" json:"toUserId,omitempty"`
 	Message    string `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
-	CreateTime string  `protobuf:"bytes,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	CreateTime string `protobuf:"bytes,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
 	UpdateTime string `protobuf:"bytes,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
 }
 
@@ -285,10 +285,10 @@ type Message struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         int64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 消息id
-	ToUserId   int64   `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`          // 该消息接收者的id
-	FromUserId int64   `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`    // 该消息发送者的id
-	Content    string  `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                               // 消息内容
+	Id         int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 消息id
+	ToUserId   int64  `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`          // 该消息接收者的id
+	FromUserId int64  `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`    // 该消息发送者的id
+	Content    string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                               // 消息内容
 	CreateTime string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 消息创建时间
 }
 

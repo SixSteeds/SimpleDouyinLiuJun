@@ -23,7 +23,6 @@ type (
 	SearchChatMessageResp  = pb.SearchChatMessageResp
 
 	Chat interface {
-		// -----------------------鑱婂ぉ淇℃伅-----------------------
 		AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error)
 		GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error)
 		SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error)
@@ -40,7 +39,6 @@ func NewChat(cli zrpc.Client) Chat {
 	}
 }
 
-// -----------------------鑱婂ぉ淇℃伅-----------------------
 func (m *defaultChat) AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error) {
 	client := pb.NewChatClient(m.cli.Conn())
 	return client.AddChatMessage(ctx, in, opts...)

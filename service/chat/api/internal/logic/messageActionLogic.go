@@ -27,6 +27,7 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 }
 
 func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.MessageActionReqResp, error) {
+	l.Logger.Info(req)
 	var resp *types.MessageActionReqResp
 	// get params
 	token := req.Token
@@ -78,6 +79,8 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 		Id:     toUserId,
 		UserID: userId,
 	}
+	l.Logger.Info(userReq)
+
 	response, userInfoErr := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &userReq)
 	if userInfoErr != nil {
 		return fmt.Errorf("fail to getUserInfo by id, error = %s", userInfoErr)
@@ -95,7 +98,6 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 	}
 	_, err = l.svcCtx.ChatRpcClient.AddChatMessage(l.ctx, request)
 	if err != nil {
-		logx.Error(err)
 		return fmt.Errorf("fail to send message, error = %s", err)
 	}
 

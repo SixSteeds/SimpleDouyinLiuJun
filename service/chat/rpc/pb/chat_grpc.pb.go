@@ -8,6 +8,7 @@ package pb
 
 import (
 	context "context"
+
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -28,7 +29,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatClient interface {
-	// -----------------------鑱婂ぉ淇℃伅-----------------------
 	AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error)
 	GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error)
 	SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error)
@@ -73,7 +73,6 @@ func (c *chatClient) SearchChatMessage(ctx context.Context, in *SearchChatMessag
 // All implementations must embed UnimplementedChatServer
 // for forward compatibility
 type ChatServer interface {
-	// -----------------------鑱婂ぉ淇℃伅-----------------------
 	AddChatMessage(context.Context, *AddChatMessageReq) (*AddChatMessageResp, error)
 	GetChatMessageById(context.Context, *GetChatMessageByIdReq) (*GetChatMessageByIdResp, error)
 	SearchChatMessage(context.Context, *SearchChatMessageReq) (*SearchChatMessageResp, error)
