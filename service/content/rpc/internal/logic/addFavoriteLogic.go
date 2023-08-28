@@ -30,7 +30,12 @@ func NewAddFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddFa
 }
 
 func (l *AddFavoriteLogic) AddFavorite(in *pb.AddFavoriteReq) (*pb.AddFavoriteResp, error) {
-
+	/*
+		Author：    刘洋
+		Function：  向 favorite 表添加点赞信息
+		Update：    08.28 对进入逻辑 加log
+	*/
+	l.Logger.Info("AddFavorite方法请求参数：", in)
 	//1.根据（userId、videoId）查找 favorite 表
 	favorite, err0 := l.svcCtx.FavoriteModel.FindFavoriteByUserIdVideoId(l.ctx, in.UserId, in.VideoId)
 	fmt.Println(favorite)
@@ -73,7 +78,5 @@ func (l *AddFavoriteLogic) AddFavorite(in *pb.AddFavoriteReq) (*pb.AddFavoriteRe
 	}
 
 	fmt.Println("【rpc-AddFavorite-新增点赞数据成功】")
-	logx.Error("rpc-AddFavorite-新增点赞数据成功")
-
 	return &pb.AddFavoriteResp{}, nil
 }

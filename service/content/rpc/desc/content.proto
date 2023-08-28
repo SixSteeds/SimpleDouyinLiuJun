@@ -28,12 +28,8 @@ message AddCommentReq {
 message AddCommentResp {
 }
 
-
-
 message DelCommentReq {
   int64 id = 1; //id
-  int64 userId = 2; //用户id
-  int64 videoId = 3; //视频id
 }
 
 message DelCommentResp {
@@ -67,9 +63,7 @@ message AddFavoriteResp {
 
 message UpdateFavoriteReq {
   int64 id = 1;
-  int64 videoId = 2;
-  int64 userId = 3;
-  int64 isDelete = 4;
+  int64 isDelete = 2;
 }
 
 message UpdateFavoriteResp {
@@ -84,12 +78,8 @@ message DelFavoriteReq {
 message DelFavoriteResp {
 }
 
-
-
 message SearchFavoriteReq {
-
   int64 userId = 1;
-
 }
 
 message SearchFavoriteResp {
@@ -107,24 +97,12 @@ message Video {
   int64 updateTime = 7;
 }
 
-
-
-
 message GetVideoByIdReq {
   int64 id = 1; //id
 }
 
 message GetVideoByIdResp {
   Video video = 1; //video
-}
-
-
-message GetUserFavoritedCntByIdReq {
-  int64 userID = 1; //用户id
-}
-
-message GetUserFavoritedCntByIdResp {
-  int64 cnt = 1; //用户被喜欢数
 }
 
 message GetUserPublishAndLikedCntByIdReq {
@@ -137,7 +115,7 @@ message GetUserPublishAndLikedCntByIdResp {
 }
 
 message GetVideoListByIdListReq{
-  repeated int64 videoIdList = 1;//视频id数组
+  repeated int64 videoIdList = 1;//videoId数组
 }
 
 message GetVideoListByIdListResp{
@@ -236,10 +214,11 @@ service content{
   rpc AddFavorite(AddFavoriteReq) returns (AddFavoriteResp);
   rpc UpdateFavorite(UpdateFavoriteReq) returns (UpdateFavoriteResp);
   rpc DelFavorite(DelFavoriteReq) returns (DelFavoriteResp);
-
   rpc SearchFavorite(SearchFavoriteReq) returns (SearchFavoriteResp);
 
   rpc GetVideoById(GetVideoByIdReq) returns (GetVideoByIdResp);
+  rpc GetVideoListByIdList(GetVideoListByIdListReq) returns (GetVideoListByIdListResp);
+  rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);
 
 
   rpc GetFeedList(FeedListReq) returns (FeedListResp);
@@ -248,7 +227,5 @@ service content{
   rpc GetWorkCountByUserId(GetWorkCountByUserIdReq) returns (GetWorkCountByUserIdResp);
   rpc GetFavoriteCountByUserId(GetFavoriteCountByUserIdReq) returns (GetFavoriteCountByUserIdResp);
 
-  rpc GetUserFavoritedCnt(GetUserFavoritedCntByIdReq) returns (GetUserFavoritedCntByIdResp);
-  rpc GetUserPublishAndLikedCntById (GetUserPublishAndLikedCntByIdReq) returns (GetUserPublishAndLikedCntByIdResp);
-  rpc GetVideoListByIdList(GetVideoListByIdListReq) returns (GetVideoListByIdListResp);
+
 }

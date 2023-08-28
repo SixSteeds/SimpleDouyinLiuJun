@@ -30,7 +30,12 @@ func NewAddCommentLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddCom
 }
 
 func (l *AddCommentLogic) AddComment(in *pb.AddCommentReq) (*pb.AddCommentResp, error) {
-
+	/*
+		Author：    刘洋
+		Function：  向 comment 表添加评论
+		Update：    08.28 对进入逻辑 加log
+	*/
+	l.Logger.Info("AddComment方法请求参数：", in)
 	//1. 雪花算法生成 id
 	snowflake, err1 := util.NewSnowflake(common.ContentRpcMachineId)
 	if err1 != nil {

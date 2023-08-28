@@ -28,6 +28,12 @@ func NewGetUserPublishAndLikedCntByIdLogic(ctx context.Context, svcCtx *svc.Serv
 
 func (l *GetUserPublishAndLikedCntByIdLogic) GetUserPublishAndLikedCntById(in *pb.GetUserPublishAndLikedCntByIdReq) (*pb.GetUserPublishAndLikedCntByIdResp, error) {
 
+	/*
+		Author：    刘洋
+		Function：  从 video表和favorite表 查找用户发布作品数、用户被点赞总数
+		Update：    08.28 对进入逻辑 加log
+	*/
+	l.Logger.Info("GetUserPublishAndLikedCntById方法请求参数：", in)
 	//1. 根据 userId 查找 video 表，得到用户发布的所有 videoId, 并计数 publishCnt
 	var publishCnt int64 = 0
 	videoList, err := l.svcCtx.VideoModel.FindVideoListByUserId(l.ctx, in.UserId)

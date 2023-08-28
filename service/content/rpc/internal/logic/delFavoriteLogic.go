@@ -30,7 +30,12 @@ func NewDelFavoriteLogic(ctx context.Context, svcCtx *svc.ServiceContext) *DelFa
 }
 
 func (l *DelFavoriteLogic) DelFavorite(in *pb.DelFavoriteReq) (*pb.DelFavoriteResp, error) {
-
+	/*
+		Author：    刘洋
+		Function：  从 favorite 删除点赞信息
+		Update：    08.28 对进入逻辑 加log
+	*/
+	l.Logger.Info("DelFavorite方法请求参数：", in)
 	//1.根据（userId、videoId）查找 favorite 表
 	favorite, err0 := l.svcCtx.FavoriteModel.FindFavoriteByUserIdVideoId(l.ctx, in.UserId, in.VideoId)
 	if err0 != nil && err0 != model.ErrNotFound {
