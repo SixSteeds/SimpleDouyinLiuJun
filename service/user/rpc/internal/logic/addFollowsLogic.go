@@ -9,6 +9,7 @@ import (
 	"doushen_by_liujun/service/user/rpc/pb"
 	"errors"
 	"github.com/zeromicro/go-zero/core/logx"
+	"strconv"
 )
 
 type AddFollowsLogic struct {
@@ -28,9 +29,19 @@ func NewAddFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddFol
 // -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, error) {
 	l.Logger.Info(in)
+	userid, _ := strconv.ParseInt(in.UserId, 10, 64)
+	followid, _ := strconv.ParseInt(in.FollowId, 10, 64)
+	isFollowed, err := l.svcCtx.FollowsModel.CheckIsFollowed(l.ctx, userid, followid) //检查是不是重复操作
+	if err != nil {
+		l.Logger.Error(err)
+		return nil, err
+	}
+	if isFollowed { //已经关注过了
+		return &pb.AddFollowsResp{}, nil
+	}
 	data, err := util.NewSnowflake(common.UserRpcMachineId)
 	if err != nil {
-		l.Logger.Info("雪花算法报错", err)
+		l.Logger.Error("雪花算法报错", err)
 		return nil, errors.New("雪花算法报错")
 	}
 	_, err = l.svcCtx.FollowsModel.Insert(l.ctx, &model.Follows{
