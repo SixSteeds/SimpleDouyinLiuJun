@@ -62,6 +62,16 @@ func (s *ContentServer) GetVideoById(ctx context.Context, in *pb.GetVideoByIdReq
 	return l.GetVideoById(in)
 }
 
+func (s *ContentServer) GetVideoListByIdList(ctx context.Context, in *pb.GetVideoListByIdListReq) (*pb.GetVideoListByIdListResp, error) {
+	l := logic.NewGetVideoListByIdListLogic(ctx, s.svcCtx)
+	return l.GetVideoListByIdList(in)
+}
+
+func (s *ContentServer) GetUserPublishAndLikedCntById(ctx context.Context, in *pb.GetUserPublishAndLikedCntByIdReq) (*pb.GetUserPublishAndLikedCntByIdResp, error) {
+	l := logic.NewGetUserPublishAndLikedCntByIdLogic(ctx, s.svcCtx)
+	return l.GetUserPublishAndLikedCntById(in)
+}
+
 func (s *ContentServer) GetFeedList(ctx context.Context, in *pb.FeedListReq) (*pb.FeedListResp, error) {
 	l := logic.NewGetFeedListLogic(ctx, s.svcCtx)
 	return l.GetFeedList(in)
@@ -80,19 +90,4 @@ func (s *ContentServer) GetWorkCountByUserId(ctx context.Context, in *pb.GetWork
 func (s *ContentServer) GetFavoriteCountByUserId(ctx context.Context, in *pb.GetFavoriteCountByUserIdReq) (*pb.GetFavoriteCountByUserIdResp, error) {
 	l := logic.NewGetFavoriteCountByUserIdLogic(ctx, s.svcCtx)
 	return l.GetFavoriteCountByUserId(in)
-}
-
-func (s *ContentServer) GetUserFavoritedCnt(ctx context.Context, in *pb.GetUserFavoritedCntByIdReq) (*pb.GetUserFavoritedCntByIdResp, error) {
-	l := logic.NewGetUserFavoritedCntLogic(ctx, s.svcCtx)
-	return l.GetUserFavoritedCnt(in)
-}
-
-func (s *ContentServer) GetUserPublishAndLikedCntById(ctx context.Context, in *pb.GetUserPublishAndLikedCntByIdReq) (*pb.GetUserPublishAndLikedCntByIdResp, error) {
-	l := logic.NewGetUserPublishAndLikedCntByIdLogic(ctx, s.svcCtx)
-	return l.GetUserPublishAndLikedCntById(in)
-}
-
-func (s *ContentServer) GetVideoListByIdList(ctx context.Context, in *pb.GetVideoListByIdListReq) (*pb.GetVideoListByIdListResp, error) {
-	l := logic.NewGetVideoListByIdListLogic(ctx, s.svcCtx)
-	return l.GetVideoListByIdList(in)
 }

@@ -35,14 +35,16 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 	/*
 		Author：    刘洋
 		Function：  评论、删除评论（ ActionType=1 评论，ActionType=2 删除 ）
-		Update：    08.21
+		Update：    08.28 对进入逻辑、异常 加log
 	*/
+	l.Logger.Info(req)
 	redisClient := l.svcCtx.RedisClient
 	videoCommentedCntKey := constants.CntCacheVideoCommentedPrefix + strconv.FormatInt(req.VideoId, 10)
 
 	// 1.根据 token 获取 userid
 	parsToken, err0 := util.ParseToken(req.Token)
 	if err0 != nil {
+		l.Logger.Error(err0)
 		return &types.CommentActionResp{
 			StatusCode: common.TOKEN_EXPIRE_ERROR,
 			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
@@ -57,6 +59,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			IsDelete: 0,
 		})
 		if err1 != nil && err1 != sql.ErrNoRows {
+			l.Logger.Error(err1)
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -65,6 +68,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 		// 2.1 redis 中 video 被评论计数自增
 		_, err2 := redisClient.IncrCtx(l.ctx, videoCommentedCntKey)
 		if err2 != nil && err2 != redis.Nil {
+			l.Logger.Error(err2)
 			return &types.CommentActionResp{
 				StatusCode: common.REDIS_ERROR,
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
@@ -77,6 +81,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			Id: req.CommentId,
 		})
 		if err1 != nil {
+			l.Logger.Error(err1)
 			return &types.CommentActionResp{
 				StatusCode: common.DB_ERROR,
 				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
@@ -85,6 +90,7 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 		// 3.1 redis 中 video 被评论计数自减
 		_, err2 := redisClient.DecrCtx(l.ctx, videoCommentedCntKey)
 		if err2 != nil && err2 != redis.Nil {
+			l.Logger.Error(err2)
 			return &types.CommentActionResp{
 				StatusCode: common.REDIS_ERROR,
 				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),

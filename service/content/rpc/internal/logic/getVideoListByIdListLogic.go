@@ -25,7 +25,12 @@ func NewGetVideoListByIdListLogic(ctx context.Context, svcCtx *svc.ServiceContex
 }
 
 func (l *GetVideoListByIdListLogic) GetVideoListByIdList(in *pb.GetVideoListByIdListReq) (*pb.GetVideoListByIdListResp, error) {
-
+	/*
+		Author：    刘洋
+		Function：  从 video 表拿出多个videoId对应的video数据
+		Update：    08.28 对进入逻辑 加log
+	*/
+	l.Logger.Info("GetVideoListByIdList方法请求参数：", in)
 	videoList, err := l.svcCtx.VideoModel.FindVideoListByIdList(l.ctx, &in.VideoIdList)
 	if err != nil && err != model.ErrNotFound {
 		return nil, errors.New("rpc-GetVideoListByIdList-数据查询失败")
