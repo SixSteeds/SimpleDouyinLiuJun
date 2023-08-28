@@ -30,6 +30,8 @@ func NewAddChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ad
 }
 
 func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
+	l.Logger.Info(in)
+
 	// generate id
 	rand.Seed(time.Now().UnixNano())
 	snowflake, err := util.NewSnowflake(common.ChatRpcMachineId)

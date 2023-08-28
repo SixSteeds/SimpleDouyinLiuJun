@@ -26,6 +26,8 @@ func NewGetChatMessageByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdReq) (*pb.GetChatMessageByIdResp, error) {
+	l.Logger.Info(in)
+
 	var results []*pb.Message
 	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId, in.PreMsgTime)
 	if err != nil {

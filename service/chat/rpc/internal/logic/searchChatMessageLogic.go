@@ -24,6 +24,8 @@ func NewSearchChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) 
 }
 
 func (l *SearchChatMessageLogic) SearchChatMessage(in *pb.SearchChatMessageReq) (*pb.SearchChatMessageResp, error) {
+	l.Logger.Info(in)
+
 	message, _ := l.svcCtx.ChatMessageModel.FindOne(l.ctx, in.Id)
 
 	var results []*pb.ChatMessage
