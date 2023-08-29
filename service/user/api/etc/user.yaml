@@ -12,7 +12,7 @@ Log:
   ServiceName: user
   Mode: file
   Path: logs/ordinary-log/user/api
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 

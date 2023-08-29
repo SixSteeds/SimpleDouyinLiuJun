@@ -7,7 +7,6 @@ import (
 	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -31,7 +30,14 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	var resp *types.MessageChatReqResp
 	var lastTime int64
 	if req.PreMsgTime > 169268692200 {
-		lastTime = req.PreMsgTime / 1000
+		// 获取第三位数字
+		thirdDigit := (req.PreMsgTime / 100) % 10
+		// 进行四舍五入
+		if thirdDigit >= 5 {
+			lastTime = req.PreMsgTime/1000 + 1
+		} else {
+			lastTime = req.PreMsgTime / 1000
+		}
 	} else {
 		lastTime = req.PreMsgTime
 	}
@@ -69,6 +75,8 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 
 	var messages []types.Message
 	for _, item := range message.MessageList {
+		fmt.Println(item.CreateTime)
+
 		msg := types.Message{
 			Id:         item.Id,
 			ToUserId:   item.ToUserId,

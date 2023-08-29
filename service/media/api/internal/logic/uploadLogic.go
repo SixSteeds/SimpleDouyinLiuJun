@@ -61,7 +61,6 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 		err = util.GetFrameByDocker(fileName)
 		if err != nil {
 			l.Logger.Error("抽帧封面出问题：", err)
-
 		}
 		// 上传封面
 		util.PutPictureByDocker(fileName)

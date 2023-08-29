@@ -14,7 +14,7 @@ Log:
   ServiceName: content
   Mode: file
   Path: logs/ordinary-log/content/api
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 

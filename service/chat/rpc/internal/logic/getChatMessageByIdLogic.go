@@ -34,6 +34,7 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 		return nil, fmt.Errorf("fail to getChatMsgByIds, error = %s", err)
 	}
 	for _, item := range *message {
+		fmt.Println(item.CreateTime)
 		results = append(results, &pb.Message{
 			Id:         item.Id,
 			ToUserId:   item.ToUserId,

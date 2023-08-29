@@ -17,7 +17,7 @@ Log:
   ServiceName: media
   Mode: file
   Path: logs/ordinary-log/media/api
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 

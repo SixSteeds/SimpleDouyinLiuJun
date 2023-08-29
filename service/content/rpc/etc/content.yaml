@@ -20,7 +20,7 @@ Log:
   ServiceName: content.rpc
   Mode: file
   Path: logs/ordinary-log/content/rpc
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 
