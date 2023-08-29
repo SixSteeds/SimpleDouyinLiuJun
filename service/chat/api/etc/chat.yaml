@@ -1,5 +1,5 @@
 Name: chat
-Host: 127.0.0.1
+Host: 0.0.0.0
 Port: 8087
 
 ChatRpcConf:
