@@ -2,12 +2,11 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/api/internal/svc"
 	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
-	"fmt"
-
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -28,7 +27,6 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
 	l.Logger.Info(req)
 
-	var resp *types.MessageChatReqResp
 	var lastTime int64
 	if req.PreMsgTime > 169268692200 {
 		lastTime = req.PreMsgTime / 1000
@@ -39,12 +37,12 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	// parse token
 	res, err := util.ParseToken(req.Token)
 	if err != nil {
-		resp = &types.MessageChatReqResp{
-			StatusCode:  1,
-			StatusMsg:   "fail to parse token",
+		l.Logger.Error(err)
+		return &types.MessageChatReqResp{
+			StatusCode:  common.TOKEN_EXPIRE_ERROR,
+			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
 			MessageList: nil,
-		}
-		return resp, fmt.Errorf("fail to parse token, error = %s", err)
+		}, nil
 	}
 
 	// get params
@@ -59,12 +57,12 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	// get chat messages
 	message, err := l.svcCtx.ChatRpcClient.GetChatMessageById(l.ctx, &request)
 	if err != nil {
-		resp = &types.MessageChatReqResp{
-			StatusCode:  1,
-			StatusMsg:   "fail to get chat message",
+		l.Logger.Error(err)
+		return &types.MessageChatReqResp{
+			StatusCode:  common.DB_ERROR,
+			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
 			MessageList: nil,
-		}
-		return resp, fmt.Errorf("fail to get chat message, error = %s", err)
+		}, nil
 	}
 
 	var messages []types.Message
@@ -79,11 +77,9 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 		messages = append(messages, msg)
 	}
 
-	resp = &types.MessageChatReqResp{
-		StatusCode:  0,
-		StatusMsg:   "get chat messages successfully",
+	return &types.MessageChatReqResp{
+		StatusCode:  common.OK,
+		StatusMsg:   common.MapErrMsg(common.OK),
 		MessageList: messages,
-	}
-
-	return resp, nil
+	}, nil
 }
