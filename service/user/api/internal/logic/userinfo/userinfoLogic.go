@@ -26,6 +26,15 @@ func NewUserinfoLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Userinfo
 }
 
 func (l *UserinfoLogic) Userinfo(req *types.UserinfoReq) (resp *types.UserinfoResp, err error) {
+	//fmt.Println(req)//for test
+	//a := pb.GetUsersByIdsReq{
+	//	UserID: 879260009437863936,
+	//	Ids:    []int64{879651486764638208, 879004869187346432},
+	//}
+	//info, err := l.svcCtx.UserRpcClient.GetUsersByIds(l.ctx, &a)
+	//fmt.Println("在api里", err)
+	//fmt.Println(info)
+	//return nil, nil
 	l.Logger.Info(req)
 	logger, e := util.ParseToken(req.Token)
 	if e != nil {
