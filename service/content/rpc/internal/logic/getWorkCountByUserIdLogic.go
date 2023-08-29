@@ -2,8 +2,6 @@ package logic
 
 import (
 	"context"
-	"fmt"
-
 	"doushen_by_liujun/service/content/rpc/internal/svc"
 	"doushen_by_liujun/service/content/rpc/pb"
 
@@ -26,11 +24,7 @@ func NewGetWorkCountByUserIdLogic(ctx context.Context, svcCtx *svc.ServiceContex
 
 func (l *GetWorkCountByUserIdLogic) GetWorkCountByUserId(in *pb.GetWorkCountByUserIdReq) (*pb.GetWorkCountByUserIdResp, error) {
 	// todo: add your logic here and delete this line
-	fmt.Println("我要去model了，GetWorkCountByUserId")
 	count, err := l.svcCtx.VideoModel.GetWorkCountByUserId(l.ctx, in.UserId)
-	fmt.Println("我从model回来了，GetWorkCountByUserId")
-	fmt.Println(count.Count)
-	fmt.Println(err)
 	if err != nil {
 		return nil, err
 	}

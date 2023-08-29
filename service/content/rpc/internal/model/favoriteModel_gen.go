@@ -192,15 +192,11 @@ func (m *defaultFavoriteModel) tableName() string {
 }
 
 func (m *defaultFavoriteModel) GetFavoriteCountByUserId(ctx context.Context, user_id int64) (*Count, error) {
-
 	var resp Count
-	err := m.QueryRowCtx(ctx, &resp, "GetWorkCountByUserId"+strconv.Itoa(int(user_id)), func(ctx context.Context, conn sqlx.SqlConn, v any) error {
+	err := m.QueryRowCtx(ctx, &resp, "GetFavoriteCountByUserId--"+strconv.Itoa(int(user_id)), func(ctx context.Context, conn sqlx.SqlConn, v any) error {
 		query := fmt.Sprintf("select COUNT(*) as count from favorite where `user_id` = ?")
 		return conn.QueryRowCtx(ctx, v, query, user_id)
 	})
-	fmt.Println("数据库返回值")
-	fmt.Println(resp.Count)
-	fmt.Println(err)
 	switch err {
 	case nil:
 		return &resp, nil

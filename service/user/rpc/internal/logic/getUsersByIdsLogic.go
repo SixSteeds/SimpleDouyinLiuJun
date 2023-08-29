@@ -61,7 +61,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 			followNum, _ = strconv.Atoi(followRecord)
 		}
 		followerRecord, _ := redisClient.GetCtx(l.ctx, followerKey)
-		_, _ = redisClient.Get(followerKey)
+		//_, _ = redisClient.Get(followerKey)
 		if len(followerRecord) == 0 {
 			//没有记录，去查表
 			num, err := l.svcCtx.FollowsModel.FindFollowersCount(l.ctx, id)
