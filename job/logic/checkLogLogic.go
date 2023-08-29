@@ -29,8 +29,8 @@ func (l *checkLogLogic) CheckLog() {
 
 	var dirs = make([]string, 0)
 	dirPath, _ := os.Getwd()
-	dirs = append(dirs, filepath.Join(dirPath, "/log/uploadSecurity"))
-	dirs = append(dirs, filepath.Join(dirPath, "/log/userSecurity"))
+	dirs = append(dirs, filepath.Join(dirPath, "/logs/kafka-log/uploadSecurity"))
+	dirs = append(dirs, filepath.Join(dirPath, "/logs/kafka-log/userSecurity"))
 
 	// 遍历所有要检查log的目录
 	for _, dir := range dirs {
