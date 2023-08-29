@@ -20,7 +20,7 @@ Log:
   ServiceName: chat
   Mode: file
   Path: logs/ordinary-log/chat/api
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 

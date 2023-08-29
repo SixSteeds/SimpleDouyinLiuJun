@@ -40,6 +40,22 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 			StatusCode: common.TOKEN_PARSE_ERROR,
 		}, nil
 	}
+	// 给用户上传行为加两秒锁，保持用户上传行为的幂等性
+	isSuccess, err := l.svcCtx.RedisClient.SetnxExCtx(l.ctx, common.UploadLockPrefix+strconv.FormatInt(token.UserID, 10), strconv.FormatInt(token.UserID, 10), 2)
+	if err != nil {
+		l.Logger.Error("redis加锁出问题：", err)
+		return &types.UploadResp{
+			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+			StatusCode: common.REDIS_ERROR,
+		}, nil
+	}
+	if !isSuccess {
+		l.Logger.Error("禁止两秒内多次上传上传行为")
+		return &types.UploadResp{
+			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DB_ERROR,
+		}, nil
+	}
 	//生成文件名
 	fileName := strconv.FormatInt(token.UserID, 10) + uuid.New().String()[:5]
 	data, err := gloabalUtil.NewSnowflake(common.MediaApiMachineId)
@@ -61,7 +77,6 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 		err = util.GetFrameByDocker(fileName)
 		if err != nil {
 			l.Logger.Error("抽帧封面出问题：", err)
-
 		}
 		// 上传封面
 		util.PutPictureByDocker(fileName)
