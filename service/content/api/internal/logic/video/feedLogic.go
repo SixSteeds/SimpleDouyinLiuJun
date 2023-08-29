@@ -40,7 +40,15 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	}
 	var lastTime int64
 	if req.LatestTime > 169268692200 {
-		lastTime = req.LatestTime / 1000
+		// 获取第三位数字
+		thirdDigit := (req.LatestTime / 100) % 10
+
+		// 进行四舍五入
+		if thirdDigit >= 5 {
+			lastTime = req.LatestTime/1000 + 1
+		} else {
+			lastTime = req.LatestTime / 1000
+		}
 	} else {
 		lastTime = req.LatestTime
 	}

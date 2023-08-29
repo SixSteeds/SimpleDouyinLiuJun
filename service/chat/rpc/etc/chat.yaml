@@ -14,7 +14,7 @@ Log:
   ServiceName: chat.rpc
   Mode: file
   Path: logs/ordinary-log/chat/rpc
-  Level: error
+  Level: info
   Encoding: plain
   KeepDays: 7
 

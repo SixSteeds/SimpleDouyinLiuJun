@@ -29,7 +29,7 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 }
 
 func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.MessageActionReqResp, error) {
-	l.Logger.Info(req)
+	l.Logger.Info("MessageAction方法请求参数：", req)
 
 	// get params
 	token := req.Token

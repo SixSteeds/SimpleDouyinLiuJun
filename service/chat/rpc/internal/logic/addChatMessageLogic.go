@@ -30,7 +30,7 @@ func NewAddChatMessageLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Ad
 }
 
 func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddChatMessageResp, error) {
-	l.Logger.Info(in)
+	l.Logger.Info("AddChatMessage方法请求参数：", in)
 
 	// generate id
 	rand.Seed(time.Now().UnixNano())

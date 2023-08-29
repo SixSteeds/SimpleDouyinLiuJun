@@ -34,6 +34,6 @@ func main() {
 	q := kq.MustNewQueue(kq.KqConf(c), kq.WithHandle(logic.LoginLogHandle))
 
 	defer q.Stop()
-	fmt.Println("Starting consumer...")
+	fmt.Println("Starting loginConsumer consumer...")
 	q.Start()
 }

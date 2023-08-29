@@ -25,11 +25,17 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 }
 
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
-	l.Logger.Info(req)
-
+	l.Logger.Info("MessageList方法请求参数：", req)
 	var lastTime int64
 	if req.PreMsgTime > 169268692200 {
-		lastTime = req.PreMsgTime / 1000
+		// 获取第三位数字
+		thirdDigit := (req.PreMsgTime / 100) % 10
+		// 进行四舍五入
+		if thirdDigit >= 5 {
+			lastTime = req.PreMsgTime/1000 + 1
+		} else {
+			lastTime = req.PreMsgTime / 1000
+		}
 	} else {
 		lastTime = req.PreMsgTime
 	}
@@ -72,7 +78,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 			ToUserId:   item.ToUserId,
 			FromUserId: item.FromUserId,
 			Content:    item.Content,
-			CreateTime: item.CreateTime,
+			CreateTime: *item.CreateTime,
 		}
 		messages = append(messages, msg)
 	}

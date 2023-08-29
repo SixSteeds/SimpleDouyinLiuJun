@@ -31,8 +31,3 @@ func (s *ChatServer) GetChatMessageById(ctx context.Context, in *pb.GetChatMessa
 	l := logic.NewGetChatMessageByIdLogic(ctx, s.svcCtx)
 	return l.GetChatMessageById(in)
 }
-
-func (s *ChatServer) SearchChatMessage(ctx context.Context, in *pb.SearchChatMessageReq) (*pb.SearchChatMessageResp, error) {
-	l := logic.NewSearchChatMessageLogic(ctx, s.svcCtx)
-	return l.SearchChatMessage(in)
-}
