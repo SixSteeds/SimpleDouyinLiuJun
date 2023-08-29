@@ -35,13 +35,13 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 	/*
 		Author：    刘洋
 		Function：  在用户界面返回点赞列表：视频1 [作者（用户信息）、视频信息]、视频2[...]、...
-		Update：    08.28 对进入逻辑、异常 加log
+		Update：    08.29 修改点击别人视频作者出现当前用户喜欢列表bug。将使用 token 中 userId 查询改为通过方法传入的 userId 查询
 	*/
 	l.Logger.Info(req)
 	redisClient := l.svcCtx.RedisClient
 
 	// 1.根据 token 获取 userid
-	parsToken, err0 := util.ParseToken(req.Token)
+	_, err0 := util.ParseToken(req.Token)
 	if err0 != nil {
 		l.Logger.Error(err0)
 		return &types.FavoriteListResp{
@@ -52,7 +52,7 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 
 	// 2.根据 user_id 查询 favorite 表，返回点赞的所有 video_id
 	favoriteListResp, err1 := l.svcCtx.ContentRpcClient.SearchFavorite(l.ctx, &pb.SearchFavoriteReq{
-		UserId: parsToken.UserID,
+		UserId: req.UserId,
 	})
 	if err1 != nil && err1 != sql.ErrNoRows {
 		l.Logger.Error(err1)
