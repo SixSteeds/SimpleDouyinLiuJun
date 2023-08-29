@@ -8,7 +8,6 @@ package pb
 
 import (
 	context "context"
-
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -22,7 +21,6 @@ const _ = grpc.SupportPackageIsVersion7
 const (
 	Chat_AddChatMessage_FullMethodName     = "/pb.chat/AddChatMessage"
 	Chat_GetChatMessageById_FullMethodName = "/pb.chat/GetChatMessageById"
-	Chat_SearchChatMessage_FullMethodName  = "/pb.chat/SearchChatMessage"
 )
 
 // ChatClient is the client API for Chat service.
@@ -31,7 +29,6 @@ const (
 type ChatClient interface {
 	AddChatMessage(ctx context.Context, in *AddChatMessageReq, opts ...grpc.CallOption) (*AddChatMessageResp, error)
 	GetChatMessageById(ctx context.Context, in *GetChatMessageByIdReq, opts ...grpc.CallOption) (*GetChatMessageByIdResp, error)
-	SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error)
 }
 
 type chatClient struct {
@@ -60,22 +57,12 @@ func (c *chatClient) GetChatMessageById(ctx context.Context, in *GetChatMessageB
 	return out, nil
 }
 
-func (c *chatClient) SearchChatMessage(ctx context.Context, in *SearchChatMessageReq, opts ...grpc.CallOption) (*SearchChatMessageResp, error) {
-	out := new(SearchChatMessageResp)
-	err := c.cc.Invoke(ctx, Chat_SearchChatMessage_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // ChatServer is the server API for Chat service.
 // All implementations must embed UnimplementedChatServer
 // for forward compatibility
 type ChatServer interface {
 	AddChatMessage(context.Context, *AddChatMessageReq) (*AddChatMessageResp, error)
 	GetChatMessageById(context.Context, *GetChatMessageByIdReq) (*GetChatMessageByIdResp, error)
-	SearchChatMessage(context.Context, *SearchChatMessageReq) (*SearchChatMessageResp, error)
 	mustEmbedUnimplementedChatServer()
 }
 
@@ -88,9 +75,6 @@ func (UnimplementedChatServer) AddChatMessage(context.Context, *AddChatMessageRe
 }
 func (UnimplementedChatServer) GetChatMessageById(context.Context, *GetChatMessageByIdReq) (*GetChatMessageByIdResp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetChatMessageById not implemented")
-}
-func (UnimplementedChatServer) SearchChatMessage(context.Context, *SearchChatMessageReq) (*SearchChatMessageResp, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SearchChatMessage not implemented")
 }
 func (UnimplementedChatServer) mustEmbedUnimplementedChatServer() {}
 
@@ -141,24 +125,6 @@ func _Chat_GetChatMessageById_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Chat_SearchChatMessage_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SearchChatMessageReq)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ChatServer).SearchChatMessage(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Chat_SearchChatMessage_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ChatServer).SearchChatMessage(ctx, req.(*SearchChatMessageReq))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // Chat_ServiceDesc is the grpc.ServiceDesc for Chat service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -173,10 +139,6 @@ var Chat_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetChatMessageById",
 			Handler:    _Chat_GetChatMessageById_Handler,
-		},
-		{
-			MethodName: "SearchChatMessage",
-			Handler:    _Chat_SearchChatMessage_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

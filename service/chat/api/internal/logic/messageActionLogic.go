@@ -2,11 +2,13 @@ package logic
 
 import (
 	"context"
+	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/api/internal/svc"
 	"doushen_by_liujun/service/chat/api/internal/types"
 	"doushen_by_liujun/service/chat/rpc/pb"
 	"doushen_by_liujun/service/user/rpc/user"
+	"errors"
 	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -27,8 +29,8 @@ func NewMessageActionLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Mes
 }
 
 func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.MessageActionReqResp, error) {
-	l.Logger.Info(req)
-	var resp *types.MessageActionReqResp
+	l.Logger.Info("MessageAction方法请求参数：", req)
+
 	// get params
 	token := req.Token
 	toUserID := req.ToUserId
@@ -40,28 +42,25 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.
 	case 1:
 		// send message
 		if err := l.SendMessage(token, content, toUserID); err != nil {
-			resp = &types.MessageActionReqResp{
-				StatusCode: 1,
-				StatusMsg:  "fail to send message",
-			}
-			return resp, fmt.Errorf("fail to send message, error = %s", err)
+			l.Logger.Error(err)
+			return &types.MessageActionReqResp{
+				StatusCode: common.DB_ERROR,
+				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			}, nil
 		}
 	default:
 		// unknown operation type
-		resp = &types.MessageActionReqResp{
-			StatusCode: 1,
-			StatusMsg:  "fail to send message",
-		}
-		return resp, fmt.Errorf("fail to send message, error = unknown operation type")
+		l.Logger.Error(errors.New("unknown operation type"))
+		return &types.MessageActionReqResp{
+			StatusCode: common.REUQEST_PARAM_ERROR,
+			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+		}, nil
 	}
-
 	// send successfully
-	resp = &types.MessageActionReqResp{
-		StatusCode: 0,
-		StatusMsg:  "send message successfully",
-	}
-
-	return resp, nil
+	return &types.MessageActionReqResp{
+		StatusCode: common.OK,
+		StatusMsg:  common.MapErrMsg(common.OK),
+	}, nil
 }
 
 func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) error {

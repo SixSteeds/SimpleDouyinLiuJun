@@ -7,11 +7,10 @@
 package pb
 
 import (
-	reflect "reflect"
-	sync "sync"
-
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	reflect "reflect"
+	sync "sync"
 )
 
 const (
@@ -30,8 +29,8 @@ type ChatMessage struct {
 	UserId     int64  `protobuf:"varint,2,opt,name=userId,proto3" json:"userId,omitempty"`
 	ToUserId   int64  `protobuf:"varint,3,opt,name=toUserId,proto3" json:"toUserId,omitempty"`
 	Message    string `protobuf:"bytes,4,opt,name=message,proto3" json:"message,omitempty"`
-	CreateTime string `protobuf:"bytes,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime string `protobuf:"bytes,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
+	CreateTime int64  `protobuf:"varint,5,opt,name=createTime,proto3" json:"createTime,omitempty"`
+	UpdateTime int64  `protobuf:"varint,6,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
 }
 
 func (x *ChatMessage) Reset() {
@@ -94,18 +93,18 @@ func (x *ChatMessage) GetMessage() string {
 	return ""
 }
 
-func (x *ChatMessage) GetCreateTime() string {
+func (x *ChatMessage) GetCreateTime() int64 {
 	if x != nil {
 		return x.CreateTime
 	}
-	return ""
+	return 0
 }
 
-func (x *ChatMessage) GetUpdateTime() string {
+func (x *ChatMessage) GetUpdateTime() int64 {
 	if x != nil {
 		return x.UpdateTime
 	}
-	return ""
+	return 0
 }
 
 type AddChatMessageReq struct {
@@ -285,11 +284,11 @@ type Message struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Id         int64  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 消息id
-	ToUserId   int64  `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`          // 该消息接收者的id
-	FromUserId int64  `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`    // 该消息发送者的id
-	Content    string `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                               // 消息内容
-	CreateTime string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 消息创建时间
+	Id         int64   `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                        // 消息id
+	ToUserId   int64   `protobuf:"varint,2,opt,name=to_user_id,json=toUserId,proto3" json:"to_user_id,omitempty"`          // 该消息接收者的id
+	FromUserId int64   `protobuf:"varint,3,opt,name=from_user_id,json=fromUserId,proto3" json:"from_user_id,omitempty"`    // 该消息发送者的id
+	Content    string  `protobuf:"bytes,4,opt,name=content,proto3" json:"content,omitempty"`                               // 消息内容
+	CreateTime *string `protobuf:"bytes,5,opt,name=create_time,json=createTime,proto3,oneof" json:"create_time,omitempty"` // 消息创建时间
 }
 
 func (x *Message) Reset() {
@@ -353,8 +352,8 @@ func (x *Message) GetContent() string {
 }
 
 func (x *Message) GetCreateTime() string {
-	if x != nil {
-		return x.CreateTime
+	if x != nil && x.CreateTime != nil {
+		return *x.CreateTime
 	}
 	return ""
 }
@@ -406,156 +405,6 @@ func (x *GetChatMessageByIdResp) GetMessageList() []*Message {
 	return nil
 }
 
-type SearchChatMessageReq struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Page       int64  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
-	Limit      int64  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`
-	Id         int64  `protobuf:"varint,3,opt,name=id,proto3" json:"id,omitempty"`
-	UserId     int64  `protobuf:"varint,4,opt,name=userId,proto3" json:"userId,omitempty"`
-	ToUserId   int64  `protobuf:"varint,5,opt,name=toUserId,proto3" json:"toUserId,omitempty"`
-	Message    string `protobuf:"bytes,6,opt,name=message,proto3" json:"message,omitempty"`
-	CreateTime int64  `protobuf:"varint,7,opt,name=createTime,proto3" json:"createTime,omitempty"`
-	UpdateTime int64  `protobuf:"varint,8,opt,name=updateTime,proto3" json:"updateTime,omitempty"`
-}
-
-func (x *SearchChatMessageReq) Reset() {
-	*x = SearchChatMessageReq{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_chat_proto_msgTypes[6]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SearchChatMessageReq) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchChatMessageReq) ProtoMessage() {}
-
-func (x *SearchChatMessageReq) ProtoReflect() protoreflect.Message {
-	mi := &file_chat_proto_msgTypes[6]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchChatMessageReq.ProtoReflect.Descriptor instead.
-func (*SearchChatMessageReq) Descriptor() ([]byte, []int) {
-	return file_chat_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *SearchChatMessageReq) GetPage() int64 {
-	if x != nil {
-		return x.Page
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetLimit() int64 {
-	if x != nil {
-		return x.Limit
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetId() int64 {
-	if x != nil {
-		return x.Id
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetUserId() int64 {
-	if x != nil {
-		return x.UserId
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetToUserId() int64 {
-	if x != nil {
-		return x.ToUserId
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetMessage() string {
-	if x != nil {
-		return x.Message
-	}
-	return ""
-}
-
-func (x *SearchChatMessageReq) GetCreateTime() int64 {
-	if x != nil {
-		return x.CreateTime
-	}
-	return 0
-}
-
-func (x *SearchChatMessageReq) GetUpdateTime() int64 {
-	if x != nil {
-		return x.UpdateTime
-	}
-	return 0
-}
-
-type SearchChatMessageResp struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	ChatMessage []*ChatMessage `protobuf:"bytes,1,rep,name=chatMessage,proto3" json:"chatMessage,omitempty"` //chatMessage
-}
-
-func (x *SearchChatMessageResp) Reset() {
-	*x = SearchChatMessageResp{}
-	if protoimpl.UnsafeEnabled {
-		mi := &file_chat_proto_msgTypes[7]
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		ms.StoreMessageInfo(mi)
-	}
-}
-
-func (x *SearchChatMessageResp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SearchChatMessageResp) ProtoMessage() {}
-
-func (x *SearchChatMessageResp) ProtoReflect() protoreflect.Message {
-	mi := &file_chat_proto_msgTypes[7]
-	if protoimpl.UnsafeEnabled && x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SearchChatMessageResp.ProtoReflect.Descriptor instead.
-func (*SearchChatMessageResp) Descriptor() ([]byte, []int) {
-	return file_chat_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *SearchChatMessageResp) GetChatMessage() []*ChatMessage {
-	if x != nil {
-		return x.ChatMessage
-	}
-	return nil
-}
-
 var File_chat_proto protoreflect.FileDescriptor
 
 var file_chat_proto_rawDesc = []byte{
@@ -602,41 +451,17 @@ var file_chat_proto_rawDesc = []byte{
 	0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x2d, 0x0a, 0x0b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
 	0x65, 0x4c, 0x69, 0x73, 0x74, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0b, 0x2e, 0x70, 0x62,
 	0x2e, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x0b, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x4c, 0x69, 0x73, 0x74, 0x22, 0xde, 0x01, 0x0a, 0x14, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68,
-	0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x12, 0x12,
-	0x0a, 0x04, 0x70, 0x61, 0x67, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x03, 0x52, 0x04, 0x70, 0x61,
-	0x67, 0x65, 0x12, 0x14, 0x0a, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28,
-	0x03, 0x52, 0x05, 0x6c, 0x69, 0x6d, 0x69, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x03,
-	0x20, 0x01, 0x28, 0x03, 0x52, 0x02, 0x69, 0x64, 0x12, 0x16, 0x0a, 0x06, 0x75, 0x73, 0x65, 0x72,
-	0x49, 0x64, 0x18, 0x04, 0x20, 0x01, 0x28, 0x03, 0x52, 0x06, 0x75, 0x73, 0x65, 0x72, 0x49, 0x64,
-	0x12, 0x1a, 0x0a, 0x08, 0x74, 0x6f, 0x55, 0x73, 0x65, 0x72, 0x49, 0x64, 0x18, 0x05, 0x20, 0x01,
-	0x28, 0x03, 0x52, 0x08, 0x74, 0x6f, 0x55, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x18, 0x0a, 0x07,
-	0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x63, 0x72, 0x65, 0x61, 0x74, 0x65,
-	0x54, 0x69, 0x6d, 0x65, 0x18, 0x07, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x63, 0x72, 0x65, 0x61,
-	0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x12, 0x1e, 0x0a, 0x0a, 0x75, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x54, 0x69, 0x6d, 0x65, 0x18, 0x08, 0x20, 0x01, 0x28, 0x03, 0x52, 0x0a, 0x75, 0x70, 0x64, 0x61,
-	0x74, 0x65, 0x54, 0x69, 0x6d, 0x65, 0x22, 0x4a, 0x0a, 0x15, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68,
+	0x65, 0x4c, 0x69, 0x73, 0x74, 0x32, 0x94, 0x01, 0x0a, 0x04, 0x63, 0x68, 0x61, 0x74, 0x12, 0x3f,
+	0x0a, 0x0e, 0x41, 0x64, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65,
+	0x12, 0x15, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64,
 	0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12,
-	0x31, 0x0a, 0x0b, 0x63, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x18, 0x01,
-	0x20, 0x03, 0x28, 0x0b, 0x32, 0x0f, 0x2e, 0x70, 0x62, 0x2e, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x0b, 0x63, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61,
-	0x67, 0x65, 0x32, 0xde, 0x01, 0x0a, 0x04, 0x63, 0x68, 0x61, 0x74, 0x12, 0x3f, 0x0a, 0x0e, 0x41,
-	0x64, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x15, 0x2e,
-	0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x70, 0x62, 0x2e, 0x41, 0x64, 0x64, 0x43, 0x68, 0x61,
-	0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x73, 0x70, 0x12, 0x4b, 0x0a, 0x12,
-	0x47, 0x65, 0x74, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x79,
-	0x49, 0x64, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x68, 0x61, 0x74, 0x4d,
-	0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x1a, 0x2e,
-	0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
-	0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x48, 0x0a, 0x11, 0x53, 0x65, 0x61,
-	0x72, 0x63, 0x68, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x12, 0x18,
-	0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65, 0x61, 0x72, 0x63, 0x68, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65,
-	0x73, 0x73, 0x61, 0x67, 0x65, 0x52, 0x65, 0x71, 0x1a, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x53, 0x65,
-	0x61, 0x72, 0x63, 0x68, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04, 0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x33,
+	0x4b, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67,
+	0x65, 0x42, 0x79, 0x49, 0x64, 0x12, 0x19, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x68,
+	0x61, 0x74, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x71,
+	0x1a, 0x1a, 0x2e, 0x70, 0x62, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x68, 0x61, 0x74, 0x4d, 0x65, 0x73,
+	0x73, 0x61, 0x67, 0x65, 0x42, 0x79, 0x49, 0x64, 0x52, 0x65, 0x73, 0x70, 0x42, 0x06, 0x5a, 0x04,
+	0x2e, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -651,7 +476,7 @@ func file_chat_proto_rawDescGZIP() []byte {
 	return file_chat_proto_rawDescData
 }
 
-var file_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_chat_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_chat_proto_goTypes = []interface{}{
 	(*ChatMessage)(nil),            // 0: pb.ChatMessage
 	(*AddChatMessageReq)(nil),      // 1: pb.AddChatMessageReq
@@ -659,23 +484,18 @@ var file_chat_proto_goTypes = []interface{}{
 	(*GetChatMessageByIdReq)(nil),  // 3: pb.GetChatMessageByIdReq
 	(*Message)(nil),                // 4: pb.Message
 	(*GetChatMessageByIdResp)(nil), // 5: pb.GetChatMessageByIdResp
-	(*SearchChatMessageReq)(nil),   // 6: pb.SearchChatMessageReq
-	(*SearchChatMessageResp)(nil),  // 7: pb.SearchChatMessageResp
 }
 var file_chat_proto_depIdxs = []int32{
 	4, // 0: pb.GetChatMessageByIdResp.messageList:type_name -> pb.Message
-	0, // 1: pb.SearchChatMessageResp.chatMessage:type_name -> pb.ChatMessage
-	1, // 2: pb.chat.AddChatMessage:input_type -> pb.AddChatMessageReq
-	3, // 3: pb.chat.GetChatMessageById:input_type -> pb.GetChatMessageByIdReq
-	6, // 4: pb.chat.SearchChatMessage:input_type -> pb.SearchChatMessageReq
-	2, // 5: pb.chat.AddChatMessage:output_type -> pb.AddChatMessageResp
-	5, // 6: pb.chat.GetChatMessageById:output_type -> pb.GetChatMessageByIdResp
-	7, // 7: pb.chat.SearchChatMessage:output_type -> pb.SearchChatMessageResp
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	1, // 1: pb.chat.AddChatMessage:input_type -> pb.AddChatMessageReq
+	3, // 2: pb.chat.GetChatMessageById:input_type -> pb.GetChatMessageByIdReq
+	2, // 3: pb.chat.AddChatMessage:output_type -> pb.AddChatMessageResp
+	5, // 4: pb.chat.GetChatMessageById:output_type -> pb.GetChatMessageByIdResp
+	3, // [3:5] is the sub-list for method output_type
+	1, // [1:3] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_chat_proto_init() }
@@ -756,30 +576,6 @@ func file_chat_proto_init() {
 				return nil
 			}
 		}
-		file_chat_proto_msgTypes[6].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchChatMessageReq); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
-		file_chat_proto_msgTypes[7].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*SearchChatMessageResp); i {
-			case 0:
-				return &v.state
-			case 1:
-				return &v.sizeCache
-			case 2:
-				return &v.unknownFields
-			default:
-				return nil
-			}
-		}
 	}
 	file_chat_proto_msgTypes[4].OneofWrappers = []interface{}{}
 	type x struct{}
@@ -788,7 +584,7 @@ func file_chat_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_chat_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   8,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

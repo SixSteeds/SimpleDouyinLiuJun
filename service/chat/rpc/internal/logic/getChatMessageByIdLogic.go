@@ -26,7 +26,7 @@ func NewGetChatMessageByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext)
 }
 
 func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdReq) (*pb.GetChatMessageByIdResp, error) {
-	l.Logger.Info(in)
+	l.Logger.Info("GetChatMessageById方法请求参数：", in)
 
 	var results []*pb.Message
 	message, err := l.svcCtx.ChatMessageModel.GetChatMsgByIds(l.ctx, in.UserId, in.ToUserId, in.PreMsgTime)
@@ -34,13 +34,13 @@ func (l *GetChatMessageByIdLogic) GetChatMessageById(in *pb.GetChatMessageByIdRe
 		return nil, fmt.Errorf("fail to getChatMsgByIds, error = %s", err)
 	}
 	for _, item := range *message {
-		fmt.Println(item.CreateTime)
+		createTime := strconv.Itoa(int(item.CreateTime.Unix()))
 		results = append(results, &pb.Message{
 			Id:         item.Id,
 			ToUserId:   item.ToUserId,
 			FromUserId: item.UserId,
 			Content:    item.Message,
-			CreateTime: strconv.Itoa(int(item.CreateTime.Unix())),
+			CreateTime: &createTime,
 		})
 	}
 	return &pb.GetChatMessageByIdResp{MessageList: results}, nil
