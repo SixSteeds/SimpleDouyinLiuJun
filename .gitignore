@@ -45,8 +45,8 @@ gen
 log
 .log
 *.log
-script/data/redisData
-script/data/kafka
-script/conf/nginx_conf/log/*.log
+/script/data/redisData
+/script/data/kafka
+/script/conf/nginx_conf/log/*.log
 *.json
 
