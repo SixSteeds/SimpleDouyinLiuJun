@@ -1,12 +1,10 @@
 package common
 
 /*
-	此处考虑后期统一错误返回码
+	统一错误返回码
 */
 // 成功返回
 const OK int32 = 0 //tzx修改，文档上成功是0
-
-/**(前3位代表业务,后三位代表具体功能)**/
 
 // 全局错误码
 const SERVER_COMMON_ERROR int32 = 201

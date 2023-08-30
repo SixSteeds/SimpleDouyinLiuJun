@@ -33,7 +33,6 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	l.Logger.Info("login方法请求参数：", req)
 
 	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) > 32 {
-
 		l.Logger.Error("login方法参数错误")
 		return &types.LoginResp{
 			StatusCode: common.REUQEST_PARAM_ERROR,
