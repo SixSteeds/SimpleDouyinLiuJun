@@ -13,7 +13,7 @@ UserRpcConf:
 Log:
   ServiceName: content
   Mode: file
-  Path: logs/ordinary-log/content/api
+  Path: ../../../logs/ordinary-log/content/api
   Level: info
   Encoding: plain
   KeepDays: 7

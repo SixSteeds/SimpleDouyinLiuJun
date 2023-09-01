@@ -15,7 +15,7 @@ DB:
 Log:
   ServiceName: media.rpc
   Mode: file
-  Path: logs/ordinary-log/media/rpc
+  Path: ../../../logs/ordinary-log/media/rpc
   Level: info
   Encoding: plain
   KeepDays: 7

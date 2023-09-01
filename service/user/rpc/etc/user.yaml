@@ -22,7 +22,7 @@ RedisConf:
 Log:
   ServiceName: user.rpc
   Mode: file
-  Path: logs/ordinary-log/user/rpc
+  Path: ../../../logs/ordinary-log/user/rpc
   Level: info
   Encoding: plain
   KeepDays: 7

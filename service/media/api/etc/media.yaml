@@ -16,7 +16,7 @@ MediaRpcConf:
 Log:
   ServiceName: media
   Mode: file
-  Path: logs/ordinary-log/media/api
+  Path: ../../../logs/ordinary-log/media/api
   Level: info
   Encoding: plain
   KeepDays: 7
