@@ -20,7 +20,7 @@ func LogWrite(fileName string, T interface{}) error {
 	}
 	now := time.Now()
 	year, month, day := now.Date()
-	logDir := "logs/kafka-log/" + fileName + "/"
+	logDir := "../../../git logs/kafka-log/" + fileName + "/"
 	err = os.MkdirAll(logDir, 0755)
 	if err != nil {
 		// 处理创建目录失败的错误

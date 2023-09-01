@@ -19,7 +19,7 @@ Mode: dev
 Log:
   ServiceName: content.rpc
   Mode: file
-  Path: logs/ordinary-log/content/rpc
+  Path: ../../../logs/ordinary-log/content/rpc
   Level: info
   Encoding: plain
   KeepDays: 7

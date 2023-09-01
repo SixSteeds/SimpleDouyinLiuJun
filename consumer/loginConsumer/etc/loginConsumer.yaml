@@ -10,7 +10,7 @@ Offset: first
 Log:
   ServiceName: loginConsumer
   Mode: file
-  Path: logs/ordinary-log/loginConsumer
+  Path: ../../../logs/ordinary-log/loginConsumer
   Level: error
   Encoding: plain
   KeepDays: 7
