@@ -1,7 +1,7 @@
 
 <p align="center">
   <a href="https://github.com/SixSteeds/SimpleDouyinLiuJun">
-    <img src="https://img0.baidu.com/it/u=320270676,3932588820&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=503" width="150" alt="douyin">
+    <img src="https://img1.baidu.com/it/u=3097479827,1066216267&fm=253&fmt=auto&app=138&f=JPEG?w=466&h=500" width="150" alt="douyin">
   </a>
 </p>
 
