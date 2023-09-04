@@ -1,6 +1,27 @@
+
+<p align="center">
+  <a href="https://github.com/SixSteeds/SimpleDouyinLiuJun">
+    <img src="https://img2.baidu.com/it/u=3792661748,2631179326&fm=253&fmt=auto&app=138&f=JPEG?w=543&h=442" width="150" alt="douyin">
+  </a>
+</p>
+
+
+
+<div align="center">
+
+
+#
+
+</div>
+
+<div align="center">
+
+
 # SimpleDouyinLiuJun
 
-一个基于go-zero的微服务简化版抖音项目，由六骏小队于23年8月参加字节跳动组织的第6届青训营时所做。
+🎉 字节青训营《基于go-zero的微服务简化版抖音项目》 🎉
+
+</div>
 
 ## 项目启动
 
