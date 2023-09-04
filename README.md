@@ -5,13 +5,7 @@
   </a>
 </p>
 
-
-
 <div align="center">
-
-
-#
-
 </div>
 
 <div align="center">
