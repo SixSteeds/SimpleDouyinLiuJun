@@ -59,7 +59,7 @@ sh start_debug_LinuxMac.sh
 ![img.png](desc/img.png)
 
 ## 预览
-![img.png](desc/preview.png)
+![img.png](desc/preview.jpg)
 
 ## 贡献者
 
