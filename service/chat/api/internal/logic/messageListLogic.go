@@ -27,7 +27,9 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
 	l.Logger.Info("MessageList方法请求参数：", req)
 	var lastTime int64
+	var flag bool //标识需不需要删除第一条数据
 	if req.PreMsgTime > 169268692200 {
+		flag = true
 		// 获取第三位数字
 		thirdDigit := (req.PreMsgTime / 100) % 10
 		// 进行四舍五入
@@ -37,6 +39,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 			lastTime = req.PreMsgTime / 1000
 		}
 	} else {
+		flag = false
 		lastTime = req.PreMsgTime
 	}
 
@@ -82,7 +85,13 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 		}
 		messages = append(messages, msg)
 	}
-
+	if flag {
+		return &types.MessageChatReqResp{
+			StatusCode:  common.OK,
+			StatusMsg:   common.MapErrMsg(common.OK),
+			MessageList: messages[1:],
+		}, nil
+	}
 	return &types.MessageChatReqResp{
 		StatusCode:  common.OK,
 		StatusMsg:   common.MapErrMsg(common.OK),
