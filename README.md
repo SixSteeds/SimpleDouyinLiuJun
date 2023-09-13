@@ -1,5 +1,6 @@
+
 <p align="center">
-  <a href="[https://github.com/SixSteeds/SimpleDouyinLiuJun ↗](https://github.com/SixSteeds/SimpleDouyinLiuJun)">
+  <a href="desc/liujundouyin.webp">
     <img src="https://img1.baidu.com/it/u=3097479827,1066216267&fm=253&fmt=auto&app=138&f=JPEG?w=466&h=500" width="150" alt="douyin">
   </a>
 </p>
@@ -9,59 +10,61 @@
 
 <div align="center">
 
+中文 | [English](desc/README_EN.md)
+</div>
+<div align="center">
 
 # SimpleDouyinLiuJun
 
-🎉 ByteDance Youth Training Camp "Simplified Douyin Project Based on go-zero" 🎉
+🎉 字节青训营《基于go-zero的微服务简化版抖音项目》 🎉
 
 </div>
 
 <p align="center">
-  <a href="[https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf ↗](https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf)" target='_blank'>Report Document</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf" target='_blank'>汇报文档</a>
   ·
-  <a href="[https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg ↗](https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg)">Development Document</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg">开发文档</a>
 </p>
 
 
-## Project Launch
+## 项目启动
 
-#### Install Dependencies
+#### 安装依赖
 
 ```
 go mod tidy
 ```
 
-#### Install Local Image in the `script` Directory
+#### 进入`script`目录安装本地镜像
 
 ```
 docker compose -f docker-compose-env up -d
 ```
 
-#### Start Services
+#### 服务启动
 
-##### Execute the Following Scripts in the `script` Directory
+##### 进入`script`目录执行以下脚本
 
-###### Mac or Linux
+###### mac or linux
 
 ```bash
 sh start_debug_LinuxMac.sh
 ```
 
-###### Windows Start in the Following Order
+###### windows 按以下顺序启动
 
 ```
-Start all consumer-job-contentrpc-other-rpc-all-api
+所有consumer-job-contentrpc-其他rpc-所有api
 ```
 
-## Business Architecture Diagram
+## 业务架构图
 
-![desc/img.png](desc/img.png)
+![img.png](desc/img.png)
 
-## Preview
-
+## 预览
 ![img.png](desc/preview.jpg)
 
-## Contributors
+## 贡献者
 
 <table>
   <tbody>
@@ -149,3 +152,5 @@ Start all consumer-job-contentrpc-other-rpc-all-api
 </tbody>
 
 </table>
+
+

@@ -9,6 +9,12 @@
 
 <div align="center">
 
+[中文](../README.md) | English
+</div>
+
+
+<div align="center">
+
 
 # SimpleDouyinLiuJun
 
@@ -17,9 +23,9 @@
 </div>
 
 <p align="center">
-  <a href="[https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf ↗](https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf)" target='_blank'>Report Document</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf" target='_blank'>Report Document</a>
   ·
-  <a href="[https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg ↗](https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg)">Development Document</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg">Development Document</a>
 </p>
 
 
@@ -59,7 +65,7 @@ Start all consumer-job-contentrpc-other-rpc-all-api
 
 ## Preview
 
-![img.png](desc/preview.jpg)
+![img.png](preview.jpg)
 
 ## Contributors
 
