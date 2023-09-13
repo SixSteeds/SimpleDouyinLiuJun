@@ -55,7 +55,7 @@ Start all consumer-job-contentrpc-other-rpc-all-api
 
 ## Business Architecture Diagram
 
-![desc/img.png](desc/img.png)
+![desc/img.png](img.png)
 
 ## Preview
 
