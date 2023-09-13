@@ -26,18 +26,21 @@ func NewMessageListLogic(ctx context.Context, svcCtx *svc.ServiceContext) *Messa
 
 func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.MessageChatReqResp, error) {
 	l.Logger.Info("MessageList方法请求参数：", req)
+
 	var lastTime int64
 	var flag bool //标识需不需要删除第一条数据
+
 	if req.PreMsgTime > 169268692200 {
 		flag = true
 		// 获取第三位数字
-		thirdDigit := (req.PreMsgTime / 100) % 10
+		//thirdDigit := (req.PreMsgTime / 100) % 10
+		lastTime = req.PreMsgTime / 1000
 		// 进行四舍五入
-		if thirdDigit >= 5 {
-			lastTime = req.PreMsgTime/1000 + 1
-		} else {
-			lastTime = req.PreMsgTime / 1000
-		}
+		//if thirdDigit >= 5 {
+		//	lastTime = req.PreMsgTime/1000 + 1
+		//} else {
+		//	lastTime = req.PreMsgTime / 1000
+		//}
 	} else {
 		flag = false
 		lastTime = req.PreMsgTime
