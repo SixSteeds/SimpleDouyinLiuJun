@@ -5,6 +5,10 @@ MaxBytes: 1048576000
 Timeout: 30000
 
 
+DevServer:
+  Enabled: true
+  Port: 8073
+
 
 MediaRpcConf:
   Etcd:

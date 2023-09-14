@@ -37,7 +37,7 @@ func (l *GetUserPublishAndLikedCntByIdLogic) GetUserPublishAndLikedCntById(in *p
 	//1. 根据 userId 查找 video 表，得到用户发布的所有 videoId, 并计数 publishCnt
 	var publishCnt int64 = 0
 	videoList, err := l.svcCtx.VideoModel.FindVideoListByUserId(l.ctx, in.UserId)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("数据查询失败")
 	}
 	var videoIdList []int64
@@ -56,7 +56,7 @@ func (l *GetUserPublishAndLikedCntByIdLogic) GetUserPublishAndLikedCntById(in *p
 	//2. 根据 videoIdList 查找 favorite 表，count 得到这些所有作品的总获赞数
 	var likedCnt int64 = 0
 	likedCntResp, err2 := l.svcCtx.FavoriteModel.FindFavoritedCntByVideoIdList(l.ctx, &videoIdList)
-	if err2 != nil && err2 != model.ErrNotFound {
+	if err2 != nil && !errors.Is(err2, model.ErrNotFound) {
 		return nil, errors.New("数据查询失败")
 	}
 	likedCnt = likedCntResp

@@ -51,8 +51,8 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.MessageChatReqResp{
-			StatusCode:  common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			StatusCode:  common.TokenExpireError,
+			StatusMsg:   common.MapErrMsg(common.TokenExpireError),
 			MessageList: nil,
 		}, nil
 	}
@@ -71,8 +71,8 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.MessageChatReqResp{
-			StatusCode:  common.DB_ERROR,
-			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
+			StatusCode:  common.DbError,
+			StatusMsg:   common.MapErrMsg(common.DbError),
 			MessageList: nil,
 		}, nil
 	}

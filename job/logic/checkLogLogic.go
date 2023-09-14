@@ -9,18 +9,18 @@ import (
 	"time"
 )
 
-type checkLogLogic struct {
+type CheckLogLogic struct {
 	ctx context.Context
 	logx.Logger
 }
 
-func NewCheckLogLogic(ctx context.Context) *checkLogLogic {
-	return &checkLogLogic{
+func NewCheckLogLogic(ctx context.Context) *CheckLogLogic {
+	return &CheckLogLogic{
 		Logger: logx.WithContext(ctx),
 	}
 }
 
-func (l *checkLogLogic) CheckLog() {
+func (l *CheckLogLogic) CheckLog() {
 	/*
 		Author：    刘洋
 		Function：  每天点定时扫描 log/uploadSecurity 目录和 log/userSecurity 目录，超过7天的文件清除
@@ -50,7 +50,10 @@ func (l *checkLogLogic) CheckLog() {
 				// 如果是文件且文件名符合日期格式，则比较日期并删除7天前的文件
 				if time.Now().Sub(fileDate) > 7*24*time.Hour {
 					fmt.Printf("Deleting file: %s\n", path)
-					os.Remove(path)
+					err := os.Remove(path)
+					if err != nil {
+						fmt.Println("Failed to delete file:", err)
+					}
 				}
 			}
 			fmt.Println("do nothing")

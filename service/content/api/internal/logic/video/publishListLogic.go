@@ -47,8 +47,8 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.PublishListResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 	if data == nil {
@@ -67,8 +67,8 @@ func (l *PublishListLogic) PublishList(req *types.PublishListReq) (resp *types.P
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.PublishListResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 	var feedUserList []*pb.FeedUser

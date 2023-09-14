@@ -2,6 +2,10 @@ Name: media.rpc
 ListenOn: 0.0.0.0:8084
 
 
+DevServer:
+  Enabled: true
+  Port: 8074
+
 Etcd:
   Hosts:
   - 0.0.0.0:8090

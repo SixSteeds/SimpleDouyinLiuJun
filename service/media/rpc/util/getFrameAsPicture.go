@@ -12,8 +12,6 @@ import (
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-
-	ffmpeg "github.com/u2takey/ffmpeg-go"
 )
 
 // ffmpeg URL-IO模式demo
@@ -59,50 +57,52 @@ func initMinio() {
 	}
 }
 
-func PutPicture(buf *bytes.Buffer, inFileName string) {
-	//上传图片
-	initMinio()
-	saveName := inFileName + ".jpg"
-	_, err := client.PutObject(context.Background(),
-		common.MinIOCoverBucketName,
-		saveName,
-		buf,
-		int64(buf.Len()),
-		minio.PutObjectOptions{
-			ContentType: "image/jpeg",
-		})
+// PutPicture 上传图片
+//func PutPicture(buf *bytes.Buffer, inFileName string) {
+//	//上传图片
+//	initMinio()
+//	saveName := inFileName + ".jpg"
+//	_, err := client.PutObject(context.Background(),
+//		common.MinIOCoverBucketName,
+//		saveName,
+//		buf,
+//		int64(buf.Len()),
+//		minio.PutObjectOptions{
+//			ContentType: "image/jpeg",
+//		})
+//
+//	if err != nil {
+//		log.Fatalln("图片上传失败", err)
+//		return
+//	}
+//	fmt.Println("图片上传成功")
+//	//获取对象预签名url
+//	URL, err := client.PresignedGetObject(context.Background(), common.MinIOCoverBucketName, saveName, time.Second*24*60*60, nil)
+//	if err != nil {
+//		log.Fatalln("获取url失败", err)
+//		return
+//	}
+//	fmt.Println("URL获取成功,URL为：", URL)
+//}
 
-	if err != nil {
-		log.Fatalln("图片上传失败", err)
-		return
-	}
-	fmt.Println("图片上传成功")
-	//获取对象预签名url
-	URL, err := client.PresignedGetObject(context.Background(), common.MinIOCoverBucketName, saveName, time.Second*24*60*60, nil)
-	if err != nil {
-		log.Fatalln("获取url失败", err)
-		return
-	}
-	fmt.Println("URL获取成功,URL为：", URL)
-}
-
-func GetFrame(inFileName string, frameNum int) (*bytes.Buffer, error) {
-	log.Printf("进到抽帧函数")
-	inFileName = inFileName + ".mp4"
-	buf := bytes.NewBuffer(nil)
-	err := ffmpeg.Input(common.HTTP+common.MinIOEndPoint+"/"+common.MinIOVideoBucketName+"/"+inFileName).
-		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
-		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
-		WithOutput(buf, os.Stdout).
-		Run()
-	// 运行 ffmpeg 命令
-	if err != nil {
-		log.Fatalln("截取图片失败", err)
-		return nil, err
-	}
-	log.Printf("截取图片成功")
-	return buf, nil
-}
+// GetFrame 抽帧
+//func GetFrame(inFileName string, frameNum int) (*bytes.Buffer, error) {
+//	log.Printf("进到抽帧函数")
+//	inFileName = inFileName + ".mp4"
+//	buf := bytes.NewBuffer(nil)
+//	err := ffmpeg.Input(common.HTTP+common.MinIOEndPoint+"/"+common.MinIOVideoBucketName+"/"+inFileName).
+//		Filter("select", ffmpeg.Args{fmt.Sprintf("gte(n,%d)", frameNum)}).
+//		Output("pipe:", ffmpeg.KwArgs{"vframes": 1, "format": "image2", "vcodec": "mjpeg"}).
+//		WithOutput(buf, os.Stdout).
+//		Run()
+//	// 运行 ffmpeg 命令
+//	if err != nil {
+//		log.Fatalln("截取图片失败", err)
+//		return nil, err
+//	}
+//	log.Printf("截取图片成功")
+//	return buf, nil
+//}
 
 func GetFrameByDocker(inFileName string) error {
 	dir, err := os.Getwd()

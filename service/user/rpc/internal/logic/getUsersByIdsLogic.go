@@ -4,12 +4,11 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	contentPB "doushen_by_liujun/service/content/rpc/pb"
-	"math/rand"
-	"strconv"
-	"time"
-
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"fmt"
+	"math/rand"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -45,7 +44,7 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 		//followRecord, _ := redisClient.Get(followKey)
 		followNum := 0
 		followerNum := 0
-		rand.Seed(time.Now().UnixNano())
+		//rand.Seed(time.Now().UnixNano())
 		expiration := 3000 + rand.Intn(600)
 		if len(followRecord) == 0 {
 			//没有记录，去查表
@@ -90,7 +89,10 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 				return nil, err
 			}
 			workCount = int(ans.WorkCount)
-			redisClient.SetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(id)), strconv.Itoa(workCount))
+			err = redisClient.SetCtx(l.ctx, common.CntCacheUserWorkPrefix+strconv.Itoa(int(id)), strconv.Itoa(workCount))
+			if err != nil {
+				fmt.Printf("redis set err %v\n", err)
+			}
 		}
 		favoriteCountRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(id)))
 		if len(favoriteCountRecord) != 0 { //等于0 代表没有记录，查表并存储到redis
@@ -104,7 +106,10 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 				return nil, err
 			}
 			favoriteCount = int(ans.FavoriteCount)
-			redisClient.SetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(id)), strconv.Itoa(favoriteCount))
+			err = redisClient.SetCtx(l.ctx, common.CntCacheUserLikePrefix+strconv.Itoa(int(id)), strconv.Itoa(favoriteCount))
+			if err != nil {
+				fmt.Printf("redis set err%v\n", err)
+			}
 		}
 		totalFavoritedRecord, _ := redisClient.GetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(id)))
 		if len(totalFavoritedRecord) != 0 { //等于0 代表没有记录，查表并存储到redis
@@ -118,7 +123,10 @@ func (l *GetUsersByIdsLogic) GetUsersByIds(in *pb.GetUsersByIdsReq) (*pb.GetUser
 				return nil, err
 			}
 			totalFavorited = int(ans.LikedCnt)
-			redisClient.SetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(id)), strconv.Itoa(totalFavorited))
+			err = redisClient.SetCtx(l.ctx, common.CntCacheUserLikedPrefix+strconv.Itoa(int(id)), strconv.Itoa(totalFavorited))
+			if err != nil {
+				fmt.Printf("redis set err %v\n", err)
+			}
 		}
 		users = append(users, &pb.Usersinfo{
 			Id:              info.Id,

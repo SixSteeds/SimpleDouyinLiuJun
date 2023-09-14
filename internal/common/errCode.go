@@ -3,20 +3,21 @@ package common
 /*
 	统一错误返回码
 */
+
 // 成功返回
+
 const OK int32 = 0 //tzx修改，文档上成功是0
 
-// 全局错误码
-const SERVER_COMMON_ERROR int32 = 201
-const REUQEST_PARAM_ERROR int32 = 202
-const TOKEN_EXPIRE_ERROR int32 = 203
-const TOKEN_GENERATE_ERROR int32 = 204
-const DB_ERROR int32 = 205
-const DB_UPDATE_AFFECTED_ZERO_ERROR int32 = 206
-const REDIS_ERROR int32 = 207
-const DATA_USE_UP int32 = 208
-const TOKEN_PARSE_ERROR int32 = 209
+// 通用错误
 
-// 用户模块
-const USERNAME_REPETITION = 220
-const AUTHORIZATION_ERROR = 221
+const ServerCommonError int32 = 201
+const RequestParamError int32 = 202
+const TokenExpireError int32 = 203
+const TokenGenerateError int32 = 204
+const DbError int32 = 205
+const DbUpdateAffectedZeroError int32 = 206
+const RedisError int32 = 207
+const DataUseUp int32 = 208
+const TokenParseError int32 = 209
+const UsernameRepetition = 220
+const AuthorizationError = 221

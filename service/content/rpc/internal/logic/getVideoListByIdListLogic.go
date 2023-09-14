@@ -32,7 +32,7 @@ func (l *GetVideoListByIdListLogic) GetVideoListByIdList(in *pb.GetVideoListById
 	*/
 	l.Logger.Info("GetVideoListByIdList方法请求参数：", in)
 	videoList, err := l.svcCtx.VideoModel.FindVideoListByIdList(l.ctx, &in.VideoIdList)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("rpc-GetVideoListByIdList-数据查询失败")
 	}
 	var resp []*pb.Video

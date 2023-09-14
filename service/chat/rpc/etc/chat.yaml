@@ -1,5 +1,11 @@
 Name: chat.rpc
 ListenOn: 0.0.0.0:8088
+
+
+DevServer:
+  Enabled: true
+  Port: 8078
+
 Etcd:
   Hosts:
     - 0.0.0.0:8090

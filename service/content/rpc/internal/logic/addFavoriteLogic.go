@@ -39,7 +39,7 @@ func (l *AddFavoriteLogic) AddFavorite(in *pb.AddFavoriteReq) (*pb.AddFavoriteRe
 	//1.根据（userId、videoId）查找 favorite 表
 	favorite, err0 := l.svcCtx.FavoriteModel.FindFavoriteByUserIdVideoId(l.ctx, in.UserId, in.VideoId)
 	fmt.Println(favorite)
-	if err0 != nil && err0 != model.ErrNotFound {
+	if err0 != nil && !errors.Is(err0, model.ErrNotFound) {
 		return nil, errors.New("rpc-AddFavorite-数据查询失败")
 	}
 	//2.favorite记录存在，则置 isDelete=0 选项到 favorite 表项

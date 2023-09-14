@@ -35,8 +35,8 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) > 32 {
 		l.Logger.Error("login方法参数错误")
 		return &types.LoginResp{
-			StatusCode: common.REUQEST_PARAM_ERROR,
-			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+			StatusCode: common.RequestParamError,
+			StatusMsg:  common.MapErrMsg(common.RequestParamError),
 		}, nil
 	}
 
@@ -47,16 +47,16 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.LoginResp{
-			StatusCode: common.AUTHORIZATION_ERROR,
-			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
+			StatusCode: common.AuthorizationError,
+			StatusMsg:  common.MapErrMsg(common.AuthorizationError),
 		}, nil
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(data.Password), []byte(req.Password))
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.LoginResp{
-			StatusCode: common.AUTHORIZATION_ERROR,
-			StatusMsg:  common.MapErrMsg(common.AUTHORIZATION_ERROR),
+			StatusCode: common.AuthorizationError,
+			StatusMsg:  common.MapErrMsg(common.AuthorizationError),
 		}, nil
 	}
 
@@ -64,8 +64,8 @@ func (l *LoginLogic) Login(req *types.LoginReq) (resp *types.LoginResp, err erro
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.LoginResp{
-			StatusCode: common.REUQEST_PARAM_ERROR,
-			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+			StatusCode: common.RequestParamError,
+			StatusMsg:  common.MapErrMsg(common.RequestParamError),
 		}, nil
 	}
 	ip := l.ctx.Value("ip")

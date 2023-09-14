@@ -33,8 +33,8 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	if e != nil {
 		l.Logger.Error(e)
 		return &types.CommentListResp{
-			StatusCode:  common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:   common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			StatusCode:  common.TokenExpireError,
+			StatusMsg:   common.MapErrMsg(common.TokenExpireError),
 			CommentList: []types.Comment{},
 		}, nil
 	}
@@ -45,8 +45,8 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	if e != nil {
 		l.Logger.Error(e)
 		return &types.CommentListResp{
-			StatusCode:  common.DB_ERROR,
-			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
+			StatusCode:  common.DbError,
+			StatusMsg:   common.MapErrMsg(common.DbError),
 			CommentList: []types.Comment{},
 		}, nil
 	}
@@ -70,8 +70,8 @@ func (l *CommentListLogic) CommentList(req *types.CommentListReq) (resp *types.C
 	if e != nil {
 		l.Logger.Error(e)
 		return &types.CommentListResp{
-			StatusCode:  common.DB_ERROR,
-			StatusMsg:   common.MapErrMsg(common.DB_ERROR),
+			StatusCode:  common.DbError,
+			StatusMsg:   common.MapErrMsg(common.DbError),
 			CommentList: []types.Comment{},
 		}, nil
 	}

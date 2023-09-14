@@ -5,12 +5,9 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/chat/rpc/internal/model"
-	"fmt"
-	"math/rand"
-	"time"
-
 	"doushen_by_liujun/service/chat/rpc/internal/svc"
 	"doushen_by_liujun/service/chat/rpc/pb"
+	"fmt"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,7 +30,6 @@ func (l *AddChatMessageLogic) AddChatMessage(in *pb.AddChatMessageReq) (*pb.AddC
 	l.Logger.Info("AddChatMessage方法请求参数：", in)
 
 	// generate id
-	rand.Seed(time.Now().UnixNano())
 	snowflake, err := util.NewSnowflake(common.ChatRpcMachineId)
 	if err != nil {
 

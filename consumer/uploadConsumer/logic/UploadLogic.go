@@ -8,7 +8,8 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
-func UploadHandle(t, message string) error {
+func UploadHandle(_, message string) error {
+
 	var uploadMessage gloabalType.UploadSuccessMessage
 	if err := json.Unmarshal([]byte(message), &uploadMessage); err != nil {
 		// 处理反序列化错误
@@ -16,7 +17,7 @@ func UploadHandle(t, message string) error {
 		logx.Error("消息传递类型错误")
 	}
 	// 持久log
-	err := util.LogWrite(common.UPLOAD_SECURITY, uploadMessage)
+	err := util.LogWrite(common.UploadSecurity, uploadMessage)
 	if err != nil {
 		return err
 	}
