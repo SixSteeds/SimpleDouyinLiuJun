@@ -34,7 +34,12 @@ func LogWrite(fileName string, T interface{}) error {
 		// 处理打开文件错误
 		return err
 	}
-	defer file.Close()
+	defer func(file *os.File) {
+		err := file.Close()
+		if err != nil {
+			fmt.Println("关闭文件失败:", err)
+		}
+	}(file)
 
 	if _, err := file.Write(jsonData); err != nil {
 		logx.Error("写入文件失败")

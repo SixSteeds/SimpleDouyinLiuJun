@@ -2,6 +2,10 @@ Name: content
 Host: 0.0.0.0
 Port: 8085
 
+DevServer:
+  Enabled: true
+  Port: 8075
+
 UserRpcConf:
   Etcd:
     Hosts:

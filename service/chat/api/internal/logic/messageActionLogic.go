@@ -44,16 +44,16 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.
 		if err := l.SendMessage(token, content, toUserID); err != nil {
 			l.Logger.Error(err)
 			return &types.MessageActionReqResp{
-				StatusCode: common.DB_ERROR,
-				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+				StatusCode: common.DbError,
+				StatusMsg:  common.MapErrMsg(common.DbError),
 			}, nil
 		}
 	default:
 		// unknown operation type
 		l.Logger.Error(errors.New("unknown operation type"))
 		return &types.MessageActionReqResp{
-			StatusCode: common.REUQEST_PARAM_ERROR,
-			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+			StatusCode: common.RequestParamError,
+			StatusMsg:  common.MapErrMsg(common.RequestParamError),
 		}, nil
 	}
 	// send successfully
@@ -78,14 +78,13 @@ func (l *MessageActionLogic) SendMessage(token, content string, toUserId int64) 
 		Id:     toUserId,
 		UserID: userId,
 	}
-	l.Logger.Info(userReq)
 
 	response, userInfoErr := l.svcCtx.UserRpcClient.GetUserinfoById(l.ctx, &userReq)
 	if userInfoErr != nil {
 		return fmt.Errorf("fail to getUserInfo by id, error = %s", userInfoErr)
 	}
 	if response == nil {
-		return fmt.Errorf("No user with id %s", toUserId)
+		return fmt.Errorf("no user with id %v", toUserId)
 	}
 
 	// add message

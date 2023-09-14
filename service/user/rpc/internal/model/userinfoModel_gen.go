@@ -89,17 +89,17 @@ func (m *defaultUserinfoModel) withSession(session sqlx.Session) *defaultUserinf
 func (m *defaultUserinfoModel) FindUserListByIdList(ctx context.Context, userIdList *[]int64) (*[]*Userinfo, error) {
 	var resp []*Userinfo
 	// []int64 转换为 “,” 分隔的 string
-	var str_arr = make([]string, len(*userIdList))
+	var strArr = make([]string, len(*userIdList))
 	for k, v := range *userIdList {
-		str_arr[k] = fmt.Sprintf("%d", v)
+		strArr[k] = fmt.Sprintf("%d", v)
 	}
-	var IdListStr = strings.Join(str_arr, ",")
+	var IdListStr = strings.Join(strArr, ",")
 	query := fmt.Sprintf("select %s from %s where `id` in (%s) and `is_delete`!= '1'", userinfoRows, m.table, IdListStr)
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -124,17 +124,17 @@ func (m *defaultUserinfoModel) FindByIds(ctx context.Context, ids []int64, userI
 	}
 	combined := strings.Join(idStrings, " UNION ALL ")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, combined)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
 	}
 }
 func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int64) (*Userdetail, error) {
-	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v", cacheLiujunUserUserinfoIdPrefix, id, userId)
+	liujunUserUserinfoIdKey := fmt.Sprintf("%s%v%v", cacheLiujunUserUserinfoIdPrefix, id, userId)
 	var resp Userdetail
 	err := m.QueryRowCtx(ctx, &resp, liujunUserUserinfoIdKey, func(ctx context.Context, conn sqlx.SqlConn, v any) error {
 		query := fmt.Sprintf("select u.id,u.username,u.avatar,u.background_image,u.signature,u.name," +
@@ -142,10 +142,10 @@ func (m *defaultUserinfoModel) FindOne(ctx context.Context, id int64, userId int
 			" from userinfo u where u.id = ? and u.is_delete = 0")
 		return conn.QueryRowCtx(ctx, v, query, userId, id)
 	})
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -171,10 +171,10 @@ func (m *defaultUserinfoModel) FindUserById(ctx context.Context, id int64) (*Use
 	var resp Userinfo
 	query := fmt.Sprintf("select %s from %s where `id` = ? ", userinfoRows, m.table)
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, id)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -186,10 +186,10 @@ func (m *defaultUserinfoModel) CheckOne(ctx context.Context, username, password 
 	var resp int64
 	query := fmt.Sprintf("SELECT id FROM %s WHERE username = ? AND password = ?", m.table)
 	err := m.QueryRowNoCacheCtx(ctx, &resp, query, username, password)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err

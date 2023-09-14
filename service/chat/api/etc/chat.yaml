@@ -2,6 +2,10 @@ Name: chat
 Host: 0.0.0.0
 Port: 8087
 
+DevServer:
+  Enabled: true
+  Port: 8077
+
 ChatRpcConf:
   Etcd:
     Hosts:
@@ -23,8 +27,6 @@ Log:
   Level: info
   Encoding: plain
   KeepDays: 7
-
-
 
 
 RedisConf:

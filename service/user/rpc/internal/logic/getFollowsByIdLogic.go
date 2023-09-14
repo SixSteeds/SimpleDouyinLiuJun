@@ -8,7 +8,6 @@ import (
 	"github.com/zeromicro/go-zero/core/logx"
 	"math/rand"
 	"strconv"
-	"time"
 )
 
 type GetFollowsByIdLogic struct {
@@ -39,7 +38,7 @@ func (l *GetFollowsByIdLogic) GetFollowsById(in *pb.GetFollowsByIdReq) (*pb.GetF
 		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 		followNum := 0
 		followerNum := 0
-		rand.Seed(time.Now().UnixNano())
+		//rand.Seed(time.Now().UnixNano())
 		expiration := 3000 + rand.Intn(600)
 		if len(followRecord) == 0 {
 			//没有记录，去查表

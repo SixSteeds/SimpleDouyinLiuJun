@@ -34,7 +34,7 @@ func (l *SearchFavoriteLogic) SearchFavorite(in *pb.SearchFavoriteReq) (*pb.Sear
 	l.Logger.Info("SearchFavorite方法请求参数：", in)
 	// 1.根据 user_id 查询 favorite 表，返回所有点赞信息
 	favoriteList, err := l.svcCtx.FavoriteModel.FindFavoriteListByUserId(l.ctx, in.UserId)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("数据查询失败")
 	}
 	var resp []*pb.Favorite

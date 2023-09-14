@@ -1,5 +1,11 @@
 Name: content.rpc
 ListenOn: 0.0.0.0:8086
+Mode: dev
+
+DevServer:
+  Enabled: true
+  Port: 8076
+
 Etcd:
   Hosts:
   - 0.0.0.0:8090
@@ -14,7 +20,7 @@ Cache:
   - Host: 0.0.0.0:8094
     Pass: liujun
 
-Mode: dev
+
 
 Log:
   ServiceName: content.rpc

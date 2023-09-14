@@ -4,6 +4,7 @@ import (
 	"context"
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/job/logic"
+	"fmt"
 	"github.com/robfig/cron/v3"
 	"github.com/zeromicro/go-zero/core/stores/redis"
 
@@ -35,8 +36,14 @@ func main() {
 	c := cron.New()
 
 	// 标准构建
-	c.AddFunc("@every 5s", logic.NewAddLikeInfoLogic(ctx, conn, rds).AddLikeInfo)
-	c.AddFunc("@every 24h", logic.NewCheckLogLogic(ctx).CheckLog)
+	_, err := c.AddFunc("@every 5s", logic.NewAddLikeInfoLogic(ctx, conn, rds).AddLikeInfo)
+	if err != nil {
+		fmt.Println("点赞数据持久化定时任务添加失败")
+	}
+	_, err = c.AddFunc("@every 24h", logic.NewCheckLogLogic(ctx).CheckLog)
+	if err != nil {
+		fmt.Println("日志清理定时任务添加失败")
+	}
 
 	//定时任务启动
 	c.Start()

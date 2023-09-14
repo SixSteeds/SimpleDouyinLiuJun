@@ -26,7 +26,6 @@ func NewAddFollowsLogic(ctx context.Context, svcCtx *svc.ServiceContext) *AddFol
 	}
 }
 
-// -----------------------鐢ㄦ埛鍩烘湰淇℃伅-----------------------
 func (l *AddFollowsLogic) AddFollows(in *pb.AddFollowsReq) (*pb.AddFollowsResp, error) {
 	l.Logger.Info(in)
 	userid, _ := strconv.ParseInt(in.UserId, 10, 64)

@@ -33,8 +33,8 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	l.Logger.Info("register方法请求参数：", req)
 	if len(req.Username) > 32 || len(req.Username) < 2 || len(req.Password) < 5 || len(req.Password) > 32 {
 		return &types.RegisterResp{
-			StatusCode: common.REUQEST_PARAM_ERROR,
-			StatusMsg:  common.MapErrMsg(common.REUQEST_PARAM_ERROR),
+			StatusCode: common.RequestParamError,
+			StatusMsg:  common.MapErrMsg(common.RequestParamError),
 		}, nil
 	}
 
@@ -42,8 +42,8 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(req.Password), bcrypt.DefaultCost)
 	if err != nil {
 		return &types.RegisterResp{
-			StatusCode: common.SERVER_COMMON_ERROR,
-			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
+			StatusCode: common.ServerCommonError,
+			StatusMsg:  common.MapErrMsg(common.ServerCommonError),
 		}, nil
 	}
 
@@ -54,15 +54,15 @@ func (l *RegisterLogic) Register(req *types.RegisterReq) (resp *types.RegisterRe
 
 	if err != nil || !data.Success {
 		return &types.RegisterResp{
-			StatusCode: common.USERNAME_REPETITION,
-			StatusMsg:  common.MapErrMsg(common.USERNAME_REPETITION),
+			StatusCode: common.UsernameRepetition,
+			StatusMsg:  common.MapErrMsg(common.UsernameRepetition),
 		}, nil
 	}
 	token, err := util.GenToken(data.Id, req.Username)
 	if err != nil {
 		return &types.RegisterResp{
-			StatusCode: common.TOKEN_GENERATE_ERROR,
-			StatusMsg:  common.MapErrMsg(common.TOKEN_GENERATE_ERROR),
+			StatusCode: common.TokenGenerateError,
+			StatusMsg:  common.MapErrMsg(common.TokenGenerateError),
 		}, nil
 	}
 

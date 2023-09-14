@@ -36,8 +36,8 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	token, err := gloabalUtil.ParseToken(req.Token)
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.TOKEN_PARSE_ERROR),
-			StatusCode: common.TOKEN_PARSE_ERROR,
+			StatusMsg:  common.MapErrMsg(common.TokenParseError),
+			StatusCode: common.TokenParseError,
 		}, nil
 	}
 	// 给用户上传行为加两秒锁，保持用户上传行为的幂等性
@@ -45,15 +45,15 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	if err != nil {
 		l.Logger.Error("redis加锁出问题：", err)
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			StatusCode: common.REDIS_ERROR,
+			StatusMsg:  common.MapErrMsg(common.RedisError),
+			StatusCode: common.RedisError,
 		}, nil
 	}
 	if !isSuccess {
 		l.Logger.Error("禁止两秒内多次上传上传行为")
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DbError),
+			StatusCode: common.DbError,
 		}, nil
 	}
 	//生成文件名
@@ -62,8 +62,8 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	if err != nil {
 		l.Logger.Error("雪花算法出问题：", err)
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.SERVER_COMMON_ERROR),
-			StatusCode: common.SERVER_COMMON_ERROR,
+			StatusMsg:  common.MapErrMsg(common.ServerCommonError),
+			StatusCode: common.ServerCommonError,
 		}, nil
 	}
 	snowId := data.Generate()
@@ -116,23 +116,23 @@ func (l *UploadLogic) Upload(req *types.UploadReq) (resp *types.UploadResp, err 
 	})
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
-			StatusCode: common.DB_ERROR,
+			StatusMsg:  common.MapErrMsg(common.DbError),
+			StatusCode: common.DbError,
 		}, nil
 	}
 
 	_, err = l.svcCtx.RedisClient.Incr(common.CntCacheUserWorkPrefix + strconv.FormatInt(token.UserID, 10))
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			StatusCode: common.REDIS_ERROR,
+			StatusMsg:  common.MapErrMsg(common.RedisError),
+			StatusCode: common.RedisError,
 		}, nil
 	}
 	err = l.svcCtx.RedisClient.SetCtx(l.ctx, common.VideoCache2User+strconv.FormatInt(token.UserID, 10), strconv.FormatInt(snowId, 10))
 	if err != nil {
 		return &types.UploadResp{
-			StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
-			StatusCode: common.REDIS_ERROR,
+			StatusMsg:  common.MapErrMsg(common.RedisError),
+			StatusCode: common.RedisError,
 		}, nil
 	}
 	return &types.UploadResp{

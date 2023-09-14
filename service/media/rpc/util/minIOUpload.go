@@ -13,16 +13,16 @@ import (
 )
 
 // Upload 视频上传
-func Upload(noUse context.Context, video []byte, fileName string) error {
+func Upload(_ context.Context, video []byte, fileName string) error {
 	fileName = fileName + ".mp4"
 	timeout := 60 * time.Second
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
-	useSSL := false
+
 	//初始化客户端
 	client, err := minio.NewCore(common.MinIOEndPoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(common.MinIOAccessKey, common.MinIOSecretKey, ""),
-		Secure: useSSL,
+		Secure: false,
 	})
 	if err != nil {
 		return err

@@ -3,12 +3,10 @@ package logic
 import (
 	"context"
 	"doushen_by_liujun/internal/common"
-	"math/rand"
-	"strconv"
-	"time"
-
 	"doushen_by_liujun/service/user/rpc/internal/svc"
 	"doushen_by_liujun/service/user/rpc/pb"
+	"math/rand"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -41,7 +39,7 @@ func (l *GetFriendsByIdLogic) GetFriendsById(in *pb.GetFriendsByIdReq) (*pb.GetF
 		followRecord, _ := redisClient.GetCtx(l.ctx, followKey)
 		followNum := 0
 		followerNum := 0
-		rand.Seed(time.Now().UnixNano())
+		//rand.Seed(time.Now().UnixNano())
 		expiration := 3000 + rand.Intn(600)
 		if len(followRecord) == 0 {
 			//没有记录，去查表

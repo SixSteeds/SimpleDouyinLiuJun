@@ -6,6 +6,7 @@ import (
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
 	"doushen_by_liujun/service/content/rpc/pb"
+	"errors"
 
 	"fmt"
 	"github.com/zeromicro/go-zero/core/stores/redis"
@@ -46,8 +47,8 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 	if err0 != nil {
 		l.Logger.Error(err0)
 		return &types.CommentActionResp{
-			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			StatusCode: common.TokenExpireError,
+			StatusMsg:  common.MapErrMsg(common.TokenExpireError),
 		}, nil
 	}
 	if action := req.ActionType; action == 1 { // actionType（1新增评论，2删除评论）
@@ -58,11 +59,11 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 			Content:  req.CommentText,
 			IsDelete: 0,
 		})
-		if err1 != nil && err1 != sql.ErrNoRows {
+		if err1 != nil && !errors.Is(err1, sql.ErrNoRows) {
 			l.Logger.Error(err1)
 			return &types.CommentActionResp{
-				StatusCode: common.DB_ERROR,
-				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+				StatusCode: common.DbError,
+				StatusMsg:  common.MapErrMsg(common.DbError),
 			}, nil
 		}
 		// 2.1 redis 中 video 被评论计数自增
@@ -70,8 +71,8 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 		if err2 != nil && err2 != redis.Nil {
 			l.Logger.Error(err2)
 			return &types.CommentActionResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		fmt.Println("【api-commentAction-用户评论成功】")
@@ -83,8 +84,8 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 		if err1 != nil {
 			l.Logger.Error(err1)
 			return &types.CommentActionResp{
-				StatusCode: common.DB_ERROR,
-				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+				StatusCode: common.DbError,
+				StatusMsg:  common.MapErrMsg(common.DbError),
 			}, nil
 		}
 		// 3.1 redis 中 video 被评论计数自减
@@ -92,8 +93,8 @@ func (l *CommentActionLogic) CommentAction(req *types.CommentActionReq) (resp *t
 		if err2 != nil && err2 != redis.Nil {
 			l.Logger.Error(err2)
 			return &types.CommentActionResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		fmt.Println("【api-commentAction-用户删除评论成功】")

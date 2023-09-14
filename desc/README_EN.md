@@ -1,6 +1,5 @@
-
 <p align="center">
-  <a href="desc/liujundouyin.webp">
+  <a href="[https://github.com/SixSteeds/SimpleDouyinLiuJun ↗](https://github.com/SixSteeds/SimpleDouyinLiuJun)">
     <img src="https://img1.baidu.com/it/u=3097479827,1066216267&fm=253&fmt=auto&app=138&f=JPEG?w=466&h=500" width="150" alt="douyin">
   </a>
 </p>
@@ -10,61 +9,65 @@
 
 <div align="center">
 
-中文 | [English](desc/README_EN.md)
+[中文](../README.md) | English
 </div>
+
+
 <div align="center">
+
 
 # SimpleDouyinLiuJun
 
-🎉 字节青训营《基于go-zero的微服务简化版抖音项目》 🎉
+🎉 ByteDance Youth Training Camp "Simplified Douyin Project Based on go-zero" 🎉
 
 </div>
 
 <p align="center">
-  <a href="https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf" target='_blank'>汇报文档</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/FlSedmvbxoDPaux8b2rcv9HNnCf" target='_blank'>Report Document</a>
   ·
-  <a href="https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg">开发文档</a>
+  <a href="https://k4rily1dmm.feishu.cn/docx/I2q8dVSY4oIXOTxOd6PcSJLYnIg">Development Document</a>
 </p>
 
 
-## 项目启动
+## Project Launch
 
-#### 安装依赖
+#### Install Dependencies
 
 ```
 go mod tidy
 ```
 
-#### 进入`script`目录安装本地镜像
+#### Install Local Image in the `script` Directory
 
 ```
 docker compose -f docker-compose-env up -d
 ```
 
-#### 服务启动
+#### Start Services
 
-##### 进入`script`目录执行以下脚本
+##### Execute the Following Scripts in the `script` Directory
 
-###### mac or linux
+###### Mac or Linux
 
 ```bash
 sh start_debug_LinuxMac.sh
 ```
 
-###### windows 按以下顺序启动
+###### Windows Start in the Following Order
 
 ```
-所有consumer-job-contentrpc-其他rpc-所有api
+Start all consumer-job-contentrpc-other-rpc-all-api
 ```
 
-## 业务架构图
+## Business Architecture Diagram
 
-![img.png](desc/img.png)
+![desc/img.png](img.png)
 
-## 预览
-![img.png](desc/preview.jpg)
+## Preview
 
-## 贡献者
+![img.png](preview.jpg)
+
+## Contributors
 
 <table>
   <tbody>
@@ -152,5 +155,3 @@ sh start_debug_LinuxMac.sh
 </tbody>
 
 </table>
-
-

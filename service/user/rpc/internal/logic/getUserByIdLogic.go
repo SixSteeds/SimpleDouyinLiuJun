@@ -28,7 +28,7 @@ func NewGetUserByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetUs
 
 func (l *GetUserByIdLogic) GetUserById(in *pb.GetUserByIdReq) (*pb.GetUserByIdResp, error) {
 	userInfo, err := l.svcCtx.UserinfoModel.FindUserById(l.ctx, in.UserID)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("数据查询失败")
 	}
 	if userInfo != nil {

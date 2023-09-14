@@ -38,7 +38,7 @@ func (l *DelFavoriteLogic) DelFavorite(in *pb.DelFavoriteReq) (*pb.DelFavoriteRe
 	l.Logger.Info("DelFavorite方法请求参数：", in)
 	//1.根据（userId、videoId）查找 favorite 表
 	favorite, err0 := l.svcCtx.FavoriteModel.FindFavoriteByUserIdVideoId(l.ctx, in.UserId, in.VideoId)
-	if err0 != nil && err0 != model.ErrNotFound {
+	if err0 != nil && !errors.Is(err0, model.ErrNotFound) {
 		return nil, errors.New("rpc-delFavorite-数据查询失败")
 	}
 	if favorite == nil || favorite.IsDelete == 1 {

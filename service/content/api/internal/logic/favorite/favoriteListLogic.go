@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"doushen_by_liujun/internal/common"
 	"doushen_by_liujun/internal/util"
+	"errors"
 
 	constants "doushen_by_liujun/internal/common"
 
@@ -45,8 +46,8 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 	if err0 != nil {
 		l.Logger.Error(err0)
 		return &types.FavoriteListResp{
-			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			StatusCode: common.TokenExpireError,
+			StatusMsg:  common.MapErrMsg(common.TokenExpireError),
 		}, nil
 	}
 
@@ -54,11 +55,11 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 	favoriteListResp, err1 := l.svcCtx.ContentRpcClient.SearchFavorite(l.ctx, &pb.SearchFavoriteReq{
 		UserId: req.UserId,
 	})
-	if err1 != nil && err1 != sql.ErrNoRows {
+	if err1 != nil && !errors.Is(err1, sql.ErrNoRows) {
 		l.Logger.Error(err1)
 		return &types.FavoriteListResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 	fmt.Println("查到favoriteList")
@@ -79,11 +80,11 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 	videoListResp, err2 := l.svcCtx.ContentRpcClient.GetVideoListByIdList(l.ctx, &pb.GetVideoListByIdListReq{
 		VideoIdList: videoIdList,
 	})
-	if err2 != nil && err2 != sql.ErrNoRows {
+	if err2 != nil && !errors.Is(err2, sql.ErrNoRows) {
 		l.Logger.Error(err2)
 		return &types.FavoriteListResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 	fmt.Println("查到videoList")
@@ -157,8 +158,8 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 		if err3 != nil && err3 != redis.Nil {
 			l.Logger.Error(err3)
 			return &types.FavoriteListResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		var videoLikedCnt int64 = 0
@@ -170,8 +171,8 @@ func (l *FavoriteListLogic) FavoriteList(req *types.FavoriteListReq) (resp *type
 		if err6 != nil && err6 != redis.Nil {
 			l.Logger.Error(err6)
 			return &types.FavoriteListResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		var videoCommentedCnt int64 = 0

@@ -3,6 +3,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -101,10 +102,10 @@ func (m *defaultFollowsModel) FindOne(ctx context.Context, id int64) (*Follows, 
 		query := fmt.Sprintf("select %s from %s where `id` = ? ", followsRows, m.table)
 		return conn.QueryRowCtx(ctx, v, query, id)
 	})
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -117,10 +118,10 @@ func (m *defaultFollowsModel) FindByUserId(ctx context.Context, id int64) (*[]*F
 		"TRUE AS is_follow" +
 		" from userinfo u,follows f where f.user_id = ? and f.follow_id = u.id and u.id <> f.user_id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -133,10 +134,10 @@ func (m *defaultFollowsModel) FindByFollowId(ctx context.Context, id int64) (*[]
 		"EXISTS (SELECT 1 FROM follows WHERE user_id = ? AND follow_id = u.id) AS is_follow" +
 		" from userinfo u,follows f where f.follow_id = ? and f.user_id = u.id and u.id <> f.follow_id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id, id)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
@@ -149,10 +150,10 @@ func (m *defaultFollowsModel) FindFriendsByUserId(ctx context.Context, id int64)
 		"TRUE AS is_follow" +
 		" from userinfo u,follows f,follows f2 where f.follow_id = f2.user_id and f2.follow_id = f.user_id  and u.id <> f.user_id and f.user_id = ? and f.follow_id = u.id and u.is_delete = 0")
 	err := m.QueryRowsNoCacheCtx(ctx, &resp, query, id)
-	switch err {
-	case nil:
+	switch {
+	case err == nil:
 		return &resp, nil
-	case sqlc.ErrNotFound:
+	case errors.Is(err, sqlc.ErrNotFound):
 		return nil, ErrNotFound
 	default:
 		return nil, err
