@@ -39,7 +39,7 @@ services:
 
   #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
   grafana:
-    image: grafana/grafana:8.0.6
+    image: grafana/grafana:10.0.4
     container_name: grafana
     hostname: grafana
     user: root
