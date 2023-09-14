@@ -5,6 +5,10 @@ maxConns: 8000 # 请求最大连接数
 Timeout: 3000 # api请求超时时间
 CpuThreshold: 800 # cpu线程阈值
 
+DevServer:
+  Enabled: true
+  Port: 8071
+
 UserRpcConf:
   Etcd:
     Hosts:

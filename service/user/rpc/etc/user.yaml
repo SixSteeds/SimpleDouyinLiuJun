@@ -1,6 +1,11 @@
 Name: user.rpc
 ListenOn: 0.0.0.0:8082
 
+
+DevServer:
+  Enabled: true
+  Port: 8072
+
 Etcd:
   Hosts:
     - 0.0.0.0:8090

@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	"fmt"
+	"mime/multipart"
 	"net/http"
 
 	"doushen_by_liujun/service/media/api/internal/logic"
@@ -22,7 +23,12 @@ func uploadHandler(svcCtx *svc.ServiceContext) http.HandlerFunc {
 			http.Error(w, "Error retrieving the file", http.StatusBadRequest)
 			return
 		}
-		defer file.Close()
+		defer func(file multipart.File) {
+			err := file.Close()
+			if err != nil {
+				fmt.Printf("close file err: %v\n", err)
+			}
+		}(file)
 		// 读取文件内容
 		req.Data = make([]byte, 0)
 		buf := make([]byte, 1024)

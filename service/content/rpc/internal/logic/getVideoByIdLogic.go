@@ -32,7 +32,7 @@ func (l *GetVideoByIdLogic) GetVideoById(in *pb.GetVideoByIdReq) (*pb.GetVideoBy
 	*/
 	l.Logger.Info("GetVideoById方法请求参数：", in)
 	videoInfo, err := l.svcCtx.VideoModel.FindOne(l.ctx, in.Id)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("rpc-GetVideoById-数据查询失败")
 	}
 	if videoInfo != nil {

@@ -60,8 +60,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.FeedResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 	if data == nil {
@@ -69,8 +69,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		l.Logger.Error(err)
 
 		return &types.FeedResp{
-			StatusCode: common.DATA_USE_UP,
-			StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),
+			StatusCode: common.DataUseUp,
+			StatusMsg:  common.MapErrMsg(common.DataUseUp),
 		}, nil
 	}
 
@@ -94,8 +94,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 		if err != nil {
 			l.Logger.Error(err)
 			return &types.FeedResp{
-				StatusCode: common.DB_ERROR,
-				StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+				StatusCode: common.DbError,
+				StatusMsg:  common.MapErrMsg(common.DbError),
 			}, nil
 		}
 		if data2 == nil {
@@ -103,8 +103,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 			l.Logger.Error(err)
 
 			return &types.FeedResp{
-				StatusCode: common.DATA_USE_UP,
-				StatusMsg:  common.MapErrMsg(common.DATA_USE_UP),
+				StatusCode: common.DataUseUp,
+				StatusMsg:  common.MapErrMsg(common.DataUseUp),
 			}, nil
 		}
 		if listLen == 0 {
@@ -123,8 +123,8 @@ func (l *FeedLogic) Feed(req *types.FeedReq) (resp *types.FeedResp, err error) {
 	if err != nil {
 		l.Logger.Error(err)
 		return &types.FeedResp{
-			StatusCode: common.DB_ERROR,
-			StatusMsg:  common.MapErrMsg(common.DB_ERROR),
+			StatusCode: common.DbError,
+			StatusMsg:  common.MapErrMsg(common.DbError),
 		}, nil
 	}
 

@@ -15,7 +15,7 @@ type Snowflake struct {
 	sequence  int64
 }
 
-// NewNode returns a new snowflake worker that can be used to generate snowflake IDs
+// NewSnowflake NewNode returns a new snowflake worker that can be used to generate snowflake IDs
 func NewSnowflake(workerid int64) (*Snowflake, error) {
 	// 检查workerid是否在有效范围内（0到1023）
 	if workerid < 0 || workerid > common.WorkeridMax {
@@ -51,7 +51,7 @@ func (s *Snowflake) Generate() int64 {
 	// 更新时间戳为当前时间
 	s.timestamp = now
 	// 生成64位整数ID
-	r := int64((now-common.Twepoch)<<common.TimestampShift | (s.workerid << common.WorkeridShift) | (s.sequence))
+	r := (now-common.Twepoch)<<common.TimestampShift | (s.workerid << common.WorkeridShift) | (s.sequence)
 	// 解锁，返回生成的ID
 	s.Unlock()
 	return r

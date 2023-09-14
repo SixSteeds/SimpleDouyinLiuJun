@@ -1,5 +1,9 @@
 Name: loginConsumer
 
+DevServer:
+  Enabled: true
+  Port: 8070
+
 Brokers:
   - 127.0.0.1:9092
 Group: uploadPersistent

@@ -2,6 +2,7 @@ package logic
 
 import (
 	"context"
+	"errors"
 
 	"database/sql"
 	constants "doushen_by_liujun/internal/common"
@@ -73,7 +74,7 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		var cur uint64 = 0
 		var count int64 = 1000
 		arr := strings.Split(item, ":")
-		var videoId string = arr[2]
+		var videoId = arr[2]
 		for {
 			// redis.scan 从 cursor=0 开始，当返回 nextCursor=0 时说明遍历完
 			keysResp, nextCur, err0 := redisClient.Hscan(item, cur, "*", count)
@@ -115,20 +116,20 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		var resp Favorite
 		query := fmt.Sprintf("select %s from `favorite` where `user_id` = ? and `video_id` = ? limit 1", favoriteRows)
 		err := l.conn.QueryRow(&resp, query, userId, videoId)
-		if err != nil && err != sql.ErrNoRows {
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			fmt.Println("【Redis同步数据, Mysql更新失败】")
 		}
 		if resp.Id != 0 {
 			// 3.2 如果记录存在，则进行更新
 			query := fmt.Sprintf("update `favorite` set %s where `id` = ?", favoriteRowsWithPlaceHolder)
 			_, err := l.conn.Exec(query, videoId, userId, isDelete, resp.Id)
-			if err != nil && err != sql.ErrNoRows {
+			if err != nil && !errors.Is(err, sql.ErrNoRows) {
 				fmt.Println("【Redis同步数据, Mysql更新失败】")
 			}
 		} else {
 			// 3.3 如果记录不存在，则拼接字符串 insertBatch 等到后续批量插入
 			snowflake, err1 := util.NewSnowflake(constants.OtherMachineId)
-			if err1 != nil && err != sql.ErrNoRows {
+			if err1 != nil && !errors.Is(err, sql.ErrNoRows) {
 				fmt.Println("【Redis同步数据, Mysql更新失败时snowflake生成id失败】")
 			}
 			snowId := snowflake.Generate() //雪花算法生成id
@@ -140,7 +141,7 @@ func (l *AddLikeInfoLogic) AddLikeInfo() {
 		insertBatch = insertBatch[:len(insertBatch)-1] // 去掉最后一个逗号
 		query := fmt.Sprintf("insert into `favorite` (%s) values %s ", favoriteRowsExpectAutoSet, insertBatch)
 		_, err := l.conn.Exec(query)
-		if err != nil && err != sql.ErrNoRows {
+		if err != nil && !errors.Is(err, sql.ErrNoRows) {
 			fmt.Println("【Redis同步数据, Mysql更新失败】")
 		}
 		fmt.Println(insertBatch)

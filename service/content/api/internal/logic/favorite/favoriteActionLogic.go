@@ -40,8 +40,8 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 	if err0 != nil {
 		l.Logger.Error(err0)
 		return &types.FavoriteActionResp{
-			StatusCode: common.TOKEN_EXPIRE_ERROR,
-			StatusMsg:  common.MapErrMsg(common.TOKEN_EXPIRE_ERROR),
+			StatusCode: common.TokenExpireError,
+			StatusMsg:  common.MapErrMsg(common.TokenExpireError),
 		}, nil
 	}
 
@@ -58,8 +58,8 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 		if err1 != nil && err1 != redis.Nil {
 			l.Logger.Error(err1)
 			return &types.FavoriteActionResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		if len(likeRecord) != 0 && likeRecord == "0" {
@@ -97,8 +97,8 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 				// pipeline 操作失败
 				l.Logger.Error(e)
 				return &types.FavoriteActionResp{
-					StatusCode: common.REDIS_ERROR,
-					StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+					StatusCode: common.RedisError,
+					StatusMsg:  common.MapErrMsg(common.RedisError),
 				}, nil
 			}
 			fmt.Println("执行pipeline成功")
@@ -112,8 +112,8 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 		if err1 != nil && err1 != redis.Nil {
 			l.Logger.Error(err1)
 			return &types.FavoriteActionResp{
-				StatusCode: common.REDIS_ERROR,
-				StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+				StatusCode: common.RedisError,
+				StatusMsg:  common.MapErrMsg(common.RedisError),
 			}, nil
 		}
 		if len(likeRecord) != 0 && likeRecord == "1" {
@@ -151,8 +151,8 @@ func (l *FavoriteActionLogic) FavoriteAction(req *types.FavoriteActionReq) (resp
 				// pipeline 操作失败
 				l.Logger.Error(e)
 				return &types.FavoriteActionResp{
-					StatusCode: common.REDIS_ERROR,
-					StatusMsg:  common.MapErrMsg(common.REDIS_ERROR),
+					StatusCode: common.RedisError,
+					StatusMsg:  common.MapErrMsg(common.RedisError),
 				}, nil
 			}
 			fmt.Println("执行pipeline成功")

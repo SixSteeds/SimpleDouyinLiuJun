@@ -28,7 +28,7 @@ func NewGetUserListByIdListLogic(ctx context.Context, svcCtx *svc.ServiceContext
 
 func (l *GetUserListByIdListLogic) GetUserListByIdList(in *pb.GetUserListByIdListReq) (*pb.GetUserListByIdListResp, error) {
 	videoList, err := l.svcCtx.UserinfoModel.FindUserListByIdList(l.ctx, &in.UserIdList)
-	if err != nil && err != model.ErrNotFound {
+	if err != nil && !errors.Is(err, model.ErrNotFound) {
 		return nil, errors.New("rpc-GetUserListByIdList-数据查询失败")
 	}
 	var resp []*pb.Userinfo
