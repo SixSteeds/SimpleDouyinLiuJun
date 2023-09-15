@@ -24,6 +24,12 @@ services:
   prometheus:
     image: prom/prometheus:v2.37.6
     container_name: prometheus
+    volumes:
+      - ./deploy/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheus/data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
     restart: always
     user: root
     volumes:
@@ -40,12 +46,14 @@ services:
     hostname: grafana
     user: root
     restart: always
+    volumes:
+      - ./data/grafana/data:/var/lib/grafana
     ports:
       - "8092:3000"
     networks:
       - liujun_net
-    depends_on:
-      - prometheus
+#    depends_on:
+#      - prometheus
 
   #redis容器 - Redis container
   redis:
