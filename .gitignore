@@ -46,7 +46,8 @@ log
 .log
 *.log
 /logs/*
-/script/data/*
+/script/data/kafka
+/script/data/redisData
 /script/conf/nginx_conf/log/*.log
 *.json
 

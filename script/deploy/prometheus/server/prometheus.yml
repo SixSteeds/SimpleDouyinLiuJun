@@ -14,3 +14,58 @@ scrape_configs:
           job: content-rpc
           app: content-rpc
           env: dev
+
+  - job_name: 'content-api'
+    static_configs:
+      - targets: [ 'host.docker.internal:8075' ]
+        labels:
+          job: content-api
+          app: content-api
+          env: dev
+
+  - job_name: 'chat-rpc'
+    static_configs:
+      - targets: [ 'host.docker.internal:8078' ]
+        labels:
+          job: chat-rpc
+          app: chat-rpc
+          env: dev
+
+  - job_name: 'chat-api'
+    static_configs:
+      - targets: [ 'host.docker.internal:8077' ]
+        labels:
+          job: chat-api
+          app: chat-api
+          env: dev
+
+  - job_name: 'media-rpc'
+    static_configs:
+      - targets: [ 'host.docker.internal:8074' ]
+        labels:
+          job: media-rpc
+          app: media-rpc
+          env: dev
+
+  - job_name: 'media-api'
+    static_configs:
+      - targets: [ 'host.docker.internal:8073' ]
+        labels:
+          job: media-api
+          app: media-api
+          env: dev
+
+  - job_name: 'user-rpc'
+    static_configs:
+      - targets: [ 'host.docker.internal:8072' ]
+        labels:
+          job: user-rpc
+          app: user-rpc
+          env: dev
+  - job_name: 'user-api'
+    static_configs:
+      - targets: [ 'host.docker.internal:8071' ]
+        labels:
+          job: user-api
+          app: user-api
+          env: dev
