@@ -10,6 +10,7 @@ import (
 	"doushen_by_liujun/service/user/rpc/user"
 	"errors"
 	"fmt"
+	"strconv"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -36,6 +37,26 @@ func (l *MessageActionLogic) MessageAction(req *types.MessageActionReq) (*types.
 	toUserID := req.ToUserId
 	actionType := req.Action_type
 	content := req.Content
+
+	val, err2 := l.svcCtx.RedisClient.GetCtx(l.ctx, strconv.Itoa(int(toUserID)))
+	if err2 != nil {
+		return &types.MessageActionReqResp{
+			StatusCode: common.OK,
+			StatusMsg:  common.MapErrMsg(common.OK),
+		}, nil
+	}
+
+	if val == content {
+		return &types.MessageActionReqResp{}, nil
+	}
+
+	_, err := l.svcCtx.RedisClient.SetnxExCtx(l.ctx, strconv.Itoa(int(toUserID)), content, 1)
+	if err != nil {
+		return &types.MessageActionReqResp{
+			StatusCode: common.RedisError,
+			StatusMsg:  common.MapErrMsg(common.RedisError),
+		}, nil
+	}
 
 	// perform corresponding actions based on actionType
 	switch actionType {
