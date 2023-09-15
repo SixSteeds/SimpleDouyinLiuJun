@@ -31,6 +31,7 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 	var flag bool //标识需不需要删除第一条数据
 
 	if req.PreMsgTime > 169268692200 {
+
 		flag = true
 		// 获取第三位数字
 		//thirdDigit := (req.PreMsgTime / 100) % 10
@@ -89,10 +90,11 @@ func (l *MessageListLogic) MessageList(req *types.MessageChatReq) (*types.Messag
 		messages = append(messages, msg)
 	}
 	if flag {
+		l.Logger.Info("删除第一条数据")
 		return &types.MessageChatReqResp{
 			StatusCode:  common.OK,
 			StatusMsg:   common.MapErrMsg(common.OK),
-			MessageList: messages[1:],
+			MessageList: messages[:len(messages)-1],
 		}, nil
 	}
 	return &types.MessageChatReqResp{

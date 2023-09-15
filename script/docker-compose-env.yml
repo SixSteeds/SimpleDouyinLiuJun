@@ -22,11 +22,11 @@ services:
 
   #prometheus监控 — Prometheus for monitoring
   prometheus:
-    image: bitnami/prometheus:2.46.0
+    image: prom/prometheus:v2.37.6
     container_name: prometheus
     volumes:
-      - ./deploy/prometheus/server/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./data/prometheus/data:/prometheus
+      - ./conf/prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./data/prometheusData:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -39,19 +39,19 @@ services:
 
   #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
   grafana:
-    image: grafana/grafana:10.0.4
+    image: grafana/grafana:9.4.3
     container_name: grafana
     hostname: grafana
     user: root
     restart: always
     volumes:
-      - ./data/grafana/data:/var/lib/grafana
+      - ./data/grafanaData:/var/lib/grafana
     ports:
       - "8092:3000"
     networks:
       - liujun_net
-#    depends_on:
-#      - prometheus
+    depends_on:
+      - prometheus
 
   #redis容器 - Redis container
   redis:
@@ -77,7 +77,7 @@ services:
     ports:
       - "9092:9092"
     volumes:
-      - "./data/kafka:/bitnami/kafka"
+      - "./data/kafkaData:/bitnami/kafka"
     environment:
       # KRaft settings
       KAFKA_CFG_NODE_ID: 0
