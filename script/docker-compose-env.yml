@@ -22,10 +22,12 @@ services:
 
   #prometheus监控 — Prometheus for monitoring
   prometheus:
-    image: bitnami/prometheus:2.46.0
+    image: prom/prometheus:v2.37.6
     container_name: prometheus
     restart: always
     user: root
+    volumes:
+      - ./conf/Prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "8091:9090"
     networks:
@@ -33,7 +35,7 @@ services:
 
   #查看prometheus监控数据 - Grafana to view Prometheus monitoring data
   grafana:
-    image: grafana/grafana:10.0.4
+    image: grafana/grafana:9.4.3
     container_name: grafana
     hostname: grafana
     user: root

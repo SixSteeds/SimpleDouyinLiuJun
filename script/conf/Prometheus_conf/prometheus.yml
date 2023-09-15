@@ -1,0 +1,16 @@
+global:
+  scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['host.docker.internal:8091']
+
+  - job_name: 'content-rpc'
+    static_configs:
+      - targets: [ 'host.docker.internal:8076' ]
+        labels:
+          job: content-rpc
+          app: content-rpc
+          env: dev
