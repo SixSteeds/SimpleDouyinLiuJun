@@ -116,7 +116,7 @@ sh start_debug_LinuxMac.sh
           </td>
           </td>
             <td align="center">
-            <a href="https://github.com/xingxing2064989403">
+            <a href="https://github.com/away-star">
               <img
                 src="https://avatars.githubusercontent.com/u/106024593?v=4"
                 width="100px;"
